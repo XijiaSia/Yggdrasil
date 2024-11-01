@@ -67,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -147,6 +176,20 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Inspired by subtraction, it is obvious that if one changes the coefficients, then we will end up with another vector.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_08_linear_combination1.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+<p>Inversely, we also can find two proper coefficients such that an arbitrary vector (purple) can be represented as the sum of two given vectors (red and blue).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_08_linear_combination2.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+<p>So, the linear combination of two vectors is <span class="math inline">\(c_1\textbf{x}_1 + c_2\textbf{x}_2.\)</span> In general, the linear combination can be defined as the weighted sum of a group of vectors. For <span class="math inline">\(\textbf{x}_1, \textbf{x}_2, \dots, \textbf{x}_n\)</span>, and n scalars <span class="math inline">\(c_1, c_2, \dots, c_n\)</span>, the linear combination is presented as <span class="math inline">\(\sum_{i=1}^n c_i\textbf{x}_i\)</span>.</p>
+<p>It seems that we can create all the vectors as long as hold two vectors in a 2D space. However, that is not always true.</p>
 <div style="text-align: center; margin: 30px 0">
 <p><a href="../../MathToolBox/la/la_02.html" title="1. Basic Operators"><strong>Previous page</strong></a> | <a href="../../MathToolBox/la/la_home.html"><strong>LA4DS Homepage</strong></a> | <a href="../../MathToolBox/la/la_04.html" title="4. Linearly Independent"><strong>Next page</strong></a></p>
 </div>
@@ -155,7 +198,7 @@ ul.task-list li input[type="checkbox"] {
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
-  <div>© 2024 Xijia Liu. All rights reserved.</div>
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
   <div><img src="../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
 </div>
 <script id="quarto-html-after-body" type="application/javascript">

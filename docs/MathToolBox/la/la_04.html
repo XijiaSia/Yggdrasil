@@ -147,6 +147,34 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Next, I will show you one simple counter-example. Considering two vectors pointing in the same direction, we know that one vector can be represented as another vector scaled by some scalar. Therefore, the linear combination of the two vectors is equivalent to a scalar multiplication of arbitrary one vector. In this case, the resulting vector only stays in one direction or presents a line but not the 2D plane. Thus, we can’t create arbitrary vectors by the two vectors through linear combinations. It is also the case when the two vectors point in opposite directions.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_09_dependent_1.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+<p>In simple words, for two overlapping vectors, we can only create a new vector in the direction of two vectors. In a mathematical language, we can use a linear combination of two vectors with non-zero coefficients to get the zero vector. In this case, we say the two vectors are linearly dependent.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_09_dependent_2.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+<p>Oppositely, for two non-overlapping vectors, we can’t use a linear combination of them to create the zero vector unless the coefficients all are zeros, and we say the two vectors are linearly independent.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_10_independent.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+<p>This definition can be extended to a more general scenario and leads to the general definition of linear dependence.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_11_def.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+<ul>
+<li><em>For 2D space, we can maximumly have two linearly independent vectors. For k-D space, we can maximumly have k linearly independent vectors. Is that true?</em></li>
+</ul>
+<p>Great! It is a good time to introduce the next concept, basis, which is not only important in linear algebra but also in data analysis.</p>
 <div style="text-align: center; margin: 30px 0">
 <p><a href="../../MathToolBox/la/la_03.html" title="3. Linear Combination"><strong>Previous page</strong></a> | <a href="../../MathToolBox/la/la_home.html"><strong>LA4DS Homepage</strong></a> | <a href="../../MathToolBox/la/la_05.html" title="5. Basis"><strong>Next page</strong></a></p>
 </div>
@@ -155,7 +183,7 @@ ul.task-list li input[type="checkbox"] {
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
-  <div>© 2024 Xijia Liu. All rights reserved.</div>
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
   <div><img src="../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
 </div>
 <script id="quarto-html-after-body" type="application/javascript">
