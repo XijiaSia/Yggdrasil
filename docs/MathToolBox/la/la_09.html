@@ -67,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -122,8 +151,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#at-first-sight" id="toc-at-first-sight" class="nav-link active" data-scroll-target="#at-first-sight">At first sight</a></li>
+  <li><a href="#matrix-true-colors" id="toc-matrix-true-colors" class="nav-link" data-scroll-target="#matrix-true-colors">Matrix, true colors</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -147,15 +183,41 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="at-first-sight" class="level2">
+<h2 class="anchored" data-anchor-id="at-first-sight">At first sight</h2>
+<p>The most straightforward definition of a matrix is the rectangle array. One needs to use two numbers to describe the size (shape) of a matrix, the numbers of rows and columns. In the following example, the matrix consists of 3 rows and 4 columns. We say it is a 3 by 4 matrix. One neat but informative notation is <span class="math inline">\(\textbf{A} = \left\{ a_{ij} \right\}_{3 \times 4}\)</span>. In this course, keep in mind, we always use <span class="math inline">\(i\)</span> indicates for the row index and <span class="math inline">\(j\)</span> for column index.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_19_matrix_1.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+<p>You may remember the idea in the previous section that a matrix can be viewed as a “row vector” of column vectors. In this example, suppose we can find 3 linearly independent vectors from the 4 column vectors, then they can be viewed as a basis and generate a space. Similarly, the matrix also can be viewed as a “column vector” of row vectors, and they also can generate a space if they are linearly independent. In statistics, especially MDA, we mainly work with a data matrix. Let’s talk about it later on.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_19_matrix_2.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+</section>
+<section id="matrix-true-colors" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-true-colors">Matrix, true colors</h2>
+<p>The definition of the matrix above is very straightforward and very helpful when we understand a data matrix in MDA. However, the disadvantage of this definition is that it is too dry, and we cannot understand it from a functional point of view as well as a geometric point of view. Let’s take a look at what its true color. Let’s turn back to the concept of ‘linear combination’ and watch the following animation.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/la_20_transoformation.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
+</figure>
+</div>
+<p>From this animation, we can see that the <span class="math inline">\(n \times p\)</span> matrix <span class="math inline">\(\textbf{A}\)</span> determines a map (function) from the <span class="math inline">\(\mathbb{R}^p\)</span> space to the <span class="math inline">\(\mathbb{R}^n\)</span> space. We call this map or function a linear transformation. In some sense, the matrix can be viewed as a bridge between two spaces.</p>
+<p><strong>Remark</strong>: we also want to emphasize that the meaning of an action that pre-multiply a vector by a matrix, <span class="math inline">\(\textbf{Ax}\)</span>, even though we have not defined matrix multiplication yet. Keep in mind that this action means that one uses the elements of <span class="math inline">\(\textbf{x}\)</span> as coefficients to calculate the linear combination of column vectors of the matrix <span class="math inline">\(\textbf{A}\)</span>. It is very helpful when we discuss the next important concept, the rank of a matrix.</p>
 <div style="text-align: center; margin: 30px 0">
 <p><a href="../../MathToolBox/la/la_08.html" title="8. Review and Outlook"><strong>Previous page</strong></a> | <a href="../../MathToolBox/la/la_home.html"><strong>LA4DS Homepage</strong></a> | <a href="../../MathToolBox/la/la_10.html" title="10. Rank"><strong>Next page</strong></a></p>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
-  <div>© 2024 Xijia Liu. All rights reserved.</div>
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
   <div><img src="../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
 </div>
 <script id="quarto-html-after-body" type="application/javascript">
