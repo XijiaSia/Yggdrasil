@@ -1,0 +1,45 @@
+/* Quarto Presentation CSS */
+
+/* Title Page Styles */
+.reveal .slides section:first-of-type h1 {
+    font-family: 'Arial', sans-serif;
+    font-size: 1.6em;
+    margin-bottom: 2.6em;
+    color: #3498db;
+}
+
+/* ---------------------------------------------- */
+
+/* General Page Styles */
+.reveal .slides section:not(:first-of-type) h2 {
+    font-family: 'Arial', sans-serif;
+    color: #3498db;
+    font-size: 1.2em;
+}
+
+/* Bullets Styles */
+.reveal .slides section:not(:first-of-type) ul {
+    font-family: 'Arial', sans-serif;
+    color: #2c3e50;
+    font-size: 0.8em;
+}
+.reveal .slides section:not(:first-of-type) ul li {
+    margin-bottom: 0em;
+}
+
+/* Logo Styles */
+/*.reveal .slides section:not(:first-of-type)::after {
+    content: url('fig/logo_sia.png');
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 1px; 
+    height: auto;
+}*/
+
+/* Math Symbols Styles */
+.reveal .katex, .reveal .math {
+    font-family: 'Arial', serif; /* 设置数学符号的字体 */
+    font-size: 1em; /* 设置数学符号的字体大小 */
+    color: #3498db; /* 设置数学符号的颜色 */
+}
