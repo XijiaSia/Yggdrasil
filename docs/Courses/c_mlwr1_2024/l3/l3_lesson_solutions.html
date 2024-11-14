@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Exercises on Probability Knowledge – My Yggdrasil</title>
+<title>Solutions to the exercises on Probability Knowledge – My Yggdrasil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -170,7 +204,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Exercises on Probability Knowledge</h1>
+<h1 class="title">Solutions to the exercises on Probability Knowledge</h1>
 </div>
 
 
@@ -187,33 +221,96 @@ window.Quarto = {
 </header>
 
 
-<p>In this lesson, we do some exercises on probability knowledge. There are 6 main tasks, each covering various knowledge points from the lecture notes. Some require you to solve problems discussed in the lecture, while others introduce new questions or extend previous one.</p>
-<p>If you are skilled in probability theory, you might treat it as a quick and easy test. For those who are not familiar with probability theory, these exercises can assistant you for learning or reviewing the basics. They are not mathematical puzzles; rather, they are basic exercises designed to help you understand those concepts. Again, the more you solve, the more you practice, the more you master.</p>
 <section id="task-1-probabilities-of-events" class="level3">
 <h3 class="anchored" data-anchor-id="task-1-probabilities-of-events">Task 1: Probabilities of events</h3>
 <p><strong>Task 1.1</strong> A bag contains 5 red balls, 3 blue balls, and 2 green balls. If you randomly draw one marble from the bag:</p>
 <ol type="1">
 <li>What is the probability of drawing a red ball?</li>
+</ol>
+<p><span style="color:blue;"> <span class="math inline">\(\Pr(\text{drawing a red ball}) = \frac{5}{5+3+2} = 0.5\)</span> </span></p>
+<ol start="2" type="1">
 <li>What is the probability of drawing a blue or green ball?</li>
 </ol>
+<p><span style="color:blue;"> We want to calculate the event with a keyword <strong>OR</strong>, so we apply sum rule here, i.e. <span class="math display">\[
+  \Pr(\text{drawing a blue or green ball}) = \Pr(\text{a blue ball}) + \Pr(\text{a green ball}) = 0.5
+\]</span> Or, this event can be represented as ‘drawing a ball which is not red’, i.e. <span class="math display">\[
+  \Pr(\text{drawing a blue or green ball}) = 1 - \Pr(\text{drawing a red ball}) = 0.5
+\]</span> </span></p>
 <p><strong>Task 1.2</strong> A fair six-sided dice is rolled once.</p>
 <ol type="1">
 <li>What is the probability of getting an even number?</li>
+</ol>
+<p><span style="color:blue;"> There are same numbers of even and odd numbers between 1 and 6, so the probability is <span class="math inline">\(\frac{3}{6} = 0.5\)</span>. </span></p>
+<ol start="2" type="1">
 <li>What is the conditional probability of getting a number larger than 3 given the number is an even number?</li>
+</ol>
+<p><span style="color:blue;"> When we know the it is a even number, then the number of all possible values become 3 and 2 of them are greater than 3, so the probability is <span class="math inline">\(\frac{2}{3}\)</span>. </span></p>
+<ol start="3" type="1">
 <li>What is the probability that you first time get a number less than 2 after throwing the dice 5 times?</li>
 </ol>
+<p><span style="color:blue;"> Let <span class="math inline">\(X_i = 1\)</span> denotes we got a number less than 2 at the <span class="math inline">\(i\)</span>th time, then the probability can be represented as <span class="math display">\[
+  \Pr(X_1 = 0 \text{ AND } X_2 = 0 \text{ AND } X_3 = 0 \text{ AND } X_4 = 0 \text{ AND } X_5 = 1)
+\]</span> By product rule to key words ‘AND’, this probability is equal to <span class="math inline">\(0.08\)</span>. </span></p>
 </section>
 <section id="task-2-discrete-random-variable-and-distribution" class="level3">
 <h3 class="anchored" data-anchor-id="task-2-discrete-random-variable-and-distribution">Task 2: Discrete Random Variable and Distribution</h3>
 <p><strong>Task 2.1</strong>: In R, write a function returning the values of <span title="probability mass function"> p.m.f </span> of an arbitrary Binomial distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ProbBin <span class="ot">=</span> <span class="cf">function</span>(k, <span class="at">N=</span><span class="dv">10</span>, <span class="at">p=</span><span class="fl">0.7</span>){</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">factorial</span>(N)<span class="sc">/</span>( <span class="fu">factorial</span>(k)<span class="sc">*</span><span class="fu">factorial</span>(N<span class="sc">-</span>k) ))<span class="sc">*</span>p<span class="sc">^</span>(k)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>p)<span class="sc">^</span>(N<span class="sc">-</span>k)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># test my function with the R function `dbinom`</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ProbBin</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.009001692</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">3</span>, <span class="dv">10</span>, <span class="fl">0.7</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.009001692</code></pre>
+</div>
+</div>
 <p><strong>Task 2.2</strong>: Apply your function to print out the distribution of Binomial distribution <span class="math inline">\(\text{Bin}(10,0.7)\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>BinDisribution <span class="ot">=</span> <span class="fu">numeric</span>(<span class="dv">11</span>) <span class="co"># since there are 11 possible values for Bin(10,0.7) </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>){</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  BinDisribution[i] <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">ProbBin</span>(<span class="at">k =</span> i<span class="dv">-1</span>),<span class="dv">3</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>BinDisribution <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">X =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">P =</span> BinDisribution)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(BinDisribution)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    X     P
+1   0 0.000
+2   1 0.000
+3   2 0.001
+4   3 0.009
+5   4 0.037
+6   5 0.103
+7   6 0.200
+8   7 0.267
+9   8 0.233
+10  9 0.121
+11 10 0.028</code></pre>
+</div>
+</div>
 </section>
 <section id="task-3-characteristic-values" class="level3">
 <h3 class="anchored" data-anchor-id="task-3-characteristic-values">Task 3: Characteristic Values</h3>
 <p><strong>Task 3.1</strong>: Explain why the expected value of a Bernoulli distributed random variable, <span class="math inline">\(X \sim \text{Ber}(p)\)</span>, is <span class="math inline">\(p\)</span>.</p>
+<p><span style="color:blue;"> The expected value of a random variable is the weighted sum of all possible values, the weights are the probability <span class="math display">\[
+  \text{E}(X) = 1\times p + 0 \times (1-p) = p
+\]</span> </span></p>
 <p><strong>Task 3.2</strong>: Explain why the expected value of a Binomial distributed random variable, <span class="math inline">\(X \sim \text{Bin}(N, p)\)</span>, is <span class="math inline">\(Np\)</span>.</p>
+<p><span style="color:blue;"> Binomial distribution presents the probability of the number of success in <span class="math inline">\(N\)</span> independent binary outcome experiment. Suppose <span class="math inline">\(X_i\)</span> for <span class="math inline">\(i = 1,\dots,N\)</span>, then <span class="math inline">\(\sum_{i = 1}^N X_i\)</span> is binomial distributed. So, by the properties of expected value, we have <span class="math display">\[
+  \text{E}(X) = \text{E}\left( \sum_{i = 1}^N X_i \right) = \sum_{i = 1}^N \text{E}(X_i) = \sum_{i = 1}^N p = Np
+\]</span> </span></p>
 <p><strong>Task 3.3</strong>: Explain why the variance of a Bernoulli distributed random variable is <span class="math inline">\(p(1-p)\)</span>.</p>
+<p><span style="color:blue;"> Variance is the expected value of the squared distance between <span class="math inline">\(X\)</span> and its expected value <span class="math display">\[
+  \text{Var}(X) = \text{E} \left( X - \text{E}(X) \right)^2 = \text{E}(X^2) - (\text{E}(X))^2 = p - p^2 = p(1-p)
+\]</span> </span></p>
 <p><strong>Task 3.4</strong>: Explain why the variance of a Binomial distributed random variable is <span class="math inline">\(Np(1-p)\)</span>.</p>
+<p><span style="color:blue;"> With the same idea of 3.2, <span class="math display">\[
+  \text{Var}(X) = \text{Var}\left( \sum_{i = 1}^N X_i \right) = \sum_{i = 1}^N \text{Var}(X_i) = \sum_{i = 1}^N p(1-p) = Np(1-p)
+\]</span> </span></p>
 <p><strong>Task 3.5</strong> ( <span title="Hard, you may skip"> <strong>HS</strong> </span> ): In Section 3.4.5, we discussed the covariance between two random variables and got formulas of calculating the characteristic values for the weighted sum (linear combination) of random variables. Actually, these formula can be represented in a matrix form, and the matrix form can help us to easily generalize it to multiple setting (more than two random variables). For example, the mean and variance of a linear combination of two random variables are <span class="math display">\[
   \text{E}(a_1X_1+a_2X_2) = a_1\text{E}(X_1) + a_2\text{E}(X_2)
 \]</span> It can be represented as <span class="math display">\[
@@ -222,25 +319,74 @@ window.Quarto = {
 <p>Now, it is your turn. Can you represent the following result of variance in a matrix form? <span class="math display">\[
   \text{Var}(a_1X_1+a_2X_2) = a_1^2\text{Var}(X_1) + 2a_1a_2\text{Cov}(X_1,X_2) + a_2^2\text{Var}(X_2)
 \]</span></p>
+<p><span style="color:blue;"> First, we write the formula above in the matrix form <span class="math display">\[
+  \text{Var}(a_1X_1+a_2X_2) = (a_1, a_2)\left(
+  \begin{matrix}
+    \text{Var}(X_1) &amp; \text{Cov}(X_1, X_2) \\
+    \text{Cov}(X_1, X_2) &amp; \text{Var}(X_2)
+  \end{matrix}
+  \right)
+  \left(
+  \begin{matrix}
+    a_1  \\
+    a_2  
+  \end{matrix}
+  \right)
+\]</span> In general, we have <span class="math display">\[
+  \text{Var}(\textbf{a}^{\top}\textbf{X}) = \textbf{a}^{\top} \boldsymbol{\Sigma} \textbf{a}
+\]</span> where <span class="math inline">\(\boldsymbol{\Sigma}\)</span> is the covariance matrix of <span class="math inline">\(\textbf{X}\)</span>. </span></p>
 </section>
 <section id="task-4-joint-distribution" class="level3">
 <h3 class="anchored" data-anchor-id="task-4-joint-distribution">Task 4: Joint distribution</h3>
 <p><strong>Task 4.1</strong>: In Section 3.4.2, I only show you how to calculate the value in the first cell, i.e.&nbsp;<span class="math inline">\(\Pr( X=1, Y=1 )\)</span>. Please calculate the values of the rest 3 cells, i.e.&nbsp;<span class="math inline">\(\Pr( X=1, Y=0 )\)</span>, <span class="math inline">\(\Pr( X=0, Y=1 )\)</span>, and <span class="math inline">\(\Pr( X=0, Y=0 )\)</span></p>
 <p><strong>Task 4.2</strong>: With the same background problem, calculate the probability that you eventually get an orange.</p>
+<p><span style="color:blue;"> We apply sum rule to key word ‘OR’ first: <span class="math display">\[
+\Pr (Y = 0) = \Pr \left( (Y = 0 \text{ AND } X = 1) \text{ OR } (Y = 0 \text{ AND } X = 0) \right)
+\]</span> i.e.&nbsp; <span class="math display">\[
+  \Pr (Y = 0) =\Pr \left( Y = 0 \text{ AND } X = 1 \right) + \Pr \left( Y = 0 \text{ AND } X = 0 \right)
+\]</span> Then we apply product rule to key word ‘AND’ <span class="math display">\[
+  \Pr (Y = 0) =\Pr \left( Y = 0 | X = 1 \right) \Pr(X = 1) + \Pr \left( Y = 0 | X = 1 \right) \Pr(X = 0)
+\]</span> Then the final answer is <span class="math display">\[
+  \Pr (Y = 0) = \frac{6}{8}\frac{4}{6} + \frac{1}{4}\frac{2}{6} = \frac{7}{12}
+\]</span> </span></p>
 <p><strong>Task 4.3</strong>: Apply Bayes Formula to calculate the posterior probability that we chose the red box if we get an apple, i.e.&nbsp;<span class="math inline">\(\Pr( X=1 | Y=1 )\)</span>.</p>
 <p><strong>Task 4.4</strong>: Discuss with your group mates, propose a new example to explain what is the difference between prior and posterior probabilities.</p>
 </section>
 <section id="task-5-continuous-random-variable-and-distribution" class="level3">
 <h3 class="anchored" data-anchor-id="task-5-continuous-random-variable-and-distribution">Task 5: Continuous Random Variable and Distribution</h3>
 <p><strong>Task 5.1</strong>: <span class="math inline">\(X \sim \mathcal{N}(1.2, 1)\)</span>, use R to calculate <span class="math inline">\(\Pr(-1.5 &lt; X &lt; 2.2)\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fl">2.2</span>, <span class="fl">1.2</span>, <span class="dv">1</span>) <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="fl">1.2</span>, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8378778</code></pre>
+</div>
+</div>
 <p><strong>Task 5.2</strong>: Suppose <span class="math inline">\(X \sim \mathcal{N}(\mu, \sigma^2)\)</span>, then what is the distribution of <span class="math inline">\(\frac{X - \mu}{\sigma}\)</span>?</p>
+<p><span style="color:blue;"> <span class="math inline">\(\frac{X - \mu}{\sigma}\)</span> is called standardization of a Normally distributed variable, since the resulting random variable has zero mean and varaince <span class="math inline">\(1\)</span><br>
+</span></p>
 <p><strong>Task 5.3</strong>: Explain why 95% of the probability is covered within two <span title="Standard Deviation">SD</span>s around the mean in a Normal distribution.</p>
+<p><span style="color:blue;"> <span class="math display">\[
+  \Pr \left(\mu + 2\sigma \leq X \leq \mu + 2\sigma \right) = \Pr\left(2 \leq \frac{X-\mu}{\sigma} \leq 2 \right)
+\]</span> This probability can be calculated as</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="dv">2</span>) <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9544997</code></pre>
+</div>
+</div>
+<p></p>
 </section>
 <section id="task-6-likelihood-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="task-6-likelihood-analysis">Task 6: Likelihood Analysis</h3>
 <p><strong>Task 6.1</strong>: With the “Box-Fruits” the background problem, let’s make a small adjustment: we use the flip of a fair coin to decide which box to choose.</p>
 <p>Suppose you got an apple—then which box do you think you are more likely to have chosen?</p>
+<p><span style="color:blue;"> Since we have equal probability to choose the red or blue box, i.e.&nbsp;the priors of blue and red are the same, we only need to evaluate the <strong>likelihood</strong> of geting an apple conditional on the color of box. So, blue box is more reasonable since <span class="math inline">\(\Pr(\text{apple} | \text{blue}) = \frac{3}{4} &gt;  \Pr(\text{apple} | \text{red}) = \frac{1}{4}\)</span> </span></p>
 <p><strong>Task 6.2</strong> Now, we change back the original setting that we throw a dice to decide the box, but we get red box when getting a number less than 6. Suppose you got an apple—then which box do you think you are more likely to have chosen?</p>
+<p><span style="color:blue;"> In the new setting, since we have different probability to choose the color, i.e.&nbsp;<span class="math inline">\(\Pr(\text{blue}) = \frac{1}{6}\)</span> and <span class="math inline">\(\Pr(\text{red}) = \frac{5}{6}\)</span>, only considering the likelihood of getting apple conditional on the color is not sufficient. Simply speaking, although we have higher probability to get an apply in blue box than the red, we can’t simply draw concolusion since we also have higher chance to get blue than red. So, in this setting, we need to apply the posterior probability to make decision, i.e.&nbsp;we need to calculate <span class="math display">\[
+  \Pr(\text{Blue}|\text{Apple}) = \frac{\Pr(\text{Apple}|\text{Blue}) \Pr(\text{Blue})}{\Pr(\text{Apple}|\text{Blue}) \Pr(\text{Blue})+\Pr(\text{Apple}|\text{red}) \Pr(\text{red})} = \frac{\frac{3}{4} \times \frac{1}{6} }{\frac{3}{4} \times \frac{1}{6} + \frac{1}{4} \times \frac{5}{6}} = \frac{3}{8}
+\]</span> and <span class="math display">\[
+  \Pr(\text{Red}|\text{Apple}) = \frac{\Pr(\text{Apple}|\text{red}) \Pr(\text{red})}{\Pr(\text{Apple}|\text{red}) \Pr(\text{red})+\Pr(\text{Apple}|\text{blue}) \Pr(\text{blue})} = \frac{\frac{1}{4} \times \frac{5}{6} }{\frac{3}{4} \times \frac{1}{6} + \frac{1}{4} \times \frac{5}{6}} = \frac{5}{8}
+\]</span> Therefore, this time we are more likely to have drawn the red box. </span></p>
 <div style="text-align: center; margin: 30px 0">
 <p><a href="../../../Courses/c_mlwr1_2024/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a></p>
 </div>
