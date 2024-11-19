@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lab 2: Exercises of GDA classifiers – My Yggdrasil</title>
+<title>Lab 2: Exercises about Gaussian Discriminant Analysis – My Yggdrasil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../../styles.css">
 </head>
@@ -122,15 +151,23 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#task-1" id="toc-task-1" class="nav-link active" data-scroll-target="#task-1">Task 1:</a></li>
+  <li><a href="#task-2" id="toc-task-2" class="nav-link" data-scroll-target="#task-2">Task 2:</a></li>
+  <li><a href="#task-3" id="toc-task-3" class="nav-link" data-scroll-target="#task-3">Task 3:</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lab 2: Exercises of GDA classifiers</h1>
+<h1 class="title">Lab 2: Exercises about Gaussian Discriminant Analysis</h1>
 </div>
 
 
@@ -147,8 +184,41 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>In this lab, we implement and practice Gaussian Discriminant Analysis with Breast Cancer Data. The breast cancer data set comprises 31 variables, with “diagnosis” indicating the diagnostic results of tumor samples, where <code>M</code> stands for malignant and <code>B</code> for benign. The remaining variables are extracted from medical images. For more information, read <a href="help.txt"><code>help</code></a>.</p>
+<p><strong>Tasks</strong>: According to the requirements in each task, using data in the file <a href="BreastCancerTrain.txt" download="">BreastCancerTrain</a>, we train a classifier with <code>diagnosis</code> as the target variable and <code>radius,</code> <code>texture,</code> and <code>smoothness</code> as the feature variables. We also test the resulting classifier on the data set in the file <a href="BreastCancerTest.txt" download="">BreastCancerTest</a>.</p>
+<section id="task-1" class="level2">
+<h2 class="anchored" data-anchor-id="task-1">Task 1:</h2>
+<p>We assumed that for different diagnostic results, the feature variables belong to different normal distributions. Write an R function to implement a classifier based on the following decision rules <span class="math display">\[
+    \widehat{y}=\arg\max_{y} f(\textbf{x}|y)
+\]</span> where <span class="math inline">\(f(x|y)\)</span> is the conditional normal density function. Estimate the unknown parameter based on the training data set and then apply this classifier to the testing data set. Report the accuracy, sensitivity, specificity, and kappa statistics.</p>
+<p><strong>Tips</strong>:</p>
+<ul>
+<li><p>The data can be imported by the function <code>write.table</code>. You need to set <code>header</code> as <code>TRUE</code> and <code>set</code> as <code>,</code>.</p></li>
+<li><p>The inputs of the function should include variables <code>x</code>, <code>mu_1</code>, <code>S_1</code>, <code>mu_2</code>, and <code>S_2</code>, where <code>x</code> is an array containing the three feature variables, <code>mu_x</code> is the estimated mean vector of category <code>x</code>, <code>S_x</code> is the estimated covariance matrix of category <code>x</code>.</p></li>
+<li><p>Functions <code>colMeans</code> and <code>cov</code> can be applied to estimate the unknown parameters.</p></li>
+<li><p>The function <code>dmvnorm</code> in the package <code>mvtnorm</code> can be applied to calculate the normal density value. For details, read the help document of this function.</p></li>
+<li><p>The function <code>confusionMatrix</code> in the package <code>caret</code> can be used to calculate different metrics of performance.</p></li>
+</ul>
+<p><strong>Note</strong>: The first two inputs should be type of factor. Also, you need to specify the <code>positive</code> as <code>M</code> i.e.&nbsp;malignant.</p>
+</section>
+<section id="task-2" class="level2">
+<h2 class="anchored" data-anchor-id="task-2">Task 2:</h2>
+<p>Modify the R function in task 1 such that the classifier based on the following decision rules is implemented. <span class="math display">\[
+    \widehat{y}=\arg\max_{y} P(y|\textbf{x})
+\]</span> Apply the modified classifier to the testing data set and report the accuracy, sensitivity, specificity, and kappa statistics.</p>
+<p><strong>Tips</strong>: The prior probability can be estimated as the rate of <code>M</code> in the training data set.</p>
+</section>
+<section id="task-3" class="level2">
+<h2 class="anchored" data-anchor-id="task-3">Task 3:</h2>
+<p><strong>Task 3.1</strong>: Apply <code>lda</code> function to estimate an LDA classifier based on the training data set. Test the resulting classifier with the testing set and report the accuracy, sensitivity, specificity, and kappa statistics.</p>
+<p><strong>Task 3.2</strong>: Given the output of <code>lda</code> function in task 3.1, write down the expression of the corresponding classifier.</p>
+<p><strong>Task 3.3</strong>: Review your solution in Task 1. Is your solution in Task 1 a LDA classifier or QDA classifier?</p>
+<div style="text-align: center; margin: 30px 0">
+<p><a href="../../../Courses/c_mlwr1_2024/l4/l4_home.html"><strong>Lecture 4 Homepage</strong></a></p>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
