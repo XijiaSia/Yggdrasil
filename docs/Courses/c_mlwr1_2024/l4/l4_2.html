@@ -326,168 +326,79 @@ window.Quarto = {
 </div>
 </div>
 <p>Next, we want to write a R function to classify each flower based on the 4 feature variables.</p>
-<p>(TBA. I will complete this part after the lab session. ) <!--
-Second, we can use target variable `y` to find out the rows of `X` for each species and estimate the mean and contrivance matrix.
-
-
-::: {.cell}
-
-```{.r .cell-code}
-# split data to X and Y
-X = as.matrix(data[,-5])
-y = data[,5]
-# estimate the mean vectors and covariance matrices 
-(mu1 = colMeans(X[1:50,]))
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
-       5.936        2.770        4.260        1.326 
-```
-
-
-:::
-
-```{.r .cell-code}
-(S1 = cov(X[1:50,]))
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-             Sepal.Length Sepal.Width Petal.Length Petal.Width
+<p>Second, we can use target variable <code>y</code> to find out the rows of <code>X</code> for each species and estimate the mean and contrivance matrix.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># split data to X and Y</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">=</span> <span class="fu">as.matrix</span>(data[,<span class="sc">-</span><span class="dv">5</span>])</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> data[,<span class="dv">5</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate the mean vectors and covariance matrices </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(<span class="at">mu1 =</span> <span class="fu">colMeans</span>(X[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+       5.936        2.770        4.260        1.326 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">S1 =</span> <span class="fu">cov</span>(X[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>,]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Sepal.Length Sepal.Width Petal.Length Petal.Width
 Sepal.Length   0.26643265  0.08518367   0.18289796  0.05577959
 Sepal.Width    0.08518367  0.09846939   0.08265306  0.04120408
 Petal.Length   0.18289796  0.08265306   0.22081633  0.07310204
-Petal.Width    0.05577959  0.04120408   0.07310204  0.03910612
-```
-
-
-:::
-
-```{.r .cell-code}
-(mu2 = colMeans(X[-(1:50),]))
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
-       6.588        2.974        5.552        2.026 
-```
-
-
-:::
-
-```{.r .cell-code}
-(S2 = cov(X[-(1:50),]))
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-             Sepal.Length Sepal.Width Petal.Length Petal.Width
+Petal.Width    0.05577959  0.04120408   0.07310204  0.03910612</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">mu2 =</span> <span class="fu">colMeans</span>(X[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>),]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+       6.588        2.974        5.552        2.026 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">S2 =</span> <span class="fu">cov</span>(X[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>),]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Sepal.Length Sepal.Width Petal.Length Petal.Width
 Sepal.Length   0.40434286  0.09376327   0.30328980  0.04909388
 Sepal.Width    0.09376327  0.10400408   0.07137959  0.04762857
 Petal.Length   0.30328980  0.07137959   0.30458776  0.04882449
-Petal.Width    0.04909388  0.04762857   0.04882449  0.07543265
-```
-
-
-:::
-:::
-
-
-Now, we are ready to build the function of our classifier.
-
-
-::: {.cell}
-
-```{.r .cell-code}
-library(mvtnorm)
-# function for making decision
-classifier = function(x,mu1,S1,mu2,S2){
-  # Here, we use function 'dmvnorm' in package 'mvtnorm'
-  ell1 = dmvnorm(x,mu1,S1)
-  ell2 = dmvnorm(x,mu2,S2)
-  res = ifelse(ell1 > ell2, "versicolor", "virginica")
-  return(res)
-}
-```
-:::
-
-
-We can apply our classifier on the 27th flower and check the accuracy of the classifier.
-
-
-::: {.cell}
-
-```{.r .cell-code}
-id = 27
-classifier(X[id,],mu1, S1,mu2,S2)
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] "versicolor"
-```
-
-
-:::
-
-```{.r .cell-code}
-y[id]
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] versicolor
-Levels: versicolor virginica
-```
-
-
-:::
-
-```{.r .cell-code}
-res = numeric(100)
-for(i in 1:100){
-  res[i] = classifier(X[i,],mu1, S1,mu2,S2)
-}
-(acc = mean(res == y))
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-[1] 0.97
-```
-
-
-:::
-:::
-
-
-Looks good. 
-Quiz: is it LDA or QDA? 
-You need to estimate the pooled contrivance matrix if you want to go for QDA. 
-
-
-::: {.cell}
-
-```{.r .cell-code}
-demeanX = X
-demeanX[1:50,] = X[1:50,] - matrix(rep(mu1,50), ncol = 4, byrow = T)
-demeanX[51:100,] = X[51:100,] - matrix(rep(mu2,50), ncol = 4, byrow = T)
-S = cov(demeanX)
-```
-:::
-
-
---></p>
+Petal.Width    0.04909388  0.04762857   0.04882449  0.07543265</code></pre>
+</div>
+</div>
+<p>Now, we are ready to build the function of our classifier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># function for making decision</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>classifier <span class="ot">=</span> <span class="cf">function</span>(x,mu1,S1,mu2,S2){</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Here, we use function 'dmvnorm' in package 'mvtnorm'</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  ell1 <span class="ot">=</span> <span class="fu">dmvnorm</span>(x,mu1,S1)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  ell2 <span class="ot">=</span> <span class="fu">dmvnorm</span>(x,mu2,S2)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">=</span> <span class="fu">ifelse</span>(ell1 <span class="sc">&gt;</span> ell2, <span class="st">"versicolor"</span>, <span class="st">"virginica"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can apply our classifier on the 27th flower and check the accuracy of the classifier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>id <span class="ot">=</span> <span class="dv">27</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">classifier</span>(X[id,],mu1, S1,mu2,S2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "versicolor"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>y[id]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] versicolor
+Levels: versicolor virginica</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">=</span> <span class="fu">numeric</span>(<span class="dv">100</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>){</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  res[i] <span class="ot">=</span> <span class="fu">classifier</span>(X[i,],mu1, S1,mu2,S2)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>(<span class="at">acc =</span> <span class="fu">mean</span>(res <span class="sc">==</span> y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.97</code></pre>
+</div>
+</div>
+<p>Looks good. Quiz: is it LDA or QDA? You need to estimate the pooled contrivance matrix if you want to go for QDA.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>demeanX <span class="ot">=</span> X</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>demeanX[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>,] <span class="ot">=</span> X[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>,] <span class="sc">-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(mu1,<span class="dv">50</span>), <span class="at">ncol =</span> <span class="dv">4</span>, <span class="at">byrow =</span> T)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>demeanX[<span class="dv">51</span><span class="sc">:</span><span class="dv">100</span>,] <span class="ot">=</span> X[<span class="dv">51</span><span class="sc">:</span><span class="dv">100</span>,] <span class="sc">-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(mu2,<span class="dv">50</span>), <span class="at">ncol =</span> <span class="dv">4</span>, <span class="at">byrow =</span> T)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>S <span class="ot">=</span> <span class="fu">cov</span>(demeanX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <div style="text-align: center; margin: 30px 0">
 <p><a href="../../../Courses/c_mlwr1_2024/l4/l4_0.html"><strong>Previous page</strong></a> | <a href="../../../Courses/c_mlwr1_2024/l4/l4_home.html"><strong>Lecture 4 Homepage</strong></a> | <a href="../../../Courses/c_mlwr1_2024/l4/l4_3.html" title="4.3 Further Discussion"><strong>Next page</strong></a></p>
 </div>
