@@ -219,7 +219,11 @@ window.Quarto = {
       \vdots  &amp; \vdots  &amp; \ddots  &amp; \vdots \\
       1 &amp; x_{n,1} &amp; \cdots  &amp; x_{n,p}
     \end{pmatrix}
-  \]</span> - <span class="math inline">\(\textbf{w}\)</span> is the vector of regression coefficients, <span class="math inline">\(\textbf{w} = (w_0, w_1, \dots, w_p)^{\top}\)</span> - $ $ is the vector of errors, $ = (_1, , _n)^{}$.</p>
+  \]</span></p>
+<ul>
+<li><span class="math inline">\(\textbf{w}\)</span> is the vector of regression coefficients, <span class="math inline">\(\textbf{w} = (w_0, w_1, \dots, w_p)^{\top}\)</span></li>
+<li><span class="math inline">\(\boldsymbol{\epsilon}\)</span> is the vector of errors, <span class="math inline">\(\boldsymbol{\epsilon} = (\epsilon_1, \dots, \epsilon_n)^{\top}\)</span>.</li>
+</ul>
 <p>To estimate the regression coefficients , we use the least squares method, which minimizes the sum of squared errors. The solution to this optimization problem is: <span class="math display">\[
   \widehat{\textbf{w}}=(\textbf{X}^{\top}\textbf{X})^{-1}\textbf{X}^{\top}\textbf{y}
 \]</span></p>
