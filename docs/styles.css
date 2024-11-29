@@ -12,3 +12,86 @@
   color: #EEEEEE;
   border-top: 1px solid #ddd;
 }
+
+.custom-block {
+  background-color: #FFFAFA;
+  border-left: 5px solid #007acc;
+  padding: 10px;
+  margin: 20px auto; /* Center the block */
+  margin-bottom: 20px;
+  max-width: 90%; /* Make it narrower than the text width */
+  border-radius: 5px;
+  font-family: 'Satisfy', Cursive, monospace; /* Example font */
+  font-size: 16px;
+  color: Goldenrod;
+  text-align: left; /* Optional: Align text inside the block */
+  line-height: 1.5; /* Adjust line spacing */
+}
+
+.custom-block2 {
+  background-color: #FFFAFA;
+  padding: 10px;
+  margin: 20px auto; /* Center the block */
+  margin-bottom: 20px;
+  max-width: 90%; /* Make it narrower than the text width */
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: left; /* Optional: Align text inside the block */
+  line-height: 1.5; /* Adjust line spacing */
+}
+
+.custom-algorithm-block {
+  background-color: #f9f9f9; /* Light background for the block */
+  padding: 15px;
+  margin: 5px auto; /* Center the block */
+  margin-bottom: 20px;
+  max-width: 90%; /* Narrow the block width */
+  border: 2px solid #007acc; /* Border color */
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: left;
+  line-height: 1.6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.custom-gifdemo-block {
+  background-color: #f9f9f9; /* Light background for the block */
+  padding: 10px;
+  margin: 1px auto; /* Center the block */
+  margin-bottom: 20px;
+  max-width: 100%; /* Narrow the block width */
+  border: 2px solid #CC3300; /* Border color */
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: left;
+  line-height: 1.6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.custom-figure-block {
+  background-color: #f9f9f9; /* Light background for the block */
+  padding: 15px;
+  margin: 5px auto; /* Center the block */
+  margin-bottom: 20px;
+  max-width: 100%; /* Narrow the block width */
+  border: 2px solid #FF9900; /* Border color */
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: left;
+  line-height: 1.6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.custom-Rfigure-block {
+  background-color: #f9f9f9; /* Light background for the block */
+  padding: 15px;
+  margin: 5px auto; /* Center the block */
+  margin-bottom: 20px;
+  max-width: 100%; /* Narrow the block width */
+  border: 2px solid #33CC66; /* Border color */
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: left;
+  line-height: 1.6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
