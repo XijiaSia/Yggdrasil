@@ -156,14 +156,14 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#mailstone-of-ai-alphago-2016" id="toc-mailstone-of-ai-alphago-2016" class="nav-link active" data-scroll-target="#mailstone-of-ai-alphago-2016">1.1 Mailstone of AI, AlphaGo, 2016</a></li>
-  <li><a href="#philosophy-of-machine-learning" id="toc-philosophy-of-machine-learning" class="nav-link" data-scroll-target="#philosophy-of-machine-learning">1.2 Philosophy of Machine Learning</a></li>
-  <li><a href="#machine-learning-process" id="toc-machine-learning-process" class="nav-link" data-scroll-target="#machine-learning-process">1.3 Machine Learning Process</a></li>
-  <li><a href="#machine-learning-abc" id="toc-machine-learning-abc" class="nav-link" data-scroll-target="#machine-learning-abc">1.4 Machine Learning ABC</a></li>
-  <li><a href="#regression-model-and-classification-model" id="toc-regression-model-and-classification-model" class="nav-link" data-scroll-target="#regression-model-and-classification-model">1.5 Regression Model and Classification Model</a>
+  <li><a href="#mailstone-of-ai-alphago-2016" id="toc-mailstone-of-ai-alphago-2016" class="nav-link active" data-scroll-target="#mailstone-of-ai-alphago-2016">1. Mailstone of AI, AlphaGo, 2016</a></li>
+  <li><a href="#philosophy-of-machine-learning" id="toc-philosophy-of-machine-learning" class="nav-link" data-scroll-target="#philosophy-of-machine-learning">2. Philosophy of Machine Learning</a></li>
+  <li><a href="#machine-learning-process" id="toc-machine-learning-process" class="nav-link" data-scroll-target="#machine-learning-process">3. Machine Learning Process</a></li>
+  <li><a href="#machine-learning-abc" id="toc-machine-learning-abc" class="nav-link" data-scroll-target="#machine-learning-abc">4. Machine Learning ABC</a></li>
+  <li><a href="#regression-model-and-classification-model" id="toc-regression-model-and-classification-model" class="nav-link" data-scroll-target="#regression-model-and-classification-model">5. Regression Model and Classification Model</a>
   <ul class="collapse">
-  <li><a href="#regression-model" id="toc-regression-model" class="nav-link" data-scroll-target="#regression-model">Regression Model</a></li>
-  <li><a href="#classification-model" id="toc-classification-model" class="nav-link" data-scroll-target="#classification-model">Classification Model</a></li>
+  <li><a href="#regression-model" id="toc-regression-model" class="nav-link" data-scroll-target="#regression-model">5.1 Regression Model</a></li>
+  <li><a href="#classification-model" id="toc-classification-model" class="nav-link" data-scroll-target="#classification-model">5.2 Classification Model</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -192,14 +192,14 @@ window.Quarto = {
 
 <p>In this lecture, we introduce machine learning to you. You will learn the basic elements in this field and an old, basic, but very interesting algorithm in machine learning.</p>
 <p>Next, I’ll begin with a review of key milestones in artificial intelligence. Then, we’ll delve into some metaphysical concepts, exploring the underlying logic of machine learning. By understanding the human learning process, we’ll gain insight into the entire machine learning process. Finally, after covering the ABCs of machine learning, we’ll focus on the fundamental forms of machine learning models.</p>
-<section id="mailstone-of-ai-alphago-2016" class="level2">
-<h2 class="anchored" data-anchor-id="mailstone-of-ai-alphago-2016">1.1 Mailstone of AI, AlphaGo, 2016</h2>
+<section id="mailstone-of-ai-alphago-2016" class="level1">
+<h1>1. Mailstone of AI, AlphaGo, 2016</h1>
 <p>Machine learning is not a new concept, but the latest version of the machine learning legend has indeed just happened recently. Have you heard about AlphaGo? AlphaGo is an artificial intelligence program developed by DeepMind that made history in 2016 by defeating a world champion Go player.</p>
 <div class="custom-figure-block">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_Go.png" class="img-fluid figure-img" style="width:99.9%"></p>
-<figcaption><strong>L</strong>: Go is an ancient board game originating from China over 2,500 years ago, in which two players compete to capture territory using black and white stones on a grid. The game’s simple rules allow for deep strategic complexity, making it one of the most intellectually challenging games in the world. <strong>R</strong>: AlphaGo is an artificial intelligence program developed by DeepMind that became the first to defeat a professional human player, and eventually world champions, in the complex board game Go, showcasing a major milestone in AI’s capabilities in strategic thinking and decision-making. Source: Google search.</figcaption>
+<figcaption><strong>Figure 1</strong>: <strong>LHS</strong>: Go is an ancient board game originating from China over 2,500 years ago, in which two players compete to capture territory using black and white stones on a grid. The game’s simple rules allow for deep strategic complexity, making it one of the most intellectually challenging games in the world. <strong>RHS</strong>: AlphaGo is an artificial intelligence program developed by DeepMind that became the first to defeat a professional human player, and eventually world champions, in the complex board game Go, showcasing a major milestone in AI’s capabilities in strategic thinking and decision-making. Source: Google search.</figcaption>
 </figure>
 </div>
 </div>
@@ -208,7 +208,7 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_pieces_value.png" class="img-fluid figure-img" style="width:66.6%"></p>
-<figcaption>Unlike in chess, each piece in Go starts with the same value, but its worth on the board isn’t fixed; it changes continuously with the evolving situation. This makes assessing the situation extraordinarily difficult, let alone writing a program to evaluate it. This resonates with life—though, unlike Go pieces, we have the power to determine our own path, at least to some extent.</figcaption>
+<figcaption><strong>Figure 2</strong>: Unlike in chess, each piece in Go starts with the same value, but its worth on the board isn’t fixed; it changes continuously with the evolving situation. This makes assessing the situation extraordinarily difficult, let alone writing a program to evaluate it. This resonates with life—though, unlike Go pieces, we have the power to determine our own path, at least to some extent.</figcaption>
 </figure>
 </div>
 </div>
@@ -217,14 +217,14 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_MLAPP.png" class="img-fluid figure-img" style="width:99.9%"></p>
-<figcaption>Machine learning applications: 1) AlphaGo, 2) Fraud detection, 3) Application in finance, 4) Pseudo CT image, 5) Face detection, 6) Spam filter, 7) Breast cancer automatical detection based on medical image.</figcaption>
+<figcaption><strong>Figure 3</strong>: Machine learning applications: 1) AlphaGo, 2) Fraud detection, 3) Application in finance, 4) Pseudo CT image, 5) Face detection, 6) Spam filter, 7) Breast cancer automatical detection based on medical image.</figcaption>
 </figure>
 </div>
 </div>
 <p>For example, people use machine learning to generate CT scan images with potential side effects from harmless MRI scans; Machine learning trains programs to assist doctors in extracting essential information from medical images; More powerful spam filter is also trained by machine learning algorithm; When you take photos with your cellphone, automatic portrait recognition and focus are also achievements of machine learning; Up until now, you can communicate with ChatGPT seamlessly and obtain reliable information, all thanks to the dividends from machine learning.</p>
 </section>
-<section id="philosophy-of-machine-learning" class="level2">
-<h2 class="anchored" data-anchor-id="philosophy-of-machine-learning">1.2 Philosophy of Machine Learning</h2>
+<section id="philosophy-of-machine-learning" class="level1">
+<h1>2. Philosophy of Machine Learning</h1>
 <p>Let’s first discuss some metaphysical matters. What is the philosophy behind machine learning? Let’s begin with the story about handwritten digit data. In the past, postal workers had to manually sort all mails according to handwritten post code. Aside from the high labor costs, we all would consider this an extremely tedious job with a high error rate. So, people wondered if they could scan handwritten post codes into computer and then let the computer recognize the digits. This is how handwritten digit data came into existence.</p>
 <p>Another story is about medical imaging. In recent years, hospitals have introduced MRI technology for medical imaging. MRI excels in presenting soft tissue, and its use of magnetic fields results in minimal harm to the body. In contrast, traditional CT imaging relies on X-rays, which can have noticeable side effects on the human body. However, CT imaging is irreplaceable when it comes to displaying the solid tissues, like skeletal structure. Therefore, people have contemplated whether it’s possible to generate corresponding CT images from MRI image data, giving rise to the concept of generative CT images.</p>
 <p>The two examples have a common feature, that is we aim to predict ‘expensive’ information using ‘cheap’ information. In the story of post office, the “cheap” information is the easily obtained image data, while the recognition of the postal code is considered “expensive” information. In the medical imaging story, the acquisition of MRI image data carries far less risk compared to the risks associated with CT images. From this perspective, MRI data is indeed much more cost-effective than CT data. Therefore, the <strong>basic idea of machine learning</strong> is to train a “machine” to transform “cheap” information into “expensive” information through data. In this way, expensive information is replaced by cheap information through machine learning models, thus avoiding high costs, unnecessary error costs, and additional risks.</p>
@@ -232,19 +232,19 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_Philospphy.png" class="img-fluid figure-img" style="width:99.9%"></p>
-<figcaption>Philosophy of machine learning. Obviously, water cannot be turned into oil—this is simply a metaphor. A successful project requires researchers to maintain an honest attitude; unrealistic ideas, like a washing machine, will only produce waste water.</figcaption>
+<figcaption><strong>Figure 4</strong>: Philosophy of machine learning. Obviously, water cannot be turned into oil—this is simply a metaphor. A successful project requires researchers to maintain an honest attitude; unrealistic ideas, like a washing machine, will only produce waste water.</figcaption>
 </figure>
 </div>
 </div>
 </section>
-<section id="machine-learning-process" class="level2">
-<h2 class="anchored" data-anchor-id="machine-learning-process">1.3 Machine Learning Process</h2>
+<section id="machine-learning-process" class="level1">
+<h1>3. Machine Learning Process</h1>
 <p>What is the process of machine learning like? First, let me tell you about some observations I have made about my sons. After they learned to speak, they began asking me all sorts of questions. For example, when we were at the supermarket, he would point at apples and ask me, ‘What’s this, Daddy?’ I just simply answered them, “It is an apple.” After a few times, they would change their questioning style from special to general, like, ’Daddy, is this an apple? In about half months, they turned into high-precision apple classifiers. They could even recognize that the logo on my laptop is also an apple! Amazing! I must emphasize that I never taught them how to recognize apples.</p>
 <div class="custom-figure-block">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_sons.png" class="img-fluid figure-img" style="width:99.9%"></p>
-<figcaption>I have two boys at home. On the LHS, the boy wearing his pants frontside back is my elder son, Siyi, when he was three years old. He was earnestly planting flowers in the artificial soccer field. On the RHS, the guy who resembles a sloth is my younger son, Siqi. It is quite evident that he is a happy fellow. Actually, he is very quiet and cool.</figcaption>
+<figcaption><strong>Figure 5</strong>: I have two boys at home. On the LHS, the boy wearing his pants frontside back is my elder son, Siyi, when he was three years old. He was earnestly planting flowers in the artificial soccer field. On the RHS, the guy who resembles a sloth is my younger son, Siqi. It is quite evident that he is a happy fellow. Actually, he is very quiet and cool.</figcaption>
 </figure>
 </div>
 </div>
@@ -254,13 +254,13 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_LearningProcess.png" class="img-fluid figure-img" style="width:99.9%"></p>
-<figcaption>The human learning process (up) V.S. machine learning process (down)</figcaption>
+<figcaption><strong>Figure 6</strong>: The human learning process (up) V.S. machine learning process (down)</figcaption>
 </figure>
 </div>
 </div>
 </section>
-<section id="machine-learning-abc" class="level2">
-<h2 class="anchored" data-anchor-id="machine-learning-abc">1.4 Machine Learning ABC</h2>
+<section id="machine-learning-abc" class="level1">
+<h1>4. Machine Learning ABC</h1>
 <p>In machine learning, variables are often split into <strong>feature variables</strong> and <strong>target variables</strong>. Feature variables are the inputs to the model—information that helps the model make predictions—while target variables are the outcomes or labels the model is intended to predict. For instance, in the case of handwritten digit recognition, each pixel value in the image of a digit acts as a feature, providing the model with clues about the visual patterns, while the digit number itself (such as “5” or “9”) is the target variable. Similarly, in medical imaging applications like pseudo-CT imaging, the pixel values from an MRI image may serve as features, and the corresponding CT image’s pixel values become the target, as the model aims to predict CT values based on MRI inputs. There are many ways to categorize machine learning, with the most common being supervised and unsupervised learning. This categorization primarily depends on whether target variables are included in the research problem.</p>
 <p>In <strong>supervised learning</strong>, a dataset includes known labels for each observations, which the model uses to learn relationships between features and targets. In a mathematical language, we try to find a map <span class="math inline">\(f\)</span>, or a function, that connect the features information and target information. For example, the Iris dataset is labeled with flower species (such as Setosa or Versicolor) based on measurements like petal length and width, which act as feature variables. The goal is for the model to learn these relationships so it can classify new, unseen examples accurately. This mapping, <span class="math inline">\(f\)</span>, also known as the model, has its functionality determined by model parameters, which are adjusted based on the data. The process of determining the “optimal” parameters is also called to ‘learning’. Once the optimal model parameters are set, the model is considered trained. In the case of the Iris example, for those who often confuse the three subspecies, the shape data of the flower can be used to predict the species. Many plant identification Apps work in this way. Supervised learning is often further divided into regression and classification problems, depending on the type of target variable. We will focus on this distinction in the following section.</p>
 <p>In <strong>unsupervised learning</strong>, on the other hand, the dataset has no target variables, and the model’s task is to find underlying patterns or groupings in the data, such as clustering the Iris dataset’s measurements into groups without knowing the species in advance. In mathematical language, in unsupervised learning problem, we also want to learn a map <span class="math inline">\(g\)</span> that connect feature variables and some “new” knowledge. In statistics, we often use the term “latent variable” or “latent information” to represent this “new” knowledge. The beautiful names Setosa, Versicolor, and Virginica did not exist before botanists classified and named them scientifically. This new knowledge emerged from analyzing data on the shapes of the flowers. In machine learning, we typically encounter two types of unsupervised learning problems: feature analysis and cluster analysis. In the first part of this course, we will not cover these topics.</p>
@@ -271,33 +271,35 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_ML_ABC.png" class="img-fluid figure-img" style="width:99.9%"></p>
-<figcaption>Feature variables V.S. Target Variable; Supervised Learning V.S. Unsupervised Learning</figcaption>
+<figcaption><strong>Figure 7</strong>: Feature variables V.S. Target Variable; Supervised Learning V.S. Unsupervised Learning</figcaption>
 </figure>
 </div>
 </div>
 </section>
-<section id="regression-model-and-classification-model" class="level2">
-<h2 class="anchored" data-anchor-id="regression-model-and-classification-model">1.5 Regression Model and Classification Model</h2>
-<section id="regression-model" class="level3">
-<h3 class="anchored" data-anchor-id="regression-model">Regression Model</h3>
+<section id="regression-model-and-classification-model" class="level1">
+<h1>5. Regression Model and Classification Model</h1>
+<section id="regression-model" class="level2">
+<h2 class="anchored" data-anchor-id="regression-model">5.1 Regression Model</h2>
 <p>The machine learning problem can be understood as regression problem when the target variable is a continuous variable. For example, predict the house price based on different feature variables; predict the pixel values of CT scans based on MRI scans; predict the stock price based on feature variables of market. A simple scenario displayed in the figure below, a basic regression model is a linear model, <span class="math inline">\(y_i = w_0 + w_1x_i + \epsilon_i\)</span>. From a geometric perspective, a linear regression model can be seen as a straight line that passes through all sample observations. In the generalization stage, the target value can be predicted from feature variable through the regression model.</p>
 <div class="custom-figure-block">
+<div style="text-align: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_regression.png" class="img-fluid figure-img" style="width:66.6%"></p>
-<figcaption>Regression Problem</figcaption>
+<figcaption><strong>Figure 8</strong>: Regression Problem</figcaption>
 </figure>
 </div>
 </div>
+</div>
 </section>
-<section id="classification-model" class="level3">
-<h3 class="anchored" data-anchor-id="classification-model">Classification Model</h3>
+<section id="classification-model" class="level2">
+<h2 class="anchored" data-anchor-id="classification-model">5.2 Classification Model</h2>
 <p>The problem can be viewed as a classification problem when the target variable is categorical. We often refer to this type of target variable as <strong>labels</strong>. For example, in the classification with Iris data, the species variable is the label variable, and we aim for finding a good “function” taking 4 shaping variables as input to predict the labels based on data. This function is often refer to a <strong>classifier</strong>. So, what kind of function can perform this role? Let’s take a look at a real classifier first, a “coin sorter.” Its operation is quite simple, as it classifies coins based on their different diameters. Inside the machine, there are holes of varying sizes corresponding to different diameters, and through vibration, coins will fall into the holes that match their size. In essence, it’s classifying by comparing a variable to a threshold value. The idea is quite simple, but it is just the essential idea of machine learning classifier.</p>
 <div class="custom-figure-block">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_classification.png" class="img-fluid figure-img" style="width:99.9%"></p>
-<figcaption>LHS: Classification with iris data. RHS: A real classifier, coin sorter. The working principle: Variable (diameter) V.S. Threshold value.</figcaption>
+<figcaption><strong>Figure 9</strong>: <strong>LHS</strong>: Classification with iris data. <strong>RHS</strong>: A real classifier, coin sorter. The working principle: Variable (diameter) V.S. Threshold value.</figcaption>
 </figure>
 </div>
 </div>
@@ -337,7 +339,7 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_LinearClassifier.png" class="img-fluid figure-img" style="width:66.6%"></p>
-<figcaption>In this example, the 2D feature space is cut into two parts by the decision boundary (red line). For any unlabeled observations (blue dots), if it is above the decision boundary, then it will be classified as yellow , otherwise, green.</figcaption>
+<figcaption><strong>Figure 10</strong>: In this example, the 2D feature space is cut into two parts by the decision boundary (red line). For any unlabeled observations (blue dots), if it is above the decision boundary, then it will be classified as yellow , otherwise, green.</figcaption>
 </figure>
 </div>
 </div>

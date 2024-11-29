@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1.5 Regression Model and Classification Model – My Yggdrasil</title>
+<title>5. Regression Model and Classification Model – My Yggdrasil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -156,8 +156,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#regression-model" id="toc-regression-model" class="nav-link active" data-scroll-target="#regression-model">Regression Model</a></li>
-  <li><a href="#classification-model" id="toc-classification-model" class="nav-link" data-scroll-target="#classification-model">Classification Model</a></li>
+  <li><a href="#regression-model" id="toc-regression-model" class="nav-link active" data-scroll-target="#regression-model">5.1 Regression Model</a></li>
+  <li><a href="#classification-model" id="toc-classification-model" class="nav-link" data-scroll-target="#classification-model">5.2 Classification Model</a></li>
   </ul>
 </nav>
     </div>
@@ -166,7 +166,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">1.5 Regression Model and Classification Model</h1>
+<h1 class="title">5. Regression Model and Classification Model</h1>
 </div>
 
 
@@ -184,23 +184,29 @@ window.Quarto = {
 
 
 <section id="regression-model" class="level2">
-<h2 class="anchored" data-anchor-id="regression-model">Regression Model</h2>
+<h2 class="anchored" data-anchor-id="regression-model">5.1 Regression Model</h2>
 <p>The machine learning problem can be understood as regression problem when the target variable is a continuous variable. For example, predict the house price based on different feature variables; predict the pixel values of CT scans based on MRI scans; predict the stock price based on feature variables of market. A simple scenario displayed in the figure below, a basic regression model is a linear model, <span class="math inline">\(y_i = w_0 + w_1x_i + \epsilon_i\)</span>. From a geometric perspective, a linear regression model can be seen as a straight line that passes through all sample observations. In the generalization stage, the target value can be predicted from feature variable through the regression model.</p>
+<div class="custom-figure-block">
+<div style="text-align: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="fig/L1_regression.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>Regression Problem</figcaption>
+<p><img src="fig/L1_regression.png" class="img-fluid figure-img" style="width:66.6%"></p>
+<figcaption><strong>Figure 8</strong>: Regression Problem</figcaption>
 </figure>
+</div>
+</div>
 </div>
 </section>
 <section id="classification-model" class="level2">
-<h2 class="anchored" data-anchor-id="classification-model">Classification Model</h2>
+<h2 class="anchored" data-anchor-id="classification-model">5.2 Classification Model</h2>
 <p>The problem can be viewed as a classification problem when the target variable is categorical. We often refer to this type of target variable as <strong>labels</strong>. For example, in the classification with Iris data, the species variable is the label variable, and we aim for finding a good “function” taking 4 shaping variables as input to predict the labels based on data. This function is often refer to a <strong>classifier</strong>. So, what kind of function can perform this role? Let’s take a look at a real classifier first, a “coin sorter.” Its operation is quite simple, as it classifies coins based on their different diameters. Inside the machine, there are holes of varying sizes corresponding to different diameters, and through vibration, coins will fall into the holes that match their size. In essence, it’s classifying by comparing a variable to a threshold value. The idea is quite simple, but it is just the essential idea of machine learning classifier.</p>
+<div class="custom-figure-block">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="fig/L1_classification.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption>LHS: Classification with iris data. RHS: A real classifier, coin sorter. The working principle: Variable (diameter) V.S. Threshold value.</figcaption>
+<p><img src="fig/L1_classification.png" class="img-fluid figure-img" style="width:99.9%"></p>
+<figcaption><strong>Figure 9</strong>: <strong>LHS</strong>: Classification with iris data. <strong>RHS</strong>: A real classifier, coin sorter. The working principle: Variable (diameter) V.S. Threshold value.</figcaption>
 </figure>
+</div>
 </div>
 <p>Well, usually we have multiple feature variables in a classification problem, then how do we apply this simple working principle to design a classifier? Let’s see another example. You might not know yet, in fact, teacher becomes a classifier after an exam. Well, <em>to pass or not to pass is a classification problem.</em> Suppose, in a secret exam, each student answers 5 questions and each question is worth 20 points. Student passes the exam if the total points are larger or equal to 60. I have corrected all the exams; the results are summarized in Table 1, and <span class="math inline">\(1\)</span> indicating the question was correctly answered and <span class="math inline">\(0\)</span> indicating not. Then, who can pass the exam?</p>
 <div class="quarto-figure quarto-figure-center">
@@ -232,12 +238,15 @@ window.Quarto = {
 <p>Now, we know what a simple classifier looks like. Essentially, it is a two-step procedure. We create a single variable through the weighted sum of all feature variables first, then compare the resulting value with a threshold value. In formal, the classifier can be represented as</p>
 <p><span class="math display">\[
   y = \text{Sign}(w_0 + w_1 x_1 + w_2 x_2 + \dots + w_p x_p)
-\]</span> where <span class="math inline">\(\text{Sign}(x)\)</span> is a sign function returning 1 if <span class="math inline">\(x&gt;0\)</span> and 0 if <span class="math inline">\(x&lt;0\)</span>. We refer coefficients <span class="math inline">\(w_1, \dots, w_p\)</span> as <strong>weights</strong>, the weighted sum of feature variables <span class="math inline">\(w_1 x_1 + w_2 x_2 + \dots + w_p x_p\)</span> as <strong>scores</strong> and <span class="math inline">\(w_0\)</span>, the threshold value, as <strong>bias</strong>. If the score value is equal to 0, then this observation can’t be classified by this classifier, and the thing we can do best is flip a coin to make the decision. We call all the points that satisfy equation <span class="math inline">\(w_0 + w_1 x_1 + w_2 x_2 + \dots + w_p x_p = 0\)</span> as the decision boundary. For example, in a 2D feature space, the decision boundary <span class="math inline">\(w_0 + w_1x_1 + w_2x_2 =0\)</span> is just a straight line with a slope of <span class="math inline">\(-w_1/w_2\)</span> and an intercept of <span class="math inline">\(-w_0/w_2\)</span>, see the figure below.</p>
+\]</span></p>
+<p>where <span class="math inline">\(\text{Sign}(x)\)</span> is a sign function returning 1 if <span class="math inline">\(x&gt;0\)</span> and 0 if <span class="math inline">\(x&lt;0\)</span>. We refer coefficients <span class="math inline">\(w_1, \dots, w_p\)</span> as <strong>weights</strong>, the weighted sum of feature variables <span class="math inline">\(w_1 x_1 + w_2 x_2 + \dots + w_p x_p\)</span> as <strong>scores</strong> and <span class="math inline">\(w_0\)</span>, the threshold value, as <strong>bias</strong>. If the score value is equal to 0, then this observation can’t be classified by this classifier, and the thing we can do best is flip a coin to make the decision. We call all the points that satisfy equation <span class="math inline">\(w_0 + w_1 x_1 + w_2 x_2 + \dots + w_p x_p = 0\)</span> as the decision boundary. For example, in a 2D feature space, the decision boundary <span class="math inline">\(w_0 + w_1x_1 + w_2x_2 =0\)</span> is just a straight line with a slope of <span class="math inline">\(-w_1/w_2\)</span> and an intercept of <span class="math inline">\(-w_0/w_2\)</span>, see the figure below.</p>
+<div class="custom-figure-block">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="fig/L1_LinearClassifier.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>In this example, the 2D feature space is cut into two parts by the decision boundary (red line). For any unlabeled observations (blue dots), if it is above the decision boundary, then it will be classified as yellow , otherwise, green.</figcaption>
+<p><img src="fig/L1_LinearClassifier.png" class="img-fluid figure-img" style="width:66.6%"></p>
+<figcaption><strong>Figure 10</strong>: In this example, the 2D feature space is cut into two parts by the decision boundary (red line). For any unlabeled observations (blue dots), if it is above the decision boundary, then it will be classified as yellow , otherwise, green.</figcaption>
 </figure>
+</div>
 </div>
 <p>This kind of classifier is called linear classifier, since the decision boundary is presented by a linear function. It is a straight line in 2D space, a plane in 3D space, and hyper-plane in a higher dimension space. You might have already realized that in fact, a classifier is solely determined by its weights and bias, and machine learning algorithms tell us how to find the optimal weights and bias through data. There are several classical methods (algorithms) for learning a linear classifier which are perceptron algorithm, linear discriminant analysis, logistic regression, and maximum margin classifier. In this course, we will introduce all of them except maximum margin classifier.</p>
 <p><strong>Remark</strong>: Just as all the rules of arithmetic start with <span class="math inline">\(1+1\)</span>, don’t underestimate this linear classifier. You will see that all complex classifiers are built upon them. For example, maximum margin classifier is the foundation of SVM (Support vector machine) which dominate machine learning world for 20 years, the perceptron algorithm is the starting point of artificial neural net works, and no matter how complex a neural network architecture may be, as long as it is a classifier, its final layer will inevitably be a logistic regression model.</p>
@@ -250,7 +259,7 @@ window.Quarto = {
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
-  <div>© 2024 Xijia Liu. All rights reserved.</div>
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
   <div><img src="../../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
 </div>
 <script id="quarto-html-after-body" type="application/javascript">

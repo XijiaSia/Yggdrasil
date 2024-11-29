@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1.4 Machine Learning ABC – My Yggdrasil</title>
+<title>4. Machine Learning ABC – My Yggdrasil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -159,7 +159,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">1.4 Machine Learning ABC</h1>
+<h1 class="title">4. Machine Learning ABC</h1>
 </div>
 
 
@@ -179,14 +179,16 @@ window.Quarto = {
 <p>In machine learning, variables are often split into <strong>feature variables</strong> and <strong>target variables</strong>. Feature variables are the inputs to the model—information that helps the model make predictions—while target variables are the outcomes or labels the model is intended to predict. For instance, in the case of handwritten digit recognition, each pixel value in the image of a digit acts as a feature, providing the model with clues about the visual patterns, while the digit number itself (such as “5” or “9”) is the target variable. Similarly, in medical imaging applications like pseudo-CT imaging, the pixel values from an MRI image may serve as features, and the corresponding CT image’s pixel values become the target, as the model aims to predict CT values based on MRI inputs. There are many ways to categorize machine learning, with the most common being supervised and unsupervised learning. This categorization primarily depends on whether target variables are included in the research problem.</p>
 <p>In <strong>supervised learning</strong>, a dataset includes known labels for each observations, which the model uses to learn relationships between features and targets. In a mathematical language, we try to find a map <span class="math inline">\(f\)</span>, or a function, that connect the features information and target information. For example, the Iris dataset is labeled with flower species (such as Setosa or Versicolor) based on measurements like petal length and width, which act as feature variables. The goal is for the model to learn these relationships so it can classify new, unseen examples accurately. This mapping, <span class="math inline">\(f\)</span>, also known as the model, has its functionality determined by model parameters, which are adjusted based on the data. The process of determining the “optimal” parameters is also called to ‘learning’. Once the optimal model parameters are set, the model is considered trained. In the case of the Iris example, for those who often confuse the three subspecies, the shape data of the flower can be used to predict the species. Many plant identification Apps work in this way. Supervised learning is often further divided into regression and classification problems, depending on the type of target variable. We will focus on this distinction in the following section.</p>
 <p>In <strong>unsupervised learning</strong>, on the other hand, the dataset has no target variables, and the model’s task is to find underlying patterns or groupings in the data, such as clustering the Iris dataset’s measurements into groups without knowing the species in advance. In mathematical language, in unsupervised learning problem, we also want to learn a map <span class="math inline">\(g\)</span> that connect feature variables and some “new” knowledge. In statistics, we often use the term “latent variable” or “latent information” to represent this “new” knowledge. The beautiful names Setosa, Versicolor, and Virginica did not exist before botanists classified and named them scientifically. This new knowledge emerged from analyzing data on the shapes of the flowers. In machine learning, we typically encounter two types of unsupervised learning problems: feature analysis and cluster analysis. In the first part of this course, we will not cover these topics.</p>
-<ul>
-<li><strong>Quiz</strong>: In fact, we have encountered similar unsupervised learning problems in basic statistics. Do you know what they are?</li>
-</ul>
+<div class="custom-block2">
+<p><strong>Quiz</strong>: In fact, we have encountered similar unsupervised learning problems in basic statistics. Do you know what they are?</p>
+</div>
+<div class="custom-figure-block">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="fig/L1_ML_ABC.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption>Feature variables V.S. Target Variable; Supervised Learning V.S. Unsupervised Learning</figcaption>
+<p><img src="fig/L1_ML_ABC.png" class="img-fluid figure-img" style="width:99.9%"></p>
+<figcaption><strong>Figure 7</strong>: Feature variables V.S. Target Variable; Supervised Learning V.S. Unsupervised Learning</figcaption>
 </figure>
+</div>
 </div>
 <div style="text-align: center; margin: 30px 0">
 <p><a href="../../../Courses/c_mlwr1_2024/l1/l1_3.html" title="1.3 Machine Learning Process"><strong>Previous page</strong></a> | <a href="../../../Courses/c_mlwr1_2024/l1/l1_home.html"><strong>Lecture 1 Homepage</strong></a> | <a href="../../../Courses/c_mlwr1_2024/l1/l1_5.html" title="1.5 Regression Model and Classifciation Model"><strong>Next page</strong></a></p>
@@ -196,7 +198,7 @@ window.Quarto = {
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
-  <div>© 2024 Xijia Liu. All rights reserved.</div>
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
   <div><img src="../../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
 </div>
 <script id="quarto-html-after-body" type="application/javascript">
