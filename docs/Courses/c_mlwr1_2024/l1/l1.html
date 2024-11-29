@@ -302,12 +302,10 @@ window.Quarto = {
 </div>
 </div>
 <p>Well, usually we have multiple feature variables in a classification problem, then how do we apply this simple working principle to design a classifier? Let’s see another example. You might not know yet, in fact, teacher becomes a classifier after an exam. Well, <em>to pass or not to pass is a classification problem.</em> Suppose, in a secret exam, each student answers 5 questions and each question is worth 20 points. Student passes the exam if the total points are larger or equal to 60. I have corrected all the exams; the results are summarized in Table 1, and <span class="math inline">\(1\)</span> indicating the question was correctly answered and <span class="math inline">\(0\)</span> indicating not. Then, who can pass the exam?</p>
-<div class="custom-figure-block">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="fig/L1_exam_res.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.5%"></p>
 </figure>
-</div>
 </div>
 <p>I believe it is a very simple problem, for example, Super girl correctly answered 4 questions and get 80 points that is above the threshold value 60, so she passed the exam! However, spiderman only got 20 points that is lower than 60, so he can’t pass. If we clearly write down the calculation process, we actually used the following formula to calculate the totol score, then compare the total score with the critical point, 60.</p>
 <p><span class="math display">\[
