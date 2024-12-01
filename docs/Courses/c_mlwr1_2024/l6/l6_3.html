@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3. Feature Selection – My Yggdrasil</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../Images/main_logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">My Yggdrasil</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../01_c_index.html"> 
+<span class="menu-text">Norns’ Blessing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../02_m_index.html"> 
+<span class="menu-text">Mímisbrunnr</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../03_s_index.html"> 
+<span class="menu-text">Skalds</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../04_about_me.html"> 
+<span class="menu-text">About me</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">3.1 Overview</a></li>
+  <li><a href="#subset-selection" id="toc-subset-selection" class="nav-link" data-scroll-target="#subset-selection">3.2 Subset Selection</a>
+  <ul class="collapse">
+  <li><a href="#best-subset-selection" id="toc-best-subset-selection" class="nav-link" data-scroll-target="#best-subset-selection">3.2.1 Best Subset Selection</a></li>
+  <li><a href="#stepwise-selection" id="toc-stepwise-selection" class="nav-link" data-scroll-target="#stepwise-selection">3.2.2 Stepwise Selection</a></li>
+  </ul></li>
+  <li><a href="#regularization" id="toc-regularization" class="nav-link" data-scroll-target="#regularization">3.3 Regularization</a>
+  <ul class="collapse">
+  <li><a href="#conceptrual-ideas" id="toc-conceptrual-ideas" class="nav-link" data-scroll-target="#conceptrual-ideas">3.3.1 Conceptrual Ideas</a></li>
+  <li><a href="#ridge-regression" id="toc-ridge-regression" class="nav-link" data-scroll-target="#ridge-regression">3.3.2 Ridge Regression</a></li>
+  <li><a href="#lasso" id="toc-lasso" class="nav-link" data-scroll-target="#lasso">3.3.3 LASSO</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">3. Feature Selection</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Now is a good time to discuss the feature selection problem, as it can be formulated as a model selection problem and, in turn, can be viewed as a hyper-parameter tuning problem in a specific setting.</p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">3.1 Overview</h2>
+<p>Feature selection is an important step in building machine learning models. First, reducing the dimensionality of the dataset is often necessary, and there are two main approaches to achieve this: feature extraction and feature selection. Second, feature selection also helps identify the most relevant features for training a model, and it can be particularly useful in choosing the appropriate feature mapping for training nonlinear models.</p>
+<p>In practice, there are many convenient methods for selecting variables. For example, statistical tests like the t-test can be used to assess whether a variable is informative. In this section, we will frame feature selection as a model selection problem and introduce subset selection methods first. Second, we will show how feature selection can be transformed into a more manageable hyper-parameter tuning problem with penalty method.</p>
+</section>
+<section id="subset-selection" class="level2">
+<h2 class="anchored" data-anchor-id="subset-selection">3.2 Subset Selection</h2>
+<p>Let’s recall the main challenge of the nonlinear expansion idea mentioned in the previous lecture, which is feature mapping — how to correctly choose the feature mapping in order to obtain an appropriate augmented feature mapping.</p>
+<div class="custom-figure-block">
+<div style="text-align: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/L6_feature_selection_VS_model_selection.png" class="img-fluid figure-img" style="width:99.9%"></p>
+<figcaption>Go left or right? Right is not always right.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Intuitively, deciding whether to go left or right is a model selection problem, <span class="math display">\[
+  y = w_0 + w_1x + w_2x^2 \text{ V.S. } y = w_0 + w_1x + w_2x^5
+\]</span> but essentially it is a feature selection problem. From the perspective of feature selection, we have three feature variables, <span class="math inline">\(\{ x, x^2, x^5 \}\)</span>, to choose from, and the variables that end up in the optimal model are the selected ones. Therefore, the feature selection problem can be formulated as a model selection problem. Following this approach, we introduce three methods: best subset selection, forward stepwise selection, and backward stepwise selection.</p>
+<section id="best-subset-selection" class="level3">
+<h3 class="anchored" data-anchor-id="best-subset-selection">3.2.1 Best Subset Selection</h3>
+<p>This method involves evaluating all possible subsets of features and selecting the one that results in the best model performance.</p>
+<div class="custom-algorithm-block">
+<div style="font-size: 18px;">
+<p><strong>Algorithm</strong>: Best Subset Selection</p>
+</div>
+<hr>
+<p><strong>Inputs</strong>:</p>
+<ul>
+<li><span class="math inline">\(\textbf{X}\)</span>, a <span class="math inline">\(n\times p\)</span> matrix, containing all <span class="math inline">\(p\)</span> feature variables.</li>
+<li><span class="math inline">\(y\)</span> the target variable.</li>
+<li><span class="math inline">\(\phi\)</span>: the metric to evaluate the model performance.</li>
+<li>Denote <span class="math inline">\(\mathcal{M}_0\)</span> is the model without any feature variable, i.e.&nbsp;<span class="math inline">\(y = w_0 + \epsilon\)</span></li>
+</ul>
+<hr>
+<p><strong>Steps</strong>:</p>
+<p>For <span class="math inline">\(k=1,2,\dots, p\)</span>:</p>
+<ol type="1">
+<li>Consider all possible models that contain <span class="math inline">\(k\)</span> feature variables.</li>
+<li>Train all the models and evaluate them with an evaluation metric <span class="math inline">\(\phi\)</span>.</li>
+<li>Record the best model and denote it as <span class="math inline">\(\mathcal{M}_k\)</span>.</li>
+</ol>
+<p>Compare models across all <span class="math inline">\(\left\{\mathcal{M}_k\right\}_{k=1}^{p}\)</span> and determine the overall best model.</p>
+<hr>
+<p><strong>Output</strong>: Return the index of feature variables in the overall best model.</p>
+</div>
+<p>Let’s have a look at the following concrete example:</p>
+<div class="custom-gifdemo-block">
+<p><strong>Animation-Demo of Best Subset Selection</strong>:</p>
+<div style="text-align: center;">
+<p><!-- GIF container --> <img id="SSS_best_gif" src="fig/L6_SSS_best.gif" alt="Demo of LOOCV" width="99.9%"> <br> <!-- Replay button --> <button id="replay_btn_4" style="margin-top: 10px; padding: 5px 10px; font-size: 13px;">Replay</button></p>
+</div>
+<script>
+// JavaScript to replay the GIF
+document.getElementById('replay_btn_4').addEventListener('click', function () {
+    const gif = document.getElementById('SSS_best_gif');
+    const gifSrc = gif.src; // Get the current src of the GIF
+    gif.src = ''; // Reset the src to stop the GIF
+    setTimeout(() => gif.src = gifSrc, 10); // Restore the src to replay the GIF
+});
+</script>
+</div>
+<div class="custom-block2">
+<p><strong>Remark</strong>: While it guarantees the optimal subset, it is computationally expensive, especially when <span class="math inline">\(p\)</span>, the number of features is large. Indeed, evaluating all <span class="math inline">\(2^p\)</span> possible subsets of feature variables becomes infeasible as the number of predictors, <span class="math inline">\(p\)</span>, grows large. Although one can set an upper limit on the number of feature variables included in the model, e.g.&nbsp;set the upper limit of the <code>for</code> loop as <span class="math inline">\(k_{max} &lt; p\)</span>, there is a potential risk of missing better models and thereby excluding important features.</p>
+</div>
+</section>
+<section id="stepwise-selection" class="level3">
+<h3 class="anchored" data-anchor-id="stepwise-selection">3.2.2 Stepwise Selection</h3>
+<p>To overcome the main drawback of best subset selection, stepwise selection is a heuristic method that iteratively builds or refines a model by either adding or removing predictors.</p>
+<section id="forward-stepwise-selection-fss" class="level4">
+<h4 class="anchored" data-anchor-id="forward-stepwise-selection-fss"><strong>Forward Stepwise Selection (FSS)</strong>:</h4>
+<p>It is an iterative method for feature selection. It starts with no feature variables in the model and adds them one at a time, selecting the one that most improves the model’s performance metric. This process continues iteratively, updating the model with the best combination of predictors, until the full model is reached, i.e., the model with all feature variables. More specifically, let’s read the algorithm below:</p>
+<div class="custom-algorithm-block">
+<div style="font-size: 18px;">
+<p><strong>Algorithm</strong>: Forward Stepwise Selection</p>
+</div>
+<hr>
+<p><strong>Inputs</strong>:</p>
+<ul>
+<li><span class="math inline">\(\textbf{X}\)</span>, a <span class="math inline">\(n\times p\)</span> matrix, containing all <span class="math inline">\(p\)</span> feature variables.</li>
+<li><span class="math inline">\(y\)</span> the target variable.</li>
+<li><span class="math inline">\(\phi\)</span>: the metric to evaluate the model performance.</li>
+<li>Denote <span class="math inline">\(\mathcal{M}_0\)</span> is the model without any feature variable, i.e.&nbsp;<span class="math inline">\(y = w_0 + \epsilon\)</span></li>
+</ul>
+<hr>
+<p><strong>Steps</strong>:</p>
+<p>For <span class="math inline">\(k=1,2,\dots, p\)</span>:</p>
+<ol type="1">
+<li>Consider all possible models that model <span class="math inline">\(\mathcal{M}_{k-1}\)</span> plus one more feature variable.</li>
+<li>Train all the models and evaluate them with an evaluation metric <span class="math inline">\(\phi\)</span>.</li>
+<li>Record the best model and denote it as <span class="math inline">\(\mathcal{M}_k\)</span>.</li>
+</ol>
+<p>Compare models across all <span class="math inline">\(\left\{\mathcal{M}_k\right\}_{k=1}^{p}\)</span> and determine the overall best model.</p>
+<hr>
+<p><strong>Output</strong>: Return the index of feature variables in the overall best model.</p>
+</div>
+<p>The concrete example:</p>
+<div class="custom-gifdemo-block">
+<div style="text-align: center;">
+<p><!-- GIF container --> <img id="SSS_forward_gif" src="fig/L6_SSS_forward.gif" alt="Demo of LOOCV" width="99.9%"> <br> <!-- Replay button --> <button id="replay_btn_5" style="margin-top: 10px; padding: 5px 10px; font-size: 13px;">Replay</button></p>
+</div>
+<script>
+// JavaScript to replay the GIF
+document.getElementById('replay_btn_5').addEventListener('click', function () {
+    const gif = document.getElementById('SSS_forward_gif');
+    const gifSrc = gif.src; // Get the current src of the GIF
+    gif.src = ''; // Reset the src to stop the GIF
+    setTimeout(() => gif.src = gifSrc, 10); // Restore the src to replay the GIF
+});
+</script>
+</div>
+<p>From this specific example, it can be seen that, unlike best subset selection, forward stepwise selection does not evaluate all possible models, which makes the algorithm more efficient. However, this also means that the algorithm is a greedy solution, making locally optimal decisions at each step. This trade-off sacrifices the guarantee of finding the best subset but significantly reduces computational burden.</p>
+</section>
+<section id="backward-stepwise-selection-bss" class="level4">
+<h4 class="anchored" data-anchor-id="backward-stepwise-selection-bss"><strong>Backward Stepwise Selection (BSS)</strong>:</h4>
+<p>Similar to FSS, Backward Stepwise Selection also offers another possible greedy solution. Unlike FSS, BSS starts with the full model and then iteratively removes features to select the optimal models in each step and find the overall best model across all steps. The algorithm is as follows:</p>
+<div class="custom-algorithm-block">
+<div style="font-size: 18px;">
+<p><strong>Algorithm</strong>: Backward Stepwise Selection</p>
+</div>
+<hr>
+<p><strong>Inputs</strong>:</p>
+<ul>
+<li><span class="math inline">\(\textbf{X}\)</span>, a <span class="math inline">\(n\times p\)</span> matrix, containing all <span class="math inline">\(p\)</span> feature variables.</li>
+<li><span class="math inline">\(y\)</span> the target variable.</li>
+<li><span class="math inline">\(\phi\)</span>: the metric to evaluate the model performance.</li>
+<li>Denote <span class="math inline">\(\mathcal{M}_p\)</span> as the full model that containing all feature variables.</li>
+</ul>
+<hr>
+<p><strong>Steps</strong>:</p>
+<p>For <span class="math inline">\(k= p-1, p-2, \dots, 1, 0\)</span>:</p>
+<ol type="1">
+<li>Consider all possible models that model <span class="math inline">\(\mathcal{M}_{k+1}\)</span> ignoring one feature variable.</li>
+<li>Train all the models and evaluate them with an evaluation metric <span class="math inline">\(\phi\)</span>.</li>
+<li>Record the best model and denote it as <span class="math inline">\(\mathcal{M}_k\)</span>.</li>
+</ol>
+<p>Compare models across all <span class="math inline">\(\left\{\mathcal{M}_k\right\}_{k=1}^{p}\)</span> and determine the overall best model.</p>
+<hr>
+<p><strong>Output</strong>: Return the index of feature variables in the overall best model.</p>
+</div>
+<p>The concrete example:</p>
+<div class="custom-gifdemo-block">
+<div style="text-align: center;">
+<p><!-- GIF container --> <img id="SSS_backward_gif" src="fig/L6_SSS_backward.gif" alt="Demo of LOOCV" width="99.9%"> <br> <!-- Replay button --> <button id="replay_btn_6" style="margin-top: 10px; padding: 5px 10px; font-size: 13px;">Replay</button></p>
+</div>
+<script>
+// JavaScript to replay the GIF
+document.getElementById('replay_btn_6').addEventListener('click', function () {
+    const gif = document.getElementById('SSS_backward_gif');
+    const gifSrc = gif.src; // Get the current src of the GIF
+    gif.src = ''; // Reset the src to stop the GIF
+    setTimeout(() => gif.src = gifSrc, 10); // Restore the src to replay the GIF
+});
+</script>
+</div>
+</section>
+</section>
+</section>
+<section id="regularization" class="level2">
+<h2 class="anchored" data-anchor-id="regularization">3.3 Regularization</h2>
+<p>We already have some feature selection methods, but subset selection algorithms have two major shortcomings. First, these methods either require extensive computation or risk getting stuck in local optima. Second, we often use loops to iterate over a series of models with varying complexity, which is both tedious and inefficient.</p>
+<p>This leads us to two key questions:</p>
+<ul>
+<li>First, can we control model complexity with a single hyperparameter, similar to KNN?</li>
+<li>Second, can this approach avoid the risk of getting stuck in local optima?</li>
+</ul>
+<p>The answer is yes—we can achieve this using <strong>regularization methods</strong>.</p>
+<section id="conceptrual-ideas" class="level3">
+<h3 class="anchored" data-anchor-id="conceptrual-ideas">3.3.1 Conceptrual Ideas</h3>
+<p>Let’s review the toy example in the previous lecture.</p>
+<div class="custom-Rfigure-block">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="l6_3_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:77.7%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>In the previous lecture, we used it to introduce the problem of overfitting. Now, let’s look at this issue from the perspective of feature selection. Do you remember the main challenge of the feature mapping idea? That’s right—choosing an appropriate feature mapping is the key challenge. In other words, here we are considering selecting some suitable variables from a set of feature variables, <span class="math inline">\(\{x, x^2, x^3, x^4\}\)</span>, to predict the <span class="math inline">\(y\)</span> variable.</p>
+<p>Now, let’s take a look at the relationship between the two models. The <span style="color: orange;"><strong>Orange Model</strong></span> can be viewed as the full model, <span class="math display">\[
+  y_i=w_0+w_1x_i+w_2x_i^2+w_3x_i^3+w_4x_i^4+\epsilon_i
+\]</span> The ideal model, <span style="color: red;"><strong>Red Model</strong></span>, <span class="math inline">\(y_i=w_0+w_1x_i+w_2x_i^2+\epsilon_i\)</span>, can be seen as a special case of <span style="color: orange;"><strong>Orange Model</strong></span>, or the full model with an added constraint on model parameters, i.e. <span class="math display">\[
+  \textcolor[rgb]{1.00,0.00,0.00}{\text{Model}} = \textcolor[rgb]{1.00,0.50,0.00}{\text{Model}} + \text{Constraint} (w_3=w_4=0)
+\]</span> If the <span style="color: red;"><strong>Red Model</strong></span> is considered as one of the candidate models in the model selection process, we can gain an insight: candidate models can be expressed as <span class="math display">\[
+  \textcolor[rgb]{1.00,0.00,0.00}{\text{Candidate Models}} = \textcolor[rgb]{1.00,0.50,0.00}{\text{Full Model}} + \text{Constraint}(\textbf{w}).
+\]</span> Of course, this Constraint, <span class="math inline">\(w_3=w_4=0\)</span>, is too specific. What we aim for is to use a single expression to represent a set of candidate models and then select the best one through an algorithm. Let’s look at another example. In the remark from Section 3.2.1, we mentioned that to reduce the computational cost in the best subset algorithm, we can set an upper limit on the number of features, <span class="math inline">\(k_{max}\)</span>, included in the model. It can be expressed as <span class="math display">\[
+  \text{Constraint}(\textbf{w}): \sum_{j = 1}^4 \textbf{1} \{ w_j \neq 0 \} \leq 3
+\]</span></p>
+<p>This constraint can be interpreted as the total number of non-zero parameters being less than or equal to 3. In a figurative way, it’s like saying to the cute little parameters, “Hey, our data is limited, so only three of you can have non-zero values!” From this perspective, the restriction in our formula represents the “budget” for non-zero parameter values. If you agree with me, let’s rewrite the formula of candidate models as</p>
+<p><span class="math display">\[
+  \textcolor[rgb]{1.00,0.00,0.00}{\text{Candidate Models}} = \textcolor[rgb]{1.00,0.50,0.00}{\text{Full Model}} + \textbf{Budget}(\textbf{w}).
+\]</span> What practical significance does this formula have? It’s significant because if we can represent a set of candidate models with a single formula, we can substitute it into the loss function when estimating model parameters. This allows us to frame the model selection problem as an optimization problem.</p>
+<div class="custom-block2">
+<p><strong>Note</strong>: The “budget” term is a function of model parameters, and it is referred to as <strong>penalty term</strong> in the formal language.</p>
+</div>
+<p>In this way, we may have the opportunity to develop a smart algorithm to find the optimal model, rather than relying on brute-force methods like best subset selection, see the figure below.</p>
+<div class="custom-figure-block">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span class="math display">\[
+  \begin{matrix}
+  \text{Best subset selection:} \\
+  \\
+  \mathcal{L}_{mse}(y_i, w_0+w_1x_i) \\
+  \mathcal{L}_{mse}(y_i, w_0+w_1x_i+w_2x_i^2) \\
+  \mathcal{L}_{mse}(y_i, w_0+w_1x_i+w_2x_i^2+w_3x_i^3) \\
+  \mathcal{L}_{mse}(y_i, w_0+w_1x_i+w_2x_i^2+w_4x_i^4) \\
+  \vdots  \\
+  \end{matrix}
+\]</span></p>
+</div><div class="column" style="width:50%;">
+<p><span class="math display">\[
+  \begin{matrix}
+  \text{Regularization methods:}  \\
+    \\
+    \\
+    \\
+  \mathcal{L}_{mse}(y_i, f(x_i，\textbf{w})+\text{Budget}(\textbf{w})) \\
+    \\
+    \\
+    \\
+  \end{matrix}
+\]</span></p>
+</div>
+</div>
+<p>where <span class="math inline">\(\mathcal{L}_{mse}\)</span> is the mse-loss function and <span class="math inline">\(f(x_i)\)</span> is the full model, <span class="math display">\[
+  f(x_i)=w_0+w_1x_i+w_2x_i^2+w_3x_i^3+w_4x_i^4+\epsilon_i
+\]</span> <span style="color: gray;"> <strong>LHS</strong>: In best subset selection, we need to solve multiple optimization problems, one for each candidate model. <strong>RHS</strong>: However, in regularization methods, with the help of the budget term, we only need to solve a single integrated optimization problem. </span></p>
+</div>
+<p>How exactly does regularization methods work? Let’s discuss it further in the next subsection.</p>
+</section>
+<section id="ridge-regression" class="level3">
+<h3 class="anchored" data-anchor-id="ridge-regression">3.3.2 Ridge Regression</h3>
+<p>Overall, ridge regression belongs to the family of regularization methods. It represents the budget term using the <span class="math inline">\(l_2\)</span>-norm, which has favorable mathematical properties, making the optimization problem solvable. To better illustrate this, let’s first revisit the previous discussion and express the best subset selection method using an optimization formula.</p>
+<p><span class="math display">\[
+  \begin{matrix}
+    \min_{\textbf{w}} &amp; \sum_{i=1}^n (y_i- w_0+w_1x_i+w_2x_i^2+w_3x_i^3+w_4x_i^4)^2 \\
+    s.t. &amp; \sum_{j = 1}^4 \textbf{1} \{ w_j \neq 0 \} \leq 3
+  \end{matrix}
+\]</span> i.e.&nbsp;consider a constraint while minimizing the MSE loss. However, this constraint lacks favorable mathematical properties, such as differentiability, making it impossible to solve the optimization problem. Therefore, we need to modify the constraint. The <span class="math inline">\(l_2\)</span>-norm is a good option, <span class="math display">\[
+  \sum_{j = 1}^4 w_i^2 \leq 3
+\]</span> With the <span class="math inline">\(l_2\)</span>-norm constraint, we can modify the problem as a <strong>ridge regression problem</strong> <span class="math display">\[
+  \begin{matrix}
+    \min_{\textbf{w}} &amp; \sum_{i=1}^n (y_i- w_0+w_1x_i+w_2x_i^2+w_3x_i^3+w_4x_i^4)^2 \\
+    s.t. &amp; \sum_{j = 1}^4 w_j^2 \leq C
+  \end{matrix}
+\]</span> Here, <span class="math inline">\(C\)</span> represents a budget for all the parameter values and will be treated as a <strong>hyper-parameter</strong>. When <span class="math inline">\(C\)</span> is large, we have a generous budget and will consider more complex models. Conversely, when <span class="math inline">\(C\)</span> is small, our choices are limited, and the resulting model will have lower complexity.</p>
+<p>This formulation of the optimization problem is typically called the <strong>budget form</strong>, and we need to solve it using the method of Lagrange multipliers. The optimization results are the regression coefficients of ridge regression.</p>
+<p>It also has an equivalent form, known as the <strong>penalty form</strong></p>
+<p><span class="math display">\[
+  \min_{\textbf{w}} \left\{ \sum_{i=1}^n (y_i- w_0+w_1x_i+w_2x_i^2+w_3x_i^3+w_4x_i^4)^2 + \lambda \sum_{j = 1}^4 w_j^2 \right\}
+\]</span></p>
+<p>In this form, <span class="math inline">\(\lambda\)</span> is the given penalty weight, which corresponds to the hyper-parameter <span class="math inline">\(C\)</span>, but with the opposite meaning. When <span class="math inline">\(\lambda\)</span> is large, to minimize the loss function, we need to consider smaller model parameters, meaning our budget <span class="math inline">\(C\)</span> is small, and as a result, we obtain a model with lower complexity. Conversely, when <span class="math inline">\(\lambda\)</span> is small, our budget <span class="math inline">\(C\)</span> is large, and we end up with a model of higher complexity. Let’s see the following example.</p>
+<section id="example" class="level4">
+<h4 class="anchored" data-anchor-id="example"><strong>Example</strong>:</h4>
+<p>Next, we will apply ridge regression to our toy example. Here, we choose the full model as a 4th-order polynomial regression and experiment with different penalty parameters (<span class="math inline">\(\lambda\)</span>). The fitting results and estimated regression coefficients are shown below.</p>
+<div class="custom-Rfigure-block">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="l6_3_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 20%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>Models</strong></th>
+<th style="text-align: center;"><span class="math inline">\(\lambda\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_0\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(w_4\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span style="color: orange;"><strong>Orange</strong></span></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-22.438</td>
+<td style="text-align: center;">44.151</td>
+<td style="text-align: center;">-25.390</td>
+<td style="text-align: center;">5.681</td>
+<td style="text-align: center;">-0.438</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span style="color: red;"><strong>Red</strong></span></td>
+<td style="text-align: center;">0.001</td>
+<td style="text-align: center;">3.624</td>
+<td style="text-align: center;">-2.307</td>
+<td style="text-align: center;">0.195</td>
+<td style="text-align: center;">0.051</td>
+<td style="text-align: center;">-0.005</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span style="color: blue;"><strong>Blue</strong></span></td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">2.931</td>
+<td style="text-align: center;">-1.463</td>
+<td style="text-align: center;">0.027</td>
+<td style="text-align: center;">0.022</td>
+<td style="text-align: center;">0.002</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span style="color: darkgreen;"><strong>Green</strong></span></td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">0.626</td>
+<td style="text-align: center;">-0.083</td>
+<td style="text-align: center;">-0.007</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The table summarizes the results of a ridge regression experiment, illustrating the relationship between the penalty parameter <span class="math inline">\(\lambda\)</span> and model complexity. As <span class="math inline">\(\lambda\)</span> increases, the penalty for larger parameter values grows stronger, resulting in smaller coefficients for all parameters (<span class="math inline">\(w_0, w_1, w_2, w_3, w_4\)</span>).</p>
+<p>For example, with <span class="math inline">\(\lambda = 0\)</span> (<span style="color: orange;"><strong>orange model</strong></span>), the model has no penalty, leading to large parameter values and a highly complex model. As <span class="math inline">\(\lambda\)</span> increases to <span class="math inline">\(0.001\)</span> (<span style="color: red;"><strong>red model</strong></span>) and <span class="math inline">\(0.01\)</span> (<span style="color: blue;"><strong>blue model</strong></span> ), the parameters shrink, indicating a reduction in model complexity. When <span class="math inline">\(\lambda = 10\)</span> (<span style="color: darkgreen;"><strong>green model</strong></span>), most parameter values approach zero, yielding a very simple model.</p>
+<p>This experiment demonstrates that ridge regression effectively controls model complexity through the hyper-parameter <span class="math inline">\(\lambda\)</span>, where larger <span class="math inline">\(\lambda\)</span> values correspond to simpler models with lower complexity.</p>
+<p>We can also observe that as <span class="math inline">\(\lambda\)</span> increases, the estimated regression coefficients continue to shrink. This is why the ridge regression model is also referred to as a <strong>shrinkage method</strong>. It is primarily used as a robust regression model to address over fitting issues.</p>
+<p>If we wish to use it as a feature selection tool, an additional threshold value needs to be set. For instance, feature variables corresponding to regression coefficients smaller than <span class="math inline">\(0.01\)</span> can be excluded. For the purpose of feature selection, there are other regularization methods available, such as the LASSO, which we will discuss next.</p>
+</section>
+</section>
+<section id="lasso" class="level3">
+<h3 class="anchored" data-anchor-id="lasso">3.3.3 LASSO</h3>
+<p>The LASSO (Least Absolute Shrinkage and Selection Operator) is a regularization method that adds an <span class="math inline">\(l_1\)</span>-norm penalty to the loss function, encouraging sparsity in the model coefficients. This unique property enables LASSO to perform both shrinkage and feature selection simultaneously, making it a powerful tool for high-dimensional data analysis.</p>
+<p>Compared to the <span class="math inline">\(l_2\)</span>-norm penalty used in ridge regression, LASSO employs the <span class="math inline">\(l_1\)</span>-norm to calculate the coefficients budget, which is <span class="math display">\[
+  \sum_{j = 1}^p |w_j| \leq C
+\]</span> So, LASSO problem can be expressed as in the budget form, <span class="math display">\[
+  \begin{matrix}
+    \min_{\textbf{w}} &amp; \sum_{i=1}^n (y_i- w_0+w_1x_i+w_2x_2+\dots+w_px_p)^2 \\
+    s.t. &amp; \sum_{j = 1}^p |w_j| \leq C
+  \end{matrix}
+\]</span> or the penalty form <span class="math display">\[
+  \min_{\textbf{w}} \left\{ \sum_{i=1}^n (y_i- w_0+w_1x_i+w_2x_2+\dots+w_px_p)^2 + \lambda \sum_{j = 1}^p |w_j| \right\}
+\]</span></p>
+<p>Similar to Ridge regression, the budget parameter <span class="math inline">\(C\)</span> and penalty parameter <span class="math inline">\(\lambda\)</span> here are treated as hyper parameters. They carry the same significance as the hyper parameters in Ridge regression. By solving this optimization problem, we can obtain the estimated LASSO parameters.</p>
+<p>In the laboratory exercises, we will find that, unlike the shrinkage results of ridge regression, the estimates from LASSO are called sparse results, meaning that most regression coefficients are zero, while a few coefficients are non-zero. Therefore LASSO is also called <strong>Sparse method</strong>. This characteristic of LASSO makes it an important tool for feature selection.</p>
+<p>The following diagram conceptually explains why LASSO produces sparse results.</p>
+<div class="custom-figure-block">
+<div style="text-align: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/L6_RRvsLASSO.png" class="img-fluid figure-img" style="width:99.9%"></p>
+<figcaption>Ridge Regression VS LASSO</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The left and right sides represent the optimization problem for the same regression model. We can see that in this optimization problem, we have two optimization variables, and the ellipse represents the contour plot of the loss function for the regression problem, where the closer to the center, the lower the loss value. Therefore, without considering the pink figure, the dark blue point represents the optimal solution to the optimization problem, which is the least squares solution, i.e., the regression coefficients for the regular regression model.</p>
+<p>However, when we consider the constraint, we need to limit the possible points to a specific region, which is the pink area. On the left, the circle represents the feasible region for the two coefficients under the <span class="math inline">\(l_2\)</span> norm constraint, while on the right, the diamond shape represents the feasible region for the two coefficients under the <span class="math inline">\(l_1\)</span> norm constraint. In other words, we can only consider the optimal solution within the pink region. As a result, the optimal solution is the light blue point, which is the point closest to the minimum loss function value within the feasible region.</p>
+<p>From the above diagram, it is clear that the geometric characteristics of the two penalty functions determine the nature of their solutions. Under the <span class="math inline">\(l_2\)</span> norm, the solution is closer to the y-axis, indicating that, due to the penalty term, the estimate of <span class="math inline">\(w_1\)</span> undergoes shrinkage toward zero. Under the <span class="math inline">\(l_1\)</span> norm, the solution lies exactly on the y-axis, meaning that, due to the penalty term, <span class="math inline">\(w_1\)</span> becomes exactly zero. This explains why the <span class="math inline">\(l_1\)</span> norm leads to sparse results, while the <span class="math inline">\(l_2\)</span> norm leads to shrinkage results.</p>
+<div style="text-align: center; margin: 30px 0">
+<p><a href="../../../Courses/c_mlwr1_2024/l6/l6_2.html" title="6.2 Model Validation and Selection"><strong>Previous page</strong></a> | <a href="../../../Courses/c_mlwr1_2024/l6/l6_home.html"><strong>Lecture 6 Homepage</strong></a></p>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
+  <div><img src="../../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
+</div>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
