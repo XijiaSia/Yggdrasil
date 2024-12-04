@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lecture 6: Model Validation and Selection – My Yggdrasil</title>
+<title>Lab 4: Exercises about Model Validation and Selection – My Yggdrasil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -67,6 +101,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../../styles.css">
 </head>
@@ -127,10 +190,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lecture-notes" id="toc-lecture-notes" class="nav-link active" data-scroll-target="#lecture-notes">Lecture notes:</a></li>
-  <li><a href="#reading-guidelines-you-can-read-the-book" id="toc-reading-guidelines-you-can-read-the-book" class="nav-link" data-scroll-target="#reading-guidelines-you-can-read-the-book">Reading Guidelines: You can read the book…</a></li>
-  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
-  <li><a href="#lab" id="toc-lab" class="nav-link" data-scroll-target="#lab">Lab:</a></li>
+  <li><a href="#task-1-about-knn-and-cross-validation" id="toc-task-1-about-knn-and-cross-validation" class="nav-link active" data-scroll-target="#task-1-about-knn-and-cross-validation">Task 1: About KNN and Cross Validation</a>
+  <ul class="collapse">
+  <li><a href="#task-1.1-practice-knn-method" id="toc-task-1.1-practice-knn-method" class="nav-link" data-scroll-target="#task-1.1-practice-knn-method">Task 1.1: Practice KNN method</a></li>
+  <li><a href="#task-1.2-practice-loocv" id="toc-task-1.2-practice-loocv" class="nav-link" data-scroll-target="#task-1.2-practice-loocv">Task 1.2: Practice LOOCV</a></li>
+  <li><a href="#task-1.3-practice-5-fold-cross-validation" id="toc-task-1.3-practice-5-fold-cross-validation" class="nav-link" data-scroll-target="#task-1.3-practice-5-fold-cross-validation">Task 1.3: Practice 5-fold Cross Validation</a></li>
+  </ul></li>
+  <li><a href="#task-2-about-feature-selection" id="toc-task-2-about-feature-selection" class="nav-link" data-scroll-target="#task-2-about-feature-selection">Task 2: About Feature Selection</a>
+  <ul class="collapse">
+  <li><a href="#task-2.1-practive-leaps-package" id="toc-task-2.1-practive-leaps-package" class="nav-link" data-scroll-target="#task-2.1-practive-leaps-package">Task 2.1: Practive <code>leaps</code> package</a></li>
+  <li><a href="#task-2.2-prediction-with-candidate-models" id="toc-task-2.2-prediction-with-candidate-models" class="nav-link" data-scroll-target="#task-2.2-prediction-with-candidate-models">Task 2.2: Prediction with candidate models</a></li>
+  <li><a href="#task-2.3-select-the-final-optimal-model" id="toc-task-2.3-select-the-final-optimal-model" class="nav-link" data-scroll-target="#task-2.3-select-the-final-optimal-model">Task 2.3: Select the final optimal model</a></li>
+  <li><a href="#task-2.4-optinal-practice-glmnet-package" id="toc-task-2.4-optinal-practice-glmnet-package" class="nav-link" data-scroll-target="#task-2.4-optinal-practice-glmnet-package">Task 2.4 (optinal): Practice <code>glmnet</code> package</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -139,7 +211,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lecture 6: Model Validation and Selection</h1>
+<h1 class="title">Lab 4: Exercises about Model Validation and Selection</h1>
 </div>
 
 
@@ -156,43 +228,104 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>In this lecture, we complete the discussion of overfitting probelm first, and then discuss the main issue model selection. In the end, we discuss a special topic in machine learning, feature selection. It covers the following things:</p>
-<ul>
-<li>Overfitting in Classification</li>
-<li>Model Validation and Selection</li>
-<li>Feature Selection</li>
-</ul>
-<section id="lecture-notes" class="level2">
-<h2 class="anchored" data-anchor-id="lecture-notes">Lecture notes:</h2>
-<ul>
-<li>Read the integrated notes: <a href="../../../Courses/c_mlwr1_2024/l6/l6.html">here</a></li>
-<li>Read the pagination notes: <a href="../../../Courses/c_mlwr1_2024/l6/l6_0.html">here</a></li>
-<li>Download the PDF notes <a href="l6.pdf" download="">here</a>.</li>
-</ul>
+<p>we implement and practice k-nearest neighbors method and subset selection methods with Breast cancer data and simulated data.</p>
+<section id="task-1-about-knn-and-cross-validation" class="level1">
+<h1>Task 1: About KNN and Cross Validation</h1>
+<p>In this task, we apply K-nearest neighbor method to Breast cancer data. We use variables <code>radius</code>, <code>texture</code> and <code>smoothness</code> to predict the target variable <code>diagnosis</code>.</p>
+<section id="task-1.1-practice-knn-method" class="level2">
+<h2 class="anchored" data-anchor-id="task-1.1-practice-knn-method">Task 1.1: Practice KNN method</h2>
+<p>Read the help document of the function <code>knn</code> in library <code>class</code> first. This exercise aims to analyze how the choice of <span class="math inline">\(k\)</span> affects the KNN method’s performance on training and test datasets and identify any patterns in overfitting or underfitting as <span class="math inline">\(k\)</span> varies. Follow the instructions below to complete your experiment, and then draw your conclusions based on the experimental results.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Define the candidates of hyper-parameter k</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>K <span class="ot">=</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">300</span>,<span class="dv">2</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>num_k <span class="ot">=</span> <span class="fu">length</span>(K)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>res_tr <span class="ot">=</span> res_te <span class="ot">=</span> <span class="fu">numeric</span>(num_k) <span class="co"># to keep performance of KNN in traing set and test set</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: For each k, store the model performance both in training set and test set</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_k){</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Predict the target variable for each case in training set by KNN with K[i]. </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Store the accuracy in `res_tr`</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Predict the target variable for each case in test set by KNN with K[i].</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Store the accuracy in `res_te`</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Visualize the results</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="reading-guidelines-you-can-read-the-book" class="level2">
-<h2 class="anchored" data-anchor-id="reading-guidelines-you-can-read-the-book">Reading Guidelines: You can read the book…</h2>
-<p>For lecture 6, it is recommended that you read the following sections in the textbook.</p>
-<ul>
-<li>About KNN, read subsection 4.7.6, page 181</li>
-<li>About validation methods, read section 5.1</li>
-<li>About model selection and feature selection, read sections 6.1 and 6.2.</li>
-</ul>
+<section id="task-1.2-practice-loocv" class="level2">
+<h2 class="anchored" data-anchor-id="task-1.2-practice-loocv">Task 1.2: Practice LOOCV</h2>
+<p>Read the help document of the function <code>knn.cv</code> in library <code>class</code> first. Apply LOOCV to select the best hyper-parameter <span class="math inline">\(k\)</span> and test the model performance in the testing set.</p>
+<p><strong>Tips</strong>: You can apply function <code>knn.cv</code> to perform LOOCV to select the best hyper-parameter. The suggested instruction:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Define the candidates of hyper-parameter k</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>K <span class="ot">=</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">300</span>,<span class="dv">2</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>num_k <span class="ot">=</span> <span class="fu">length</span>(K)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>cv_acc <span class="ot">=</span> <span class="fu">numeric</span>(num_k)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_k){</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># apply function `knn.cv` to calculate cross validation accuracy,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># and store it in `cv_acc`.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Find the model with highest cross validation accuracy and estimate its performance in testing set. </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="discussion" class="level2">
-<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
-<p>Slides for discussion: TBA</p>
+<section id="task-1.3-practice-5-fold-cross-validation" class="level2">
+<h2 class="anchored" data-anchor-id="task-1.3-practice-5-fold-cross-validation">Task 1.3: Practice 5-fold Cross Validation</h2>
+<p>Tune the hyper-parameter by 5-fold cross validation. Estimate the model performance of the optimal model with testing set.</p>
+<p><strong>Note</strong>: Function <code>knn.cv</code> only provide LOOCV option. So, you need to implement the 5-fold CV by your own code.</p>
 </section>
-<section id="lab" class="level2">
-<h2 class="anchored" data-anchor-id="lab">Lab:</h2>
-<p>Laboratory: <a href="../../../Courses/c_mlwr1_2024/l6/l6_lab_home.html">Entrance</a></p>
-<p>Solutions: TBA</p>
-<p>R file: TBA</p>
+</section>
+<section id="task-2-about-feature-selection" class="level1">
+<h1>Task 2: About Feature Selection</h1>
+<p>In this task, we will use simulated data to practice feature selection methods. The simulated data can be generated using the following R code. From the code, we can see that the target variable is primarily determined by the first five feature variables. Below, we randomly display the first six observations of five feature variables and the target variable <span class="math inline">\(y\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8312</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">500</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="dv">20</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>X <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(n <span class="sc">*</span> p), <span class="at">nrow =</span> n, <span class="at">ncol =</span> p)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>w <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="dv">1</span>, <span class="fl">2.3</span>, <span class="fl">1.5</span>, <span class="fu">rep</span>(<span class="dv">0</span>, p<span class="dv">-5</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> X <span class="sc">%*%</span> w <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">=</span> <span class="fu">data.frame</span>(X, <span class="at">y =</span> y)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>( X, w, y)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat[, <span class="fu">c</span>(<span class="fu">sort</span>(<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, <span class="dv">5</span>)), <span class="dv">21</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          X7          X8         X13         X14        X18         y
+1 -0.4051647  0.04860872  0.03389675 -2.51265909 -0.7737131  2.683957
+2 -0.3300477 -1.19580506 -1.48307329 -0.24639241 -0.7631660 -2.255025
+3  0.8251963  0.33617031 -0.22148474  0.27703785 -0.4178979 -7.106195
+4 -0.8314352  1.32395677  1.20709742  1.84552276 -0.8829887  2.433349
+5 -0.5919659 -0.06201140  0.15292587  0.28684091 -1.6195710 -1.023411
+6 -2.0953279 -1.45533806 -0.50448883  0.06009562  0.4953250 -2.891946</code></pre>
+</div>
+</div>
+<section id="task-2.1-practive-leaps-package" class="level2">
+<h2 class="anchored" data-anchor-id="task-2.1-practive-leaps-package">Task 2.1: Practive <code>leaps</code> package</h2>
+<p>Read the help document of function <code>regsubsets</code>. Apply this function to do best subset selection on the simulated data, <code>dat</code>. Print out the variable names selected in the candidate model with 8 feature variables.</p>
+<p><strong>Tips</strong>: Two options to get the regression coefficients:</p>
+<ol type="1">
+<li>You can find the included variables of the candidate model with 8 feature variables by the following code.</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)<span class="sc">$</span>which <span class="co"># m: the output of `regsubsets`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li>Use function <code>coef</code> to extract the selected variables. You need to specify two arguments, the output of <code>regsubsets</code> function and the id of target candidate model.</li>
+</ol>
+</section>
+<section id="task-2.2-prediction-with-candidate-models" class="level2">
+<h2 class="anchored" data-anchor-id="task-2.2-prediction-with-candidate-models">Task 2.2: Prediction with candidate models</h2>
+<p>Set random seed as 2024. Randomly split the data set into training and testing sets (80% VS 20%). Use the same method as task 2.1 to find all the candidate models. Apply the candidate model with 8 feature variables to the testing set and estimate the RMSE.</p>
+<p><strong>Tips</strong>: Function <code>model.matrix</code> can be used for preparing the data matrix for prediction, e.g.,</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x_test <span class="ot">=</span> <span class="fu">model.matrix</span>(y<span class="sc">~</span>., dat_te)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="task-2.3-select-the-final-optimal-model" class="level2">
+<h2 class="anchored" data-anchor-id="task-2.3-select-the-final-optimal-model">Task 2.3: Select the final optimal model</h2>
+<p>With the same data spiting, find the <code>optimal</code> model by training-against-validation method. Estimate the model performance with the testing set.</p>
+</section>
+<section id="task-2.4-optinal-practice-glmnet-package" class="level2">
+<h2 class="anchored" data-anchor-id="task-2.4-optinal-practice-glmnet-package">Task 2.4 (optinal): Practice <code>glmnet</code> package</h2>
+<p>Read the help document of <code>cv.glmnet</code> function in package <code>glmnet</code> first. Apply LASSO method to select the feature variables in dataset <code>dat</code>.</p>
+<p><strong>Note</strong>: If you are short on time, you can skip this task for now. We will focus on practicing this package in the lab next week.</p>
 <div style="text-align: center; margin: 30px 0">
-<p><a href="../../../Courses/c_mlwr1_2024/mlwr1_index.html"><strong>Course Homepage</strong></a></p>
+<p><a href="../../../Courses/c_mlwr1_2024/l6/l6_home.html"><strong>Lecture 6 Homepage</strong></a></p>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
