@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3. Cross-Entropy Loss and Penalized Logistic Regression – My Yggdrasil</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../Images/main_logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">My Yggdrasil</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../01_c_index.html"> 
+<span class="menu-text">Norns’ Blessing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../02_m_index.html"> 
+<span class="menu-text">Mímisbrunnr</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../03_s_index.html"> 
+<span class="menu-text">Skalds</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../04_about_me.html"> 
+<span class="menu-text">About me</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#cross-entropy-loss-and-likelihood-function" id="toc-cross-entropy-loss-and-likelihood-function" class="nav-link active" data-scroll-target="#cross-entropy-loss-and-likelihood-function">3.1 Cross-entropy Loss and Likelihood function</a>
+  <ul class="collapse">
+  <li><a href="#cross-entropy-loss" id="toc-cross-entropy-loss" class="nav-link" data-scroll-target="#cross-entropy-loss">3.1.1 Cross-entropy Loss</a></li>
+  <li><a href="#maximum-likelihood-estimation" id="toc-maximum-likelihood-estimation" class="nav-link" data-scroll-target="#maximum-likelihood-estimation">3.1.2 Maximum Likelihood Estimation</a></li>
+  </ul></li>
+  <li><a href="#penalized-logistic-regression" id="toc-penalized-logistic-regression" class="nav-link" data-scroll-target="#penalized-logistic-regression">3.2 Penalized Logistic Regression</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">3. Cross-Entropy Loss and Penalized Logistic Regression</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="cross-entropy-loss-and-likelihood-function" class="level2">
+<h2 class="anchored" data-anchor-id="cross-entropy-loss-and-likelihood-function">3.1 Cross-entropy Loss and Likelihood function</h2>
+<p>Above, we conceptually explained the logistic regression model and its classifier and demonstrated its implementation in R. Next, we will address a more theoretical question: how to train our model, or in other words, how to estimate the model parameters. This question can be approached from both machine learning and statistical modeling perspectives, yielding consistent conclusions.</p>
+<div class="custom-block2">
+<p><strong>Strategy</strong>: From the machine learning perspective, it is relatively easy to formulate the optimization problem for the logistic regression model. However, different from MSE loss, to fully understand the cross-entropy loss function, we would need to learn some additional concepts from information theory. Since we have already studied likelihood theory, deriving the objective function (i.e., the likelihood function) from this perspective is comparatively straightforward. Therefore, to simplify the learning process, I will introduce the cross-entropy loss from the machine learning perspective and then interpret it through the lens of likelihood theory. In the near future, you can revisit this concept from the information theory perspective when you study neural networks.</p>
+</div>
+<section id="cross-entropy-loss" class="level3">
+<h3 class="anchored" data-anchor-id="cross-entropy-loss">3.1.1 Cross-entropy Loss</h3>
+<p>Let us recall the brute-force method we used when training a regression model. First, we define a loss function, specifically the MSE loss, which we use to evaluate the model’s performance.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/L7_loss.png" class="img-fluid figure-img" style="width:99.9%"></p>
+<figcaption>In this formula: <strong>LHS</strong>: It represents the relationship between the model’s loss and its parameters, i.e., the loss function. Its value is determined by two factors: the model parameters and the data fed into the model. Since the data is fixed and unchanging, the quality of the model depends on the choice of parameters. <strong>RHS</strong>: It specifies how the loss is calculated. Since the model <span class="math inline">\(f\)</span> is a regression model, its loss can be directly measured by the prediction error, namely the Mean Squared Error (MSE).</figcaption>
+</figure>
+</div>
+<p>After defining the loss function, we can select the optimal model based on the performance corresponding to different sets of model parameters. In the absence of an efficient algorithm, brute-force computation is the simplest solution. However, for a well-defined optimization problem, smart mathematicians would never resort to brute-force computation so easily. This has led to the development of various algorithms for training models, e.g.&nbsp;<strong>gradient descent algorithm</strong>.</p>
+<p>Alright, let’s return to the logistic regression model. How do we determine its model parameters? Similarly, we can design a loss function for the model and formulate it as an optimization problem. However, for a classification problem, we cannot directly calculate the model error and take the average, as we do in regression problems. Instead, the most commonly used loss function for classification problems is the <strong>cross-entropy loss</strong>: <span class="math display">\[
+  \mathcal{L}\left(\textbf{w};\left\{ y_i, \textbf{x}_i \right\}_{i=1}^N  \right) = -\frac{1}{N}\sum_{i = 1}^N \left\{ y_i\log( \pi(\textbf{x}_i, \textbf{w}) ) + (1-y_i)\log(1-\pi(\textbf{x}_i, \textbf{w})) \right\}
+\]</span> Similar to training regression problems, the model parameters of logistic regression can be obtained by optimizing the cross-entropy loss, i.e., <span class="math display">\[
+   \hat{\textbf{w}} = \arg\max_{\textbf{w}} \mathcal{L}(\textbf{w};\left\{ y_i, \textbf{x}_i \right\}_{i=1}^N)
+\]</span></p>
+<div class="custom-block2">
+<p><strong>Note</strong>: The cross-entropy loss is undeniably famous. You will encounter it again when you study neural network models and deep learning in the future.</p>
+</div>
+<p>Unlike regression problems, optimizing the cross-entropy loss does not have an analytical solution. This means that we must use numerical algorithms to find the optimal solution. Typically, we use second-order optimization algorithms to estimate the parameters of logistic regression, such as the Newton-Raphson algorithm you practiced in Lab 1. In broader fields, like optimizing deep neural network models, the gradient descent algorithm is commonly used. We will only touch on this briefly here, and I will discuss it in more detail in the future.</p>
+<div class="custom-block2">
+<p><strong>Think</strong>: Why can’t we design the loss function using prediction error like in regression problems? What would happen if we did?</p>
+</div>
+</section>
+<section id="maximum-likelihood-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="maximum-likelihood-estimation">3.1.2 Maximum Likelihood Estimation</h3>
+<p>Cross-entropy loss is not as easy to understand as MSE loss; you need to learn some information theory to fully grasp it. But don’t worry, here we will approach it from the perspective of statistical theory, specifically from the concept of maximum likelihood estimation (MLE), which you have already studied. In the end, you will find that the likelihood function of MLE and the cross-entropy loss are equivalent.</p>
+<p>Suppose we have a set of training observations, <span class="math inline">\(\left\{ y_i, \textbf{x}_i \right\}_{i = 1}^N\)</span>. The distribution of the target variable is Binary distribution, i.e.&nbsp; <span class="math display">\[
+  \Pr\left( y_i, \pi(\textbf{x}_i, \textbf{w}) \right) = \pi(\textbf{x}_i, \textbf{w}) ^{y_i} (1-\pi(\textbf{x}_i, \textbf{w}))^{1 - y_i}  
+\]</span> where <span class="math inline">\(y_i = 1 \text{ or } 0\)</span>. Since we have independent observations, the joint likelihood of the training sample is <span class="math display">\[
+  L\left(\textbf{w}; ;\left\{ y_i, \textbf{x}_i \right\}_{i=1}^N \right) = \prod_{i = 1}^{n} \pi(\textbf{x}_i, \textbf{w}) ^{y_i} (1-\pi(\textbf{x}_i, \textbf{w}))^{1 - y_i}
+\]</span> The log-likelihood function is <span class="math display">\[
+  \ell\left(\textbf{w}; \left\{ y_i, \textbf{x}_i \right\}_{i=1}^N\right) = \sum_{i = 1}^N \left\{ y_i\log( \pi(\textbf{x}_i, \textbf{w}) ) + (1-y_i)\log(1-\pi(\textbf{x}_i, \textbf{w})) \right\}
+\]</span> The MLE of <span class="math inline">\(\textbf{w}\)</span> is <span class="math display">\[
+  \hat{\textbf{w}}_{\text{MLE}} = \arg\max_{\textbf{w}} \ell\left(\textbf{w};\left\{ y_i, \textbf{x}_i \right\}_{i=1}^N\right)
+\]</span></p>
+<p>Now we can compare the likelihood function and the cross-entropy loss function. Upon comparison, you will find that they differ only by a negative sign. Therefore, maximizing the likelihood function is equivalent to minimizing the loss function; they are interchangeable. So, if you want to understand cross-entropy loss, start by approaching it from the perspective of likelihood analysis.</p>
+</section>
+</section>
+<section id="penalized-logistic-regression" class="level2">
+<h2 class="anchored" data-anchor-id="penalized-logistic-regression">3.2 Penalized Logistic Regression</h2>
+<p>In the previous lecture, we discussed the shrinkage and sparse versions of the regression model. Through these, we can both avoid the risk of overfitting and indirectly obtain feature selection results. For classification problems, we have similar tools available, that is penalized logistic regression.</p>
+<p>Let’s first recall the idea of penalized regression. We define a set of candidate models by adding the calculation of the budget for the model parameter values, i.e., <span class="math display">\[
+  \textcolor[rgb]{1.00,0.00,0.00}{\text{Candidate Models}} = \textcolor[rgb]{1.00,0.50,0.00}{\text{Full Model}} + \textbf{Budget}(\textbf{w}).
+\]</span> With the general form of all candidate models, the penalized regression problem can be formulated as <span class="math display">\[
+  \min_{\textbf{w}} \left\{ \mathcal{L}_{mse}\left( \textbf{w}; \left\{ y_i, \textbf{x}_i \right\}_{i=1}^N \right) + \lambda\textbf{Budget}(\textbf{w})  \right\}
+\]</span> where the mse loss is just the sum squared residuals, and the budget term can be <span class="math inline">\(L_1\)</span> norm, i.e.&nbsp;LASSO, or <span class="math inline">\(L_2\)</span> norm, i.e.&nbsp;ridge regression.</p>
+<p>Now, let’s return to the logistic regression model. The clever among you might have already realized that the difference between penalized logistic regression and the previous penalized regression is simply the choice of the loss function. If we replace the MSE loss in the above formula with the cross-entropy loss, we obtain the optimization problem for penalized logistic regression, and the optimal solution is the penalized logistic regression model parameters.</p>
+<p>Similarly, if we choose the <span class="math inline">\(L_2\)</span> norm, we will get a shrinkage solution, whereas the <span class="math inline">\(L_1\)</span> norm will provide us with a sparse solution and serve as an important tool for feature selection in classification problems. In addition, we will encounter many variations of penalty terms, such as the <strong>Elastic net penalty</strong>, <span class="math display">\[
+  \alpha \times \sum_{j = 1}^p |w_j|  + (1- \alpha) \times \sum_{j = 1}^p w_j^2
+\]</span> where <span class="math inline">\(\alpha\)</span> is an extra hyper-parameter taking value in <span class="math inline">\([0,1]\)</span>. From the above formula, it is easy to see that the calculation of the parameter value budget in elastic net is intermediate between ridge regression and LASSO. If the parameter <span class="math inline">\(\alpha\)</span> is set to 1, the elastic net degenerates into the LASSO penalty. Conversely, if <span class="math inline">\(\alpha\)</span> is set to 0, we get the <span class="math inline">\(L_2\)</span> penalty, which corresponds to ridge regression. When <span class="math inline">\(\alpha\)</span> takes any value between 0 and 1, we obtain the elastic net. In other words, the elastic net is a convex combination of the <span class="math inline">\(L_1\)</span> penalty and the <span class="math inline">\(L_2\)</span> penalty. This setup makes the corresponding candidate models more flexible. Of course, the trade-off is that we need to consider an additional hyperparameter. Alright, let’s stop here for now. We will explain the implementation of penalized logistic regression in more detail in the upcoming labs.</p>
+<div style="text-align: center; margin: 30px 0">
+<p><a href="../../../Courses/c_mlwr1_2024/l7/l7_2.html" title="Logistic Regression Classifier"><strong>Previous page</strong></a> | <a href="../../../Courses/c_mlwr1_2024/l7/l7_home.html"><strong>Lecture 7 Homepage</strong></a> | <a href="../../../Courses/c_mlwr1_2024/l7/l7_4.html" title="Course Conlusion"><strong>Next page</strong></a></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
+  <div><img src="../../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
+</div>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
