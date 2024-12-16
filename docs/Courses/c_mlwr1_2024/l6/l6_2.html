@@ -241,14 +241,21 @@ window.Quarto = {
 <li><p><strong>Hyper-parameters</strong>: These are parameters that need to be set <strong>before</strong> the model is trained. They control aspects of the model or the learning process itself. Examples include the degree of the polynomial in polynomial regression or the value of <span class="math inline">\(k\)</span> in KNN. Unlike model parameters, hyper-parameters are not learned from the data directly but require careful tuning through methods like cross-validation.</p></li>
 </ul>
 <p>In essence, building and training a machine learning model involves selecting a model type, defining its structure through hyper-parameters, and then using data to learn the model parameters. Before we begin training a model using data, we need not only to choose the type of model but also to determine the hyper-parameters that can <strong>not</strong> be set by the algorithm itself. In other words, <strong>determining the optimal values for hyper-parameters is essentially a model selection problem</strong>.</p>
-<div class="custom-figure-block">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/L6_tuning.png" class="img-fluid figure-img" style="width:99.9%"></p>
-<figcaption><strong>Tuning hyper-parameters</strong>: <em>Step 1:</em> Define the range of hyper-parameter choices. <em>Step 2:</em> Use the algorithm to estimate model parameters from the data. <em>Step 3:</em> Evaluate the training results. <em>Step 4:</em> Select the optimal hyper-parameters.</figcaption>
-</figure>
+<!------ Tuning Slides demo ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The procedure of tuning hyper-parameters
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l6_slides_tuning.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Tuning Slides demo OVER ------>
 <div class="custom-block2">
 <p><strong>Recall</strong>: In previous labs, we used the so-called brute-force method, the grid search method, to estimate the parameters of regression models. Do you sense a similar vibe here? In other words, without those clever algorithms, wouldn’t the coefficients of a regression model also become hyper-parameters?</p>
 </div>

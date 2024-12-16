@@ -211,23 +211,21 @@ window.Quarto = {
 <p><strong>Output</strong>: The assigned label.</p>
 </div>
 <p>See the following demonstration. In this toy example, we have a binary classification problem with 2 feature variables. There are 10 observations in the training set. We apply 3-NN method to classify an arbitrary point in the 2D space according to the training samples.</p>
-<!------ KNN demo ------>
-<div class="custom-gifdemo-block">
-<p><strong>Animation-Demo of KNN</strong></p>
-<div style="text-align: center;">
-<p><!-- GIF container --> <img id="KNN_gif" src="fig/L6_KNN.gif" alt="Demo of KNN" width="66.6%"> <br> <!-- Replay button --> <button id="replay_btn_0" style="margin-top: 10px; padding: 5px 10px; font-size: 13px;">Replay</button></p>
+<!------ KNN Slides demo ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<script>
-// JavaScript to replay the GIF
-document.getElementById('replay_btn_0').addEventListener('click', function () {
-    const gif = document.getElementById('KNN_gif');
-    const gifSrc = gif.src; // Get the current src of the GIF
-    gif.src = ''; // Reset the src to stop the GIF
-    setTimeout(() => gif.src = gifSrc, 10); // Restore the src to replay the GIF
-});
-</script>
+<div class="callout-title-container flex-fill">
+Demo of KNN method
 </div>
-<!------ KNN demo OVER ------>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l6_slides_knn.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ KNN Slides demo OVER ------>
 <p><strong>Formal formulation</strong>(<span title="Not essential and you may skip"> <strong>NE</strong> </span>): KNN method can be easily generalized to multiple classification problems, <span class="math inline">\(M\)</span> classes. For a multiple classification problem, suppose we have a training set <span class="math inline">\(\left\{\textbf{x}_i, y_i \right\}_{i = 1}^{N}\)</span>, where <span class="math inline">\(y_i\)</span> takes value in a set of labels <span class="math inline">\(\left\{1, 2, \dots, M \right\}\)</span>. For a new observation point, <span class="math inline">\(\textbf{x}_{\text{new}}\)</span>, the posterior probability that the new point belongs to the <span class="math inline">\(j\)</span>th class given the feature values can be evaluated as <span class="math display">\[
   \Pr(y=j|\textbf{x}_{\text{new}}) = \frac{1}{K}\sum_{i \in \mathbb{N}_k(\textbf{x}_{\text{new}})} \textbf{1}\{y_i = j\}
 \]</span> where <span class="math inline">\(\mathbb{N}_k(\textbf{x}_{\text{new}})\)</span> denotes the index set of k nearest neighbors of <span class="math inline">\(\textbf{x}_{\text{new}}\)</span> in the training set, the indicator function <span class="math inline">\(\textbf{1}\{y_i = j\} = 1\)</span> if <span class="math inline">\(y_i = j\)</span> otherwise <span class="math inline">\(0\)</span>, and <span class="math inline">\(j = 1,2,\dots,M\)</span>. After evaluating the posterior probabilities, one can make the decision accordingly.</p>
