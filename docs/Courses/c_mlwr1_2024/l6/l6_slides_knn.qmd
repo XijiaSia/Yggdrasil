@@ -1,0 +1,57 @@
+---
+format: revealjs
+self-contained: true
+css: style_presentation.css
+---
+
+### A binary classification problem
+
+![](fig/L6_slides_knn0.gif)
+
+---
+
+### Assign a label to the purple star point
+
+![](fig/L6_slides_knn1.gif)
+
+---
+
+### Step 1: find the 3 nearest neighbors
+
+![](fig/L6_slides_knn2.gif)
+
+---
+
+### Step 2: preditc it as the color of majority
+
+![](fig/L6_slides_knn3.gif)
+
+---
+
+### Another example
+
+![](fig/L6_slides_knn4.gif)
+
+---
+
+### Step 1: find the 3 nearest neighbors
+
+![](fig/L6_slides_knn5.gif)
+
+---
+
+### Step 2: preditc it as the color of majority
+
+![](fig/L6_slides_knn6.gif)
+
+---
+
+### If apply KNN to all possible points, then...
+
+![](fig/L6_slides_knn7.gif)
+
+---
+
+### We get the decision Boundary
+
+![](fig/L6_slides_KNN8.png)
