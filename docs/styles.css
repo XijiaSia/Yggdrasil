@@ -14,7 +14,7 @@
 }
 
 .custom-block {
-  background-color: #FFFAFA;
+  background-color: #F8F9F9;
   border-left: 5px solid #007acc;
   padding: 10px;
   margin: 20px auto; /* Center the block */
@@ -22,7 +22,7 @@
   max-width: 90%; /* Make it narrower than the text width */
   border-radius: 5px;
   font-family: 'Satisfy', Cursive, monospace; /* Example font */
-  font-size: 16px;
+  font-size: 18px;
   color: Goldenrod;
   text-align: left; /* Optional: Align text inside the block */
   line-height: 1.5; /* Adjust line spacing */
@@ -45,12 +45,12 @@
   padding: 15px;
   margin: 5px auto; /* Center the block */
   margin-bottom: 20px;
-  max-width: 90%; /* Narrow the block width */
+  max-width: 95%; /* Narrow the block width */
   border: 2px solid #007acc; /* Border color */
   border-radius: 8px;
   font-size: 16px;
   text-align: left;
-  line-height: 1.6;
+  line-height: 1.4;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
@@ -59,7 +59,7 @@
   padding: 10px;
   margin: 1px auto; /* Center the block */
   margin-bottom: 20px;
-  max-width: 100%; /* Narrow the block width */
+  max-width: 95%; /* Narrow the block width */
   border: 2px solid #CC3300; /* Border color */
   border-radius: 8px;
   font-size: 16px;
@@ -73,7 +73,7 @@
   padding: 15px;
   margin: 5px auto; /* Center the block */
   margin-bottom: 20px;
-  max-width: 100%; /* Narrow the block width */
+  max-width: 95%; /* Narrow the block width */
   border: 2px solid #FF9900; /* Border color */
   border-radius: 8px;
   font-size: 16px;
@@ -87,8 +87,8 @@
   padding: 15px;
   margin: 5px auto; /* Center the block */
   margin-bottom: 20px;
-  max-width: 100%; /* Narrow the block width */
-  border: 2px solid #33CC66; /* Border color */
+  max-width: 95%; /* Narrow the block width */
+  border: 2px solid #b603b7; /* Border color */
   border-radius: 8px;
   font-size: 16px;
   text-align: left;
