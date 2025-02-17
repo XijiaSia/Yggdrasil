@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2. Principle Components Analysis – My Yggdrasil</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../Images/main_logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">My Yggdrasil</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../01_c_index.html"> 
+<span class="menu-text">Norns’ Blessing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../02_m_index.html"> 
+<span class="menu-text">Mímisbrunnr</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../03_s_index.html"> 
+<span class="menu-text">Skalds</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../04_about_me.html"> 
+<span class="menu-text">About me</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-pca" id="toc-what-is-pca" class="nav-link active" data-scroll-target="#what-is-pca">2.1 What is PCA?</a></li>
+  <li><a href="#pca-problem" id="toc-pca-problem" class="nav-link" data-scroll-target="#pca-problem">2.2 PCA Problem</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">2. Principle Components Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>PCA is an important data analysis method in statistics, particularly in multivariate statistical analysis. Mathematicians and statisticians have studied it extensively and in great depth. Among them, the <strong>Swedish</strong> 🇸🇪 mathematician and statistician <strong>Herman Wold</strong> made significant contributions to the understanding and expansion of PCA’s essence. In fact, if we review his works on PCA related issues, we can even catch glimpses of the <strong>modern artificial neural network models</strong>. Let us pay tribute to this great pioneer! 🎩👏</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/HermanWold.png" class="img-fluid figure-img" style="width:66.6%"></p>
+<figcaption>Herman Wold was a Swedish statistician and econometrician who served as a professor at <strong>Uppsala University</strong> and is renowned for his contributions to sequential regression, partial least squares (PLS), and stochastic processes.</figcaption>
+</figure>
+</div>
+</div>
+<section id="what-is-pca" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-pca">2.1 What is PCA?</h2>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/plate-PCA.PNG" class="img-fluid figure-img" style="width:88.8%"></p>
+<figcaption>What is PCA? I took this picture when I was waiting for traffic lights close to Stroa Coop at Tomtebo in Umeå in January 2021. What perfect timing! Being stopped by traffic lights isn’t always a bad thing.</figcaption>
+</figure>
+</div>
+</div>
+<p>PCA is a linear feature extraction tool. Let’s first provide the definition:</p>
+<div class="custom-block2">
+<p><strong>PCA</strong> is a <span style="color: red;"> <strong>linear</strong> </span> numerical method for creating a relatively smaller set of mutually <span style="color: green;"> <strong>orthogonal</strong> </span> <span style="color: red;"> <strong>new variables</strong> </span> from the original dataset and the most <span style="color: blue;"> <strong>information</strong> </span> can be preserved in the new dataset.</p>
+</div>
+<p>Next, let me explain each highlighted key words in the definition.</p>
+<p><span style="color: red;"><strong>New variables</strong></span> and <span style="color: red;"><strong>Linear</strong></span>: The term “new variable” is easy to understand. PCA is a type of feature extraction method, and the results of feature extraction are essentially new variables. However, this feature extraction, or the map <span class="math inline">\(g()\)</span>, is not arbitrary; we constrain it to be linear. In other words, all the new variables must satisfy the following equation:</p>
+<p><span class="math display">\[
+  g_{\textbf{w}}(\textbf{x}) = w_1x_1 + w_2x_2 + \dots + w_px_p
+\]</span> where <span class="math inline">\(\textbf{x}\)</span> expresses all the <span class="math inline">\(p\)</span> original feature variables, and <span class="math inline">\(\textbf{w}\)</span> contains all the <span class="math inline">\(p\)</span> coefficients. A straightforward example is the average. The average is a widely used method of summarizing information in real-life situations. It is the time to awkwardly show the generation gap. For example, in old-style music competitions, a singer would typically receive scores from several judges after their performance. Then, the host would say, “Remove the highest score, remove the lowest score, and the final score is……” The final score is just the average. More precisely, it is the truncated mean.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/scoring.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:88.8%"></p>
+</figure>
+</div>
+</div>
+<p>Here, I want to emphasize something for you. To make it more memorable, let me start with a sad memory.</p>
+<div class="custom-block2">
+<p><strong>Sad memories</strong>: In middle school, I was very good at mathematics and physics, and also terrible at English and literature. The end of every exam was always the most awkward moment for me. Say I got 100 scores both for mathematics and physics, but 0 scores both for English and literature. My teacher simply informed the average score as the overall evaluation of my study to my parents. I guess she used the following formula <span class="math display">\[
+  \frac{1}{4} \text{Math} + \frac{1}{4} \text{Physics}+ \frac{1}{4} \text{English} + \frac{1}{4} \text{Literature}
+\]</span> Obviously, I was hopeless. However, my smart mother courageously stepped up, she simply adjusted the coefficients of the feature extraction function, <span class="math display">\[
+  \frac{1}{2} \text{Math} + \frac{1}{2} \text{Physics}+ 0 \cdot \text{English}+ 0 \cdot \text{Literature}
+\]</span> and told me that you are actually great!</p>
+</div>
+<p>A good choice of coefficients not only can save a young people but also leads to a informative new variable for different purposes. This sad story highlights the role of coefficients in the feature extraction function. In one word, different coefficients lead to different information.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/handshadow.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:44.4%"></p>
+</figure>
+</div>
+</div>
+<p>I would like to use the above picture to close the discussion about this keyword. Essentially, the extracted feature is just the weighted sum of original features, while the weighted sum is called linear combination in linear algebra and the geometry meaning of linear combination is <strong>projection</strong>. I strongly suggest you read about <a href="../../../MathToolBox/la/la_07.html">mathematical projection</a> if you are not familiar with this concept.</p>
+<p>This hand shadow game is a good example. If you don’t know it, just looking at the two hands won’t immediately tell you what the performer wants to show the audience. But once the light casts a shadow, the image of a dog becomes clear. The basic idea of feature extraction is similar—by using the right feature extraction function, useful information can be presented in a way that is easy for a computer to recognize. In one words, the new variable can be viewed as a shadow of the object (<span class="math inline">\(\textbf{x}\)</span>) from a proper direction (<span class="math inline">\(\textbf{w}\)</span>).</p>
+<p><span style="color: blue;"><strong>Information</strong> </span>: Based on the discussion above, it’s not difficult to see that the goal of the PCA algorithm is to find a set of suitable coefficients to achieve feature extraction. But what does “suitable” coefficients mean? Are there specific criteria for this? To understand the answer to this question, we need to take a closer look at the key term “information”.</p>
+<p>In statistics and information theory, we have many measures of information. In PCA, however, we use a simple and familiar measure to quantify how much information a variable contains, that is “<strong>Variance</strong>”. Let’s start with an interesting example.<br>
+I will present two events—think about which one you would be more eager to share with your family or friends:</p>
+<p><strong>Event 1:</strong> This morning, the sun rose in the east.<br>
+<strong>Event 2:</strong> NASA has just admitted to observing UFOs over the past 10 years.</p>
+<p>I think you already have the answer. No rush, let me and my wife simulate this scenario, as shown in the picture below.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/message.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:88.8%"></p>
+</figure>
+</div>
+</div>
+<p>On the left, my wife immediately saw through my trick of avoiding cooking at home. On the right, she was genuinely shocked by the news—although she still figured out my trick five minutes later. For us, the amount of information in a message depends on how surprising it is. Essentially, information amount is roughly equal to the <strong>degree of surprise</strong>.</p>
+<p>Another example, I tell two students, “You can pass this exam.” The first student has prepared well and is confident in their answers, while the second student didn’t do well and feels uncertain. Clearly, the amount of information my message carries is completely different for them. Therefore, the <strong>degree of surprise</strong> in a message depends on the uncertainty of the event it describes. In statistics, uncertainty is usually measured by <strong>variance</strong>.</p>
+<p>Let me use one last example to convince you. Suppose we have an epidemiological dataset about cervical cancer, which includes age, gender, BMI, and various health indicators. Now, which variable do we absolutely not need? Think about what the variance of this variable would be.</p>
+<p><span style="color: green;"><strong>Orthogonal</strong> </span>: At this point, we’ve basically understood the core idea of how PCA extracts new variables. However, there’s one more thing to clarify: for a dataset containing many variables, we usually extract a set of new variables. The PCA algorithm has a specific requirement for the relationship between these extracted variables, which is orthogonality. Simply put, orthogonality means that there is no linear relationship between the extracted variables, meaning their covariance is zero. We’ll see this more clearly in a concrete example later.</p>
+</section>
+<section id="pca-problem" class="level2">
+<h2 class="anchored" data-anchor-id="pca-problem">2.2 PCA Problem</h2>
+<p>With all this groundwork laid out, it becomes much easier to understand how PCA extracts variables from the original dataset. Simply put, PCA first aims to find a set of coefficients to calculate new variables, and this set of coefficients is designed to maximize the variance of the extracted new variables. Suppose, we have <span class="math inline">\(p\)</span> variables in a dataset. <span class="math display">\[
+  \max_{\textbf{w}} \left\{ \text{Var} \left( \underbrace{w_1 \cdot x_1 + w_2 \cdot x_2 + \dots + w_p \cdot x_p}_{\text{extracted feature}} \right) \right\}
+\]</span></p>
+<p>By solving this optimization problem, we obtain an optimizer <span class="math inline">\(\textbf{w}_1\)</span> that is a set of coefficients for computing the first new variable. We call <span class="math inline">\(\textbf{w}_1\)</span> the <strong>first Principal Component weights (PC weithgs)</strong>, and the variable calculated using these coefficients is commonly known as the <strong>first principal component</strong>. Of course, these are just statistical terms. In machine learning, this is simply a <strong>feature extraction</strong> function obtained through an algorithm under certain constraints.</p>
+<p>As mentioned earlier, we usually need to extract a series of new variables from the original dataset to replace the old ones, achieving <strong>dimensionality reduction</strong>. Finding the second set of coefficients is not much different from the previous problem—we still aim to maximize the variance of the resulting variable. However, the key difference is that we need to add a constraint to ensure that we do not obtain the same <strong>first PC weights</strong> again. This constraint is what we call <strong>orthogonality</strong> before.</p>
+<p><span class="math display">\[
+  \max_{\textbf{w}: \textbf{w} \perp \textbf{w}_1} \left\{ \text{Var} \left( \underbrace{w_1 \cdot x_1 + w_2 \cdot x_2 + \dots + w_p \cdot x_p}_{\text{extracted feature}} \right) \right\}
+\]</span> Some linear algebra knowledge is needed to fully understand <span class="math inline">\(\textbf{w} \perp \textbf{w}_1\)</span>, but you can ignore the details for now and just remember two key points:</p>
+<ol type="1">
+<li>This condition prevents us from obtaining the first set of <strong>PC weights</strong> again.<br>
+</li>
+<li>The second <strong>principal component</strong> (new variable) obtained this way will be linearly uncorrelated with the first principal component.</li>
+</ol>
+<p>Of course, if needed, we continue searching for the third set of PC weights. This time, we need to add two orthogonality constraints to ensure it remains uncorrelated with both the first and second principal components, that is <span class="math inline">\(\textbf{w} \perp \textbf{w}_1\)</span> and <span class="math inline">\(\textbf{w} \perp \textbf{w}_2\)</span>. By following this approach, we can continue finding more <strong>PC weights</strong>. In fact, we can obtain up to <span class="math inline">\(p\)</span> new variables—yes, the same number as in the original dataset.<br>
+You might be wondering: <strong>How does this achieve dimensionality reduction?</strong> Let’s explore this in the next section with a concrete example.</p>
+<div style="text-align: center; margin: 30px 0">
+<p><a href="../../../Courses/mlwr2_2025/l1/l1_1.html"><strong>Previous page</strong></a> | <a href="../../../Courses/mlwr2_2025/l1/l1_home.html"><strong>Lecture 1 Homepage</strong></a> | <a href="../../../Courses/mlwr2_2025/l1/l1_3.html" title="PCA Algorithm and A Simple Example"><strong>Next page</strong></a></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
+  <div><img src="../../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
+</div>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
