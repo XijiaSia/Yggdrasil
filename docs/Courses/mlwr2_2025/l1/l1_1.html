@@ -220,7 +220,8 @@ window.Quarto = {
   D_i = \sqrt{ X_1^2 + X_2^2 }
 \]</span></p>
 <p>Then, we can choose an appropriate cutoff to differentiate the black points from the red points. This is also an example of feature extraction, where the extracted feature is a function of the original feature variables, i.e.&nbsp;<span class="math inline">\(D = g(X_1, X_2)\)</span>.</p>
-<p>By now, I guess you’ve probably realized something. Do you remember how we introduced linear classifiers in the first part of the course? Yes, first, we compute the weighted sum of the feature variables, then compare it with an appropriate cutoff. In fact, a linear classifier is essentially doing feature extraction first, and then comparing the extracted feature with a cutoff. This feature extraction is also a function of the original feature variables, that is:</p>
+<p>By now, I guess you’ve probably realized something. Do you remember how we introduced <strong>linear classifiers</strong> in the first part of the course? (Read about linear classifiers <a href="https://xijiasia.github.io/Yggdrasil/Courses/c_mlwr1_2024/l1/l1_5.html#classification-model">here</a>)<br>
+Yes, first, we compute the weighted sum of the feature variables, then compare it with an appropriate cutoff. In fact, a linear classifier is essentially doing feature extraction first, and then comparing the extracted feature with a cutoff. This feature extraction is also a function of the original feature variables, that is:</p>
 <p><span class="math display">\[
   Z = g(X_1, X_2, \dots, X_p) = \sum_{j = 1}^p w_jX_j
 \]</span></p>

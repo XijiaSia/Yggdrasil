@@ -276,7 +276,7 @@ window.Quarto = {
   D_i = \sqrt{ X_1^2 + X_2^2 }
 \]</span></p>
 <p>Then, we can choose an appropriate cutoff to differentiate the black points from the red points. This is also an example of feature extraction, where the extracted feature is a function of the original feature variables, i.e.&nbsp;<span class="math inline">\(D = g(X_1, X_2)\)</span>.</p>
-<p>By now, I guess you’ve probably realized something. Do you remember how we introduced linear classifiers in the first part of the course? Yes, first, we compute the weighted sum of the feature variables, then compare it with an appropriate cutoff. In fact, a linear classifier is essentially doing feature extraction first, and then comparing the extracted feature with a cutoff. This feature extraction is also a function of the original feature variables, that is:</p>
+<p>By now, I guess you’ve probably realized something. Do you remember how we introduced <strong>linear classifiers</strong> in the first part of the course? (Read about linear classifiers <a href="https://xijiasia.github.io/Yggdrasil/Courses/c_mlwr1_2024/l1/l1_5.html#classification-model">here</a>) Yes, first, we compute the weighted sum of the feature variables, then compare it with an appropriate cutoff. In fact, a linear classifier is essentially doing feature extraction first, and then comparing the extracted feature with a cutoff. This feature extraction is also a function of the original feature variables, that is:</p>
 <p><span class="math display">\[
   Z = g(X_1, X_2, \dots, X_p) = \sum_{j = 1}^p w_jX_j
 \]</span></p>
@@ -349,7 +349,7 @@ window.Quarto = {
 <p><span style="color: blue;"><strong>Information</strong> </span>: Based on the discussion above, it’s not difficult to see that the goal of the PCA algorithm is to find a set of suitable coefficients to achieve feature extraction. But what does “suitable” coefficients mean? Are there specific criteria for this? To understand the answer to this question, we need to take a closer look at the key term “information”.</p>
 <p>In statistics and information theory, we have many measures of information. In PCA, however, we use a simple and familiar measure to quantify how much information a variable contains, that is “<strong>Variance</strong>”. Let’s start with an interesting example.<br>
 I will present two events—think about which one you would be more eager to share with your family or friends:</p>
-<p><strong>Event 1:</strong> This morning, the sun rose in the east.<br>
+<p><strong>Event 1:</strong> This morning, the sun raised in the east.<br>
 <strong>Event 2:</strong> NASA has just admitted to observing UFOs over the past 10 years.</p>
 <p>I think you already have the answer. No rush, let me and my wife simulate this scenario, as shown in the picture below.</p>
 <div class="custom-figure-block">
