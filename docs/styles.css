@@ -95,3 +95,7 @@
   line-height: 1.6;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
+
+.math {
+    color: #1382f5;  /* Change this to any color you like */
+}
