@@ -64,6 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../Images/main_logo.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -220,11 +221,11 @@ window.Quarto = {
 </header>
 
 
-<p>In this section, we discuss a cryptography problem that Prof.&nbsp;Persi Diaconis introduced in his paper. He used this example to introduce the Markov Chain Monte Carlo (MCMC) approach. This is a beautiful example not only for introducing MCMC but also a nice example to demonstrate the “routine” of using data to solve real problems. We can also review some basic probability knowledge and concepts. In addition, it is a good programming exercise, and you may try to implement it by yourself.</p>
-<p>The story takes place in a prison in the United States. One day, the police officer found many strange symbols on a piece of paper, see figure below. It turned out that some prisoners wanted to exchange secret information through ciphertext. The officer first visited a linguist and was told that the cipher text might be a simple substitution cipher. The linguists can’t understand the cipher either but recommend seeking help from statisticians.</p>
+<p>In this note, we discuss a cryptography problem introduced by Prof.&nbsp;Persi Diaconis in his paper, see [1]. He used this example to illustrate the Markov Chain Monte Carlo (MCMC) approach. This example is not only an elegant introduction to MCMC but also a great demonstration of the “routine” of using data to solve real-world problems. Additionally, it provides an opportunity to review fundamental probability concepts and serves as a valuable programming exercise—you may even try implementing it yourself.</p>
+<p>The story takes place in a U.S. prison. One day, a police officer discovered a piece of paper covered in strange symbols (see the figure below). It turned out that some prisoners were attempting to exchange secret messages using a cipher. The officer first consulted a linguist, who suggested that the ciphertext might be a simple substitution cipher. Unable to decipher it themselves, the linguist recommended seeking help from statisticians.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="fig/S_241028_cipher.png" class="img-fluid figure-img" style="width:66.6%"></p>
+<p><img src="../fig/S_241028_cipher.png" class="img-fluid figure-img" style="width:66.6%"></p>
 <figcaption>The piece of paper with cipher.</figcaption>
 </figure>
 </div>
@@ -254,7 +255,7 @@ mjumnftmpjuymnsmbiitvmnftmbrjuhbmeuymevvsdbmsims nvehts bmisvn
 utmsvmnsmnextmevpb mehejubnmembtemsimnvs g rtbmeuymgwmskksbjuhmtuy</code></pre>
 </div>
 </div>
-<p>One can apply inverse mapping to translate the cipher and retrieve the secret information. In other words, one can understand the cipher if holds the key. Thus the problem is to find the key (mapping <span class="math inline">\(f\)</span>). Well, it is also obviously not such an easy task. The size of the symbol space is too big to simply apply a brute force algorithm to search the key. The size of the symbol space is <span class="math inline">\(27\)</span> even though we only consider letters in lowercase and space. In such a case, the total number of possible keys is <span class="math inline">\(27! = 1.08\times 10^{28}\)</span>. So we have to figure out a smart approach that takes some prior information into account to search the key! The prior information leads to our assumptions and the model on top of it.</p>
+<p>One can apply an inverse mapping to decrypt the cipher and retrieve the hidden message. In other words, if one holds the key, the cipher becomes understandable. Thus, the challenge is to determine the key (mapping <span class="math inline">\(f\)</span>). However, this is far from an easy task, because the symbol space is too large for a brute-force search to be feasible. Even if we only consider lowercase letters and spaces, the total number of possible keys is <span class="math inline">\(27! = 1.08 \times 10^{28}\)</span>. Given this immense complexity, we need a smarter approach—one that incorporates prior information to guide the search. This prior knowledge forms the foundation of our assumptions and the model built upon them.</p>
 </section>
 <section id="model-and-assumption" class="level2">
 <h2 class="anchored" data-anchor-id="model-and-assumption">Model and Assumption</h2>
@@ -316,7 +317,7 @@ I &amp; 0.017 &amp; 0.008 &amp; 0.049 &amp; 0.050 &amp; 0.049 &amp; 0.022 &amp; 
 <p><span class="math display">\[
   f^{(1)}: \{ \text{a} \to \text{m}, \text{b} \to \text{g}, \text{c} \to \text{f}, \dots \}
 \]</span></p>
-<p>Is the new <span class="math inline">\(f^{(1)}\)</span> key a good proposal? We can calculate its likelihood value and compare it with the previous key. The simple situation is that if the likelihood value of the new key is higher than the previous one, <span class="math inline">\(\ell(f^{(1)}) &gt; \ell(f^{(0)})\)</span>, we should keep the new key. The interesting question is what if the new key is worse? Simply discard this new key? It seems to be a good way, but there is a risk of falling into the local area and finally missing the optimal key. What is the good way then? There are two situations. If the likelihood value of the new key is much lower than the previous key, then we should be inclined to abandon it; however, if the likelihood values of the two keys are almost the same, then we should tend to keep it. This plan sounds more reasonable, but the question is how exactly realize ‘tend to’? We can calculate the ratio, <span class="math inline">\(\frac{ \ell(f^{(t)}) }{ \ell( f^{(t-1)}}\)</span>. This value, between 0 and 1, can be regarded as a probability that an action will be executed. If we generate a Bernoulli-distributed random number with this probability, and use it to determine whether to keep the new key, then the above operation can be achieved. We summarize this approach in the following algorithm</p>
+<p>Is the new <span class="math inline">\(f^{(1)}\)</span> key a good proposal? We can calculate its likelihood value and compare it with the previous key. The simple situation is that if the likelihood value of the decoded text with the new key is higher than the previous one, <span class="math inline">\(\ell(f^{(1)}) &gt; \ell(f^{(0)})\)</span>, we should keep the new key. The interesting question is what if the new key is worse? Simply discard this new key? It seems to be a good way, but there is a risk of falling into the local area and finally missing the optimal key. What is the good way then? There are two situations. If the likelihood value of the decoded text with the new key is much lower than the previous key, then we should be inclined to abandon it; however, if the likelihood values of the two keys are almost the same, then we should tend to keep it. This plan sounds more reasonable, but the question is how exactly realize ‘tend to’? We can calculate the ratio, <span class="math inline">\(\frac{ \ell(f^{(t)}) }{ \ell( f^{(t-1)}}\)</span>. First, this value is a decimal number between 0 and 1. Second, if the likelihood of the text decoded with the new key is significantly lower than that of the text decoded with the old key, then this decimal will be very close to 0. Conversely, it will be a decimal very close to one. So, it can be regarded as a probability that an action will be executed. If we generate a Bernoulli-distributed random number with this probability, and use it to determine whether to keep the new key, then the above operation can be achieved. We summarize this approach in the following algorithm</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Initialize the key <span class="fu">f</span>(<span class="dv">0</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>R){</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  Step <span class="fl">1.</span> Evaluate the likelihood value of <span class="fu">f</span>(t<span class="dv">-1</span>), <span class="fu">likelihood</span>(<span class="fu">f</span>(t<span class="dv">-1</span>))</span>
@@ -325,7 +326,7 @@ I &amp; 0.017 &amp; 0.008 &amp; 0.049 &amp; 0.050 &amp; 0.049 &amp; 0.022 &amp; 
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">likelihood</span>(<span class="fu">f</span>(t)) <span class="sc">&gt;</span> <span class="fu">likelihood</span>(<span class="fu">f</span>(t<span class="dv">-1</span>))){</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    keep <span class="fu">f</span>(t)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    generate u <span class="sc">~</span> <span class="fu">Ber</span>(<span class="fu">f</span>(t)<span class="sc">/</span><span class="fu">f</span>(t<span class="dv">-1</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    generate u <span class="sc">~</span> <span class="fu">Ber</span>(<span class="fu">likelihood</span>(<span class="fu">f</span>(t))<span class="sc">/</span><span class="fu">likelihood</span>(<span class="fu">f</span>(t<span class="dv">-1</span>)))</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(u <span class="sc">==</span> <span class="dv">1</span>){</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      keep <span class="fu">f</span>(t)  </span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span>{</span>
@@ -340,13 +341,15 @@ I &amp; 0.017 &amp; 0.008 &amp; 0.049 &amp; 0.050 &amp; 0.049 &amp; 0.022 &amp; 
 <figcaption>R outputs</figcaption>
 </figure>
 </div>
+<p><strong>Reference</strong>：</p>
+<p>[1] Diaconis, Persi. “The markov chain monte carlo revolution.” Bulletin of the American Mathematical Society 46.2 (2009): 179-205.</p>
 
 
 </section>
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
-  <div>© 2024 Xijia Liu. All rights reserved.</div>
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
   <div><img src="../Images/logo.png" alt="Logo" style="width: 60px;"></div>
 </div>
 <script id="quarto-html-after-body" type="application/javascript">
