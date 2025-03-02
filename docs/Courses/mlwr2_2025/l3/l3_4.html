@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4. Deep Learning – My Yggdrasil</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../Images/main_logo.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../Images/main_logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">My Yggdrasil</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../01_c_index.html"> 
+<span class="menu-text">Norns’ Blessing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../02_m_index.html"> 
+<span class="menu-text">Mímisbrunnr</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../03_s_index.html"> 
+<span class="menu-text">Skalds</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../04_about_me.html"> 
+<span class="menu-text">About me</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#retrospect" id="toc-retrospect" class="nav-link active" data-scroll-target="#retrospect">4.1 Retrospect</a></li>
+  <li><a href="#from-shallow-to-deep" id="toc-from-shallow-to-deep" class="nav-link" data-scroll-target="#from-shallow-to-deep">4.2 From Shallow to Deep</a></li>
+  <li><a href="#challenges-and-solutions" id="toc-challenges-and-solutions" class="nav-link" data-scroll-target="#challenges-and-solutions">4.3 Challenges and Solutions</a></li>
+  <li><a href="#more-options-for-shopping-guides-optimizers" id="toc-more-options-for-shopping-guides-optimizers" class="nav-link" data-scroll-target="#more-options-for-shopping-guides-optimizers">4.4 More options for shopping guides (Optimizers)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">4. Deep Learning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>I feel very lucky because we have witnessed a significant historical phase in humanity together. I remember in 2016, I was sitting on bus line 8 in Umeå, watching the live broadcast of the match between the Korean Go player Lee Sedol and AlphaGo on my phone. I was very conflicted at that time. First, I had always been proud of my ancestors for inventing Go (<a href="https://en.wikipedia.org/wiki/Go_(game)">Weiqi</a>), and I didn’t want the final intellectual barrier created by them to be easily overcome by computers. At the same time, I was very interested in the development of machine learning and was eager to see humanity make breakthroughs in the field of artificial intelligence. However, that spring, on the bus, I witnessed the singularity of human development. As a result, AlphaGo defeated Lee Sedol 4-1. Therefore, I am willing to regard the event of AlphaGo, based on deep learning, defeating top human Go players as a major milestone in the field of artificial intelligence.</p>
+<div class="custom-block2">
+<p><strong>Remark</strong>: It is worth mentioning that the Go player Lee Sedol, who was facing off against AlphaGo, was about to retire and was not considered the number one player in Go at that time. I guess, if the match had been played by the Chinese player Ke Jie, we would have to push this milestone further back. However, when Ke Jie competed a year later, AlphaGo had already evolved into the unbeatable AlphaGo Zero.</p>
+</div>
+<section id="retrospect" class="level2">
+<h2 class="anchored" data-anchor-id="retrospect">4.1 Retrospect</h2>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/History.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>There is an old Chinese saying, “By using other people as a mirror, one can understand success and failure; By using history as a mirror, one can understand the rise and fall.” Image by Rochester Riverside Primary School.</figcaption>
+</figure>
+</div>
+</div>
+<p>Although we have not yet introduced another famous machine learning model, the Support Vector Machine (SVM), we will use it as a reference to review the history of ANN and deep learning in the development of machine learning. Therefore, I will briefly introduce the characteristics of SVM here. SVM is a nonlinear machine learning model that belongs to the kernel methods family. It primarily uses the concept of feature mapping to nonlinearize a linear model. However, its approach to feature mapping is quite unique. Instead of manually selecting an appropriate feature mapping to get the augmented feature space, SVM employs a mathematical tool called the kernel function to control the final augmented feature space, allowing for a more flexible use of an unknown feature mapping through hyperparameters. (<strong>Note</strong>: Later, we will encounter the term “kernel” again in convolutional neural networks, but these are entirely different concepts.) Due to the use of kernel functions, along with convex optimization and the concept of reproducing kernel Hilbert space, SVM has gained a strong and solid theoretical foundation. Its flexibility and relatively low data requirements once made SVM the dominant model in the field of machine learning. Even today, you can still find many studies and explorations of deep learning through the perspective of kernel functions. I have a set of quite good notes for learning SVM and kernel methods. I will write them up and publish them on Yggdrasil later. If you’re interested, stay tuned! 😊</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/ANN_history.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>The famous deep learning architecture, CNN, is purely based on two ancient ideas and concepts. However, people usually only mention LeCun while overlooking two pioneers, Werbos and Kunihiko. I think this is quite <strong>unfair</strong>.</figcaption>
+</figure>
+</div>
+</div>
+<p>I have summarized the historical review of the field of machine learning in the image above. After reading it, you will realize that ANN is actually a very old concept and idea. The reason why machine learning was not as popular as it is today and was dominated by SVM for 20 years was mainly that the timing was not right—the two most critical factors had not yet matured.</p>
+<p>So, what are those two key factors? The first key factor is <strong>data</strong>. There is an old Chinese saying, “A clever housewife cannot cook without rice.” Indeed, in the era before the internet and digital technology advanced, it was difficult to obtain high-quality data. The number of parameters in neural network models is often staggering, and insufficient data can directly lead to overfitting or even prevent the neural network model from being trained at all. Secondly, <strong>computational power</strong> is also crucial. Our small smartphones today are much more powerful than the computers of the past. The computational requirements for neural network models and their gradient information are enormous, so this critical factor is not hard to understand. However, the new era has arrived! We now have a much better kitchen now. It’s not just the “clever housewives” anymore—now, everyone can step into the kitchen and cook!</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/kitchen.png" class="img-fluid figure-img" style="width:77.7%"></p>
+<figcaption>In this new era, everything has become relatively convenient, and everyone can step into the kitchen and cook a variety of delicious dishes.</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="from-shallow-to-deep" class="level2">
+<h2 class="anchored" data-anchor-id="from-shallow-to-deep">4.2 From Shallow to Deep</h2>
+<p>Before the success of deep learning, research in the field of machine learning on neural networks was primarily limited to shallow neural network models. These models typically had fewer layers, often just one hidden layer, and were more limited in their ability to capture complex patterns and representations in data. Deep learning specifically refers to machine learning models that utilize deep neural networks, which are neural networks with many layers. These models are capable of learning complex representations of data by processing it through multiple levels of abstraction, hence the term “deep.” So, when you refer to deep learning, it typically involves using deep neural network architectures for tasks such as image recognition, natural language processing, and speech recognition.</p>
+<div class="custom-block2">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Shallow ANN:</strong></p>
+<ol type="1">
+<li><p><strong>Easier to train, more efficient:</strong><br>
+Shallow ANN model typically consist of fewer layers and are simpler in structure, which makes them easier and faster to train. With fewer parameters to optimize, the training process is often more efficient and less computationally expensive compared to deeper models.</p></li>
+<li><p><strong>Simpler decision structure:</strong><br>
+The decision-making process in shallow ANNs is relatively straightforward. Since the networks have fewer layers, the information flow is less complex, which can sometimes lead to easier interpretability. However, this simplicity limits their ability to model more intricate patterns and relationships within data.</p></li>
+<li><p><strong>Good enough theory:</strong><br>
+Theoretical foundations for shallow ANNs are well established and understood. These models work well in many classical machine learning tasks where data is not overly complex. Shallow networks can perform well with simpler datasets, and the theory behind them has been solid for decades.</p></li>
+</ol>
+</div><div class="column" style="width:50%;">
+<p><strong>Deep ANN:</strong></p>
+<ol type="1">
+<li><p><strong>‘Arbitrarily’ powerful:</strong><br>
+Deep ANNs are composed of many layers, each learning more complex patterns. This feature have the theoretical potential to model virtually any function and capture highly non-linear relationships in data.</p></li>
+<li><p><strong>More ‘meaningful’ feature extraction:</strong><br>
+As the End to End learning method, one of the major advantages of deep networks is their ability to learn hierarchical features in different levels automatically. This ability to perform automatic feature extraction is crucial in fields like computer vision, natural language processing, and speech recognition.</p></li>
+<li><p><strong>More challenges:</strong><br>
+Deep networks come with significant challenges. However, apart from lacking a solid theoretical foundation, researchers in the field of deep learning have essentially overcome various challenges. Next, let’s discuss the various solutions that deep learning has developed to face its challenges.<br>
+</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="challenges-and-solutions" class="level2">
+<h2 class="anchored" data-anchor-id="challenges-and-solutions">4.3 Challenges and Solutions</h2>
+<p><strong>Challenge 1: High complexity model</strong>. Deep learning models based on deep neural network architectures have a considerable number of model parameters. This means we need to train models with high complexity. When the data volume is insufficient, overcoming the overfitting problem becomes our first challenge. People have approached this problem from both the model and data aspects.</p>
+<p>First, in terms of the model, various regularization techniques have been introduced. For example, adding an L2 penalty to the neuron activation function, and introducing practical methods such as dropout learning and early stopping during model training. These methods are easy to understand. I suggest you read textbook sections 10.7.2 to 10.7.4 (pages 436-439).</p>
+<p>Secondly, in situations where data is insufficient, many methods have also been proposed to overcome this challenge. For example, data augmentation is a very straightforward method.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/DataAugmentation.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>In situations with insufficient data, people address the issue by applying various slight transformations to the original data to generate synthetic images, thereby compensating for the lack of data. For example, stretching, rotating, and adding noise. One of my students in this course, <strong><span class="citation" data-cites="Eleonora">@Eleonora</span> Isberg</strong>, also proposed the idea of reconstructing images using a small number of principal components (PCs), which is quite interesting. <strong>LHS</strong>: the original image data, <strong>RHS</strong>: the augmented image data.</figcaption>
+</figure>
+</div>
+</div>
+<p>In the previous section, we mentioned that the initial values of model parameters are crucial when training a model. A good set of initial values can help us find the optimal model parameters more quickly and avoid getting trapped in local optima. Therefore, based on this idea, concepts such as pre-training, fine-tuning, and transfer learning have also been proposed.</p>
+<div class="custom-block2">
+<p>About <strong>Pre-training</strong> and <strong>Pre-trained Model</strong>: TBA</p>
+</div>
+<div class="custom-block2">
+<p>About <strong>Transfer Learning</strong>: TBA</p>
+</div>
+<p><strong>Challenge 2: More tricky optimization problems</strong>. We have previously mentioned that the loss function of neural network models is highly unfriendly. It not only has many local minimum traps but also requires gradient information to be obtained layer by layer. Therefore, training neural network models is a tricky problem in most cases. However, we also have many new ideas and methods in this regard. One of the revolutionary changes is the introduction of the ReLU activation function.</p>
+<div class="custom-block2">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Sigmoid function</strong>:</p>
+<p><span class="math display">\[
+  \sigma(x) = \frac{1}{1 + e^{-x}}  
+\]</span></p>
+</div><div class="column" style="width:50%;">
+<p><strong>ReLU function</strong>:</p>
+<p><span class="math display">\[
+  \text{ReLU}(x) = max(0,x)
+\]</span></p>
+</div>
+</div>
+</div>
+<p>We know that activation functions play a crucial role in introducing non-linearity. However, traditional activation functions, such as the sigmoid function (also known as the logistic function), are quite complex, which increases the difficulty of computing gradient information and even causes significant issues in the backward propagation of gradients. The introduction of the ReLU function has greatly addressed this problem.</p>
+<p>Another point worth mentioning is <strong>batch learning</strong>. We know that algorithms (such as gradient-based methods) guide us toward the optimal model parameters using gradient information. Just like in statistics, where all data is used to update maximum likelihood estimates, traditional methods involve using all the data to compute the gradient information. However, this approach not only increases the computational load significantly but also hinders the learning process. Therefore, it was proposed that data could be fed to the model in random batches. In this way, the algorithm makes targeted adjustments based on a subset of the data each time, which greatly enriches the gradient information we can obtain.</p>
+<div class="custom-block2">
+<p><strong>The analogy that requires some imagination</strong></p>
+<p>For Chinese students, since there’s no English-speaking environment, the main method of learning English is through memorizing word lists. We often find ourselves holding a vocabulary list all day long. For those of us who don’t particularly enjoy learning languages, like me, it’s hard to stick to this method. As a result, we often start memorizing from A and quickly give up. This makes us Chinese students have a special kind of feeling toward the word “abandon”. 😊 But if we shuffle the order and use the “batch” method to memorize (e.g.&nbsp;reading a book) rather than holding the entire book, it might lead to better results.</p>
+</div>
+<div class="custom-block2">
+<p><strong>Epochs</strong> and <strong>batch_size</strong></p>
+<p>Later on, when you use Keras, you will frequently encounter these two parameters. “Epochs” are like the number of times you change shoes when you’re shopping, while “batch_size” is the amount of data you feed to the model in each epoch, just like how you might try on a certain number of shoes each time you change. How to choose the batch_size？ Well, people often choose powers of 2 as the batch size. he table below summarizes the key takeaways about choosing the batch size.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 27%">
+<col style="width: 23%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Batch Size</strong></th>
+<th><strong>Advantages</strong></th>
+<th><strong>Disadvantages</strong></th>
+<th><strong>Applicable Scenarios</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Small Batch (16, 32, 64)</strong></td>
+<td>Stable training, reduces memory usage</td>
+<td>Longer training time</td>
+<td>Most tasks, default recommendation</td>
+</tr>
+<tr class="even">
+<td><strong>Medium Batch (128, 256)</strong></td>
+<td>Balances speed and stability</td>
+<td>May lead to local minima</td>
+<td>When memory is sufficient</td>
+</tr>
+<tr class="odd">
+<td><strong>Large Batch (512+)</strong></td>
+<td>Faster training</td>
+<td>Prone to local minima</td>
+<td>When computational resources are abundant, very large datasets</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In addition to the Gradient Descent algorithm, we have many of its <strong>variant algorithms</strong> to choose from. In the next section, I will specifically discuss this point.</p>
+<p><strong>Challenge 3: Heavy computational works</strong>. Heavy computational tasks are something deep learning must face. Fortunately, we have more computing resources, so this is not a major issue. For example, we can use GPUs instead of CPUs for batch computations. I believe that, in the near future, we will have even more technologies to provide us with even greater computational power.</p>
+</section>
+<section id="more-options-for-shopping-guides-optimizers" class="level2">
+<h2 class="anchored" data-anchor-id="more-options-for-shopping-guides-optimizers">4.4 More options for shopping guides (Optimizers)</h2>
+<p>TBA</p>
+<div style="text-align: center; margin: 30px 0">
+<p><a href="../../../Courses/mlwr2_2025/l3/l3_3.html" title="Training Algorithm and Implementation"><strong>Previous page</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_5.html" title="Convolutional Neural Network"><strong>Next page</strong></a></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
+  <div><img src="../../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
+</div>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
