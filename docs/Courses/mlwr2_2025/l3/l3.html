@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lecture 3: Artificial Neural Networks and Deep Learning – My Yggdrasil</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../Images/main_logo.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../Images/main_logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">My Yggdrasil</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../01_c_index.html"> 
+<span class="menu-text">Norns’ Blessing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../02_m_index.html"> 
+<span class="menu-text">Mímisbrunnr</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../03_s_index.html"> 
+<span class="menu-text">Skalds</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../04_about_me.html"> 
+<span class="menu-text">About me</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">1. Introduction</a></li>
+  <li><a href="#the-road-to-artificial-neural-networks" id="toc-the-road-to-artificial-neural-networks" class="nav-link" data-scroll-target="#the-road-to-artificial-neural-networks">2. The Road to Artificial Neural Networks</a>
+  <ul class="collapse">
+  <li><a href="#model-graphicalization" id="toc-model-graphicalization" class="nav-link" data-scroll-target="#model-graphicalization">2.1 Model Graphicalization</a></li>
+  <li><a href="#is-pca-also-a-machine" id="toc-is-pca-also-a-machine" class="nav-link" data-scroll-target="#is-pca-also-a-machine">2.2 Is PCA also a machine?</a></li>
+  <li><a href="#traditional-model-vs-new-age-model" id="toc-traditional-model-vs-new-age-model" class="nav-link" data-scroll-target="#traditional-model-vs-new-age-model">2.3 Traditional Model vs New Age Model</a></li>
+  <li><a href="#on-the-top-of-mount-tai" id="toc-on-the-top-of-mount-tai" class="nav-link" data-scroll-target="#on-the-top-of-mount-tai">2.4 On the top of Mount Tai</a></li>
+  </ul></li>
+  <li><a href="#training-algorithm-and-implementation" id="toc-training-algorithm-and-implementation" class="nav-link" data-scroll-target="#training-algorithm-and-implementation">3. Training Algorithm and Implementation</a>
+  <ul class="collapse">
+  <li><a href="#traning-problem" id="toc-traning-problem" class="nav-link" data-scroll-target="#traning-problem">3.1 Traning Problem</a></li>
+  <li><a href="#gradient-descent-algorithm" id="toc-gradient-descent-algorithm" class="nav-link" data-scroll-target="#gradient-descent-algorithm">3.2 Gradient Descent Algorithm</a></li>
+  <li><a href="#gd-algorithm-for-training-ann" id="toc-gd-algorithm-for-training-ann" class="nav-link" data-scroll-target="#gd-algorithm-for-training-ann">3.3 GD algorithm for training ANN</a></li>
+  <li><a href="#implementation-in-r" id="toc-implementation-in-r" class="nav-link" data-scroll-target="#implementation-in-r">3.4 Implementation in R</a></li>
+  </ul></li>
+  <li><a href="#deep-learning" id="toc-deep-learning" class="nav-link" data-scroll-target="#deep-learning">4. Deep Learning</a>
+  <ul class="collapse">
+  <li><a href="#retrospect" id="toc-retrospect" class="nav-link" data-scroll-target="#retrospect">4.1 Retrospect</a></li>
+  <li><a href="#from-shallow-to-deep" id="toc-from-shallow-to-deep" class="nav-link" data-scroll-target="#from-shallow-to-deep">4.2 From Shallow to Deep</a></li>
+  <li><a href="#challenges-and-solutions" id="toc-challenges-and-solutions" class="nav-link" data-scroll-target="#challenges-and-solutions">4.3 Challenges and Solutions</a></li>
+  <li><a href="#more-options-for-shopping-guides-optimizers" id="toc-more-options-for-shopping-guides-optimizers" class="nav-link" data-scroll-target="#more-options-for-shopping-guides-optimizers">4.4 More options for shopping guides (Optimizers)</a></li>
+  </ul></li>
+  <li><a href="#convolutional-neural-network" id="toc-convolutional-neural-network" class="nav-link" data-scroll-target="#convolutional-neural-network">5. Convolutional Neural Network</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lecture 3: Artificial Neural Networks and Deep Learning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In recent years, deep learning has achieved remarkable success across various domains, including image and speech recognition, natural language processing, and more. This success has transformed industries and fueled advancements in artificial intelligence. Deep learning is a subset of machine learning models that fundamentally based on artificial neural networks (ANN). ANN is not a new concept; they were introduced well before the era of deep learning and its prominent models. The foundational ideas of neural networks date back to the mid-20th century, laying the groundwork for what would eventually evolve into the sophisticated deep learning techniques we see today.</p>
+<section id="introduction" class="level1">
+<h1>1. Introduction</h1>
+<p>If you have tried to understand ANN before, it may not have seemed very user-friendly to you. The large and complex model can indeed be difficult to grasp. However, regardless of that, ANN is still a machine learning model, containing all the essential elements of a machine model. So, what are the basic elements of a machine learning model? Next, let’s review what we mean by a machine learning model first.</p>
+<!------ Slides Model/machine ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Model/Machine
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_1_model.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides Model/machine OVER ------>
+<p>Mathematicians are right. Essentially, any machine learning model can be understood as a transformation <span class="math inline">\(f\)</span> that converts feature variables into predictions. The type of model is determined by <span class="math inline">\(f\)</span>, which can be a simple linear classifier or other complex nonlinear models, while its specific characteristics are controlled by parameters. In other words, a successful machine learning model consists of the right model class <span class="math inline">\(f\)</span> plus the appropriate parameters <span class="math inline">\(w\)</span>.</p>
+<p>In the first part of the course, we used <a href="https://xijiasia.github.io/Yggdrasil/Courses/c_mlwr1_2024/l6/l6.html#hyper-parameters">cars</a> as a metaphor when we discussed the hyper-parameters, and now I’d like to introduce another one: shoes. Shoes come in various types, and we choose different kinds based on our purposes. For example, if you’re going to the beach, you definitely wouldn’t bring a lot of high heels. In machine learning, we determine which model to use based on the problem type, variable types, and sample size. Once you’ve determined the type of shoe you need, you then select the specific model and size that fits you best. In this analogy, the type of shoe represents <span class="math inline">\(f\)</span>, while the specific shoes model is hyper-parameter that you have to determine it first, and the size is model parameter <span class="math inline">\(w\)</span>. To complete the analogy, the input <span class="math inline">\(X\)</span> would be your foot, and the output <span class="math inline">\(y\)</span> would be your comfort or experience.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/model.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>I dread buying shoes because it always takes a lot of time, yet they still end up being uncomfortable. Maybe I need a better algorithm to find comfortable and affordable shoes.</figcaption>
+</figure>
+</div>
+</div>
+<p>Do you like this metaphor, well I’ll be using it again later. Now, we can embark on our journey toward understanding ANN.</p>
+</section>
+<section id="the-road-to-artificial-neural-networks" class="level1">
+<h1>2. The Road to Artificial Neural Networks</h1>
+<p>Textbooks typically introduce neural network models using fundamental Logical operation model. That approach is useful—I used to rely on it as well—but I’ve found that students often struggle with it. It can be challenging to grasp the essence of neural networks, let alone deep learning, in a clear and direct way. Here, my plan is to use <strong>Model Graphicalization</strong> along with <strong>PCA</strong> to lay the groundwork for understanding neural network models.</p>
+<section id="model-graphicalization" class="level2">
+<h2 class="anchored" data-anchor-id="model-graphicalization">2.1 Model Graphicalization</h2>
+<p>Mathematicians always take a bird’s-eye view of the world, seeking out its most fundamental elements. The symbolic representation of a machine learning model is both concise and insightful, constantly reminding us of what truly matters. However, this notation is so minimalistic that it overlooks many details, while the earlier graphical representation is too cumbersome and impractical for expressing more complex models. Next, we introduce a more efficient graphical method.</p>
+<!------ Slides Model Representation ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Model Representation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_2_model_representation.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides Model Representation OVER ------>
+</section>
+<section id="is-pca-also-a-machine" class="level2">
+<h2 class="anchored" data-anchor-id="is-pca-also-a-machine">2.2 Is PCA also a machine?</h2>
+<p>Of course, the answer is positive. If we understand PCA through the concept of image reconstruction, it is indeed a “machine” (a machine learning model). It is a transformation where the input consists of all the original variables, and the output is the reconstructed original variables. The specific performance of the model depends on all the PC weights.</p>
+<p>That being the case, let’s now apply the graphical representation to this model.</p>
+<!------ Slides PCA ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+PCA is also a Machine
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_3_PCA.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides PCA OVER ------>
+<p>Similar to the basic elements we discussed in the previous models, we also have inputs, outputs, hyperparameters, and model parameters here. Isn’t it fascinating? PCA can be seen as a very special kind of “machine.” Rather than focusing on its output, we are more interested in its internal byproducts—the principal components (PCs), <span class="math inline">\(\textbf{Z}\)</span>. This is mainly because our ultimate goal is to use the <strong>feature variables extracted by PCA</strong> to predict our predefined <strong>target variable</strong>. In other words, it is an <strong>intermediate step</strong>.</p>
+<p>But do you remember the limitations of PCA that we mentioned in the first lecture? Yes, <strong>PCA is a linear feature extraction method</strong>, which means it has low flexibility. However, in complex problems, we often need more flexible <strong>nonlinear</strong> feature extraction methods to create new variables. So, can we improve PCA? Again, the answer is positive.</p>
+<!------ Slides AutoEncoder ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nonlinear PCA: AutoEncoder
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_4_Autoencoder.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides AutoEncoder OVER ------>
+<p>We are now very close to understanding neural network models and even deep learning models. However, we still need to clarify one concept: end-to-end learning.</p>
+</section>
+<section id="traditional-model-vs-new-age-model" class="level2">
+<h2 class="anchored" data-anchor-id="traditional-model-vs-new-age-model">2.3 Traditional Model vs New Age Model</h2>
+<p>Next, let’s discuss a broader question: the <strong>fundamental workflow to machine learning modeling</strong>. Yes, the process of building machine learning models follows a regular routine. However, <strong>deep learning</strong> marks a clear boundary where traditional and modern modeling approaches diverge significantly.</p>
+<p>Simply put:<br>
+- <strong>Traditional modeling</strong> follows a <strong>two-step approach</strong>.<br>
+- <strong>Modern modeling</strong>, especially in deep learning, follows an <strong>end-to-end approach</strong>.</p>
+<p>Let me explain in detail with the following slides.</p>
+<!------ Slides E2E ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+End to End Learning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_5_e2e.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides E2E OVER ------>
+<p>So how can we implement this end-to-end approach in practice? Let’s return to a powerful nonlinear feature extraction model, the autoencoder.</p>
+<!------ Slides ANN ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_6_ANN.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides ANN OVER ------>
+<div class="custom-block2">
+<p><strong>Remark</strong>: It’s important to note that we usually include a constant term when calculating the score, similar to linear regression. However, for simplicity, we have omitted them in the figures.</p>
+</div>
+<p>This model indeed resembles a large network, but what’s its connection to <strong>neurons</strong>? Let’s check the figures below. On the far left of the figure is the simple model we discussed earlier. If we replace the input with the neurons from the previous layer and the output with new neurons, we obtain the basic unit of an ANN as shown in the middle. Doesn’t this basic unit look quite similar to a <strong>neuron</strong> in <strong>neuroscience</strong>?</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/Neuron.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>People in computer science are indeed great at naming things. Cool names like random forest, support vector machine, and so on pop up all the time in machine learning. However, just like how random forest has nothing to do with a real forest, ANN bears little resemblance to neurons in true neuroscience, both in terms of shape, scale, and working principles. ANN is just a cool name. However, there are scientists who are now researching the use of hardware to replicate real neurons. In my opinion, that could truly be the hopeful light for the future of artificial intelligence. Even with large language models being so popular right now, I still have to say this.</p>
+<div class="custom-block2">
+<p><strong>Quiz</strong>: Are linear regression models and logistic regression models considered special cases of neural network models?</p>
+</div>
+</section>
+<section id="on-the-top-of-mount-tai" class="level2">
+<h2 class="anchored" data-anchor-id="on-the-top-of-mount-tai">2.4 On the top of Mount Tai</h2>
+<!--- On the top of Mount Tai --->
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/taishan.png" class="img-fluid figure-img" style="width:88.8%"></p>
+<figcaption>This is a Chinese landscape painting depicting the scenic beauty of Mount Tai (泰山). In China, there are many majestic mountains, but Mount Tai is regarded as the foremost among them. People believe that once you stand atop Mount Tai, all other peaks can be seen at a glance.</figcaption>
+</figure>
+</div>
+</div>
+<p>We have reached the destination of this journey. Just like standing upon Mount Tai, if you have understood the content above, then you have already grasped the fundamental principles of deep learning. Now, let’s take a closer look at our neural network model and name its elements.</p>
+<!------ Slides ANN components ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+ANN components:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_7_ANN_components.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides ANN components OVER ------>
+<div class="custom-block2">
+<p><strong>Remark</strong>: There is one small note regarding the final layer: if our classification problem is a multi-class problem, say <span class="math inline">\(K\)</span> classes, then we need to generate <span class="math inline">\(K\)</span> score values from the previous layer. Also, we need to use the so called Soft-Max function as the activation function.</p>
+</div>
+<div class="custom-block2">
+<p>(<span title="Not essential and you may skip"> <strong>NE</strong> </span>)Soft-Max function is map from <span class="math inline">\(\mathcal{R}^K\)</span> to <span class="math inline">\(K\)</span> decimal numbers. Let <span class="math inline">\(\textbf{s} = (s_1,s_2,\dots,s_K)^{\top}\)</span> as the <span class="math inline">\(K\)</span> score values in the output layer. The <span class="math inline">\(k\)</span>th output of Soft-Max function is <span class="math display">\[
+  \sigma(\textbf{s})_k = \frac{e^{s_k}}{\sum_{k = 1}^K e^{s_k}}
+\]</span></p>
+<p><strong>Quiz</strong>:</p>
+<ol type="1">
+<li>What is the range of <span class="math inline">\(\sigma(\textbf{s})_k\)</span>?</li>
+<li>What is the relationship between logistic function and Soft-Max function?</li>
+</ol>
+</div>
+</section>
+</section>
+<section id="training-algorithm-and-implementation" class="level1">
+<h1>3. Training Algorithm and Implementation</h1>
+<p>There is an old Chinese saying: “A sharp sword is forged through grinding, and the fragrance of plum blossoms comes from bitter cold.” Indeed, to see a rainbow, one must first endure a storm. Likewise, to obtain a useful model, it must go through training. The models we discussed in the first part of the course mostly do not require so-called training, such as regression models and LDA models. All parameters can be directly computed using formulas. So, what does model training mean? And how do we train a neural network model? Let’s dive into this question next.</p>
+<section id="traning-problem" class="level2">
+<h2 class="anchored" data-anchor-id="traning-problem">3.1 Traning Problem</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/m7.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:44.4%"></p>
+</figure>
+</div>
+<p>Let’s return to this concise mathematical notation. We’ve mentioned that a successful machine learning model depends on the model architecture embedded in <span class="math inline">\(f\)</span> and the appropriate parameters <span class="math inline">\(\textbf{w}\)</span>. The next question is, assuming we have an appropriate <span class="math inline">\(f\)</span>, how do we obtain a suitable set of <span class="math inline">\(w\)</span>? First, we need to clarify an important premise: we need data to guide us toward the appropriate parameters, or in other words, we need data to train our model. Next, let’s use the shoes analogy again.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/buy_shoes.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+<div style="font-size: 16px;">
+<p>Actually, training a model is a bit like trying on shoes. Once the size is set, the shoe is determined, and then we can put our foot in to feel it. It might feel a little loose, or it could be so tight it’s suffocating. If you really can’t find the right fit, you take a step back, switch to a different style, and look for the right size again.</p>
+</div>
+</div>
+<p>Next, we need to address two key questions:</p>
+<ol type="1">
+<li>How to measure the ‘feelings’ of the current model? What is the standard for good parameters?</li>
+<li>How to update the parameters?</li>
+</ol>
+<p>If you remember the <strong>loss function</strong> we discussed in the first part of the course, the first question becomes a piece of cake. Simply put, we need to compare the model’s predicted values for each individual’s target variable with the actual values of the target variable to calculate the <strong>loss</strong>. For example, the loss will be the difference between the true value of target variable and the prediction by the model with a set of values of model parameters. (You will experience this firsthand later in <strong>Exercise 1</strong> of the Lab.) The set of parameters that gives us the <strong>smallest loss</strong> is the set of appropriate values we are looking for. So, the training problem can be represented as an optimization problem.</p>
+<p><span class="math display">\[
+  \min_{\textbf{W}} \mathcal{L}( \textbf{y}, f(\textbf{X}; \textbf{W}))
+\]</span> where <span class="math inline">\(\textbf{y}\)</span> is the target variable containing all the target values in a dataset, <span class="math inline">\(\textbf{X}\)</span> is the data matrix of all possible input features, and <span class="math inline">\(\textbf{W}\)</span> contains all the model parameters. That is, we want to find a set of model coefficients that minimize the model’s loss.</p>
+<p>This is somewhat like selecting hyperparameters in a model selection problem. The difference is that we can use algorithms to handle this tedious task. This algorithm is like a shopping guide. It helps you find a better shoe size based on your feedback on comfort until you feel it fits perfectly. I summarized this analogy in the image below.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/model_training.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>The blue text represents concepts from everyday life, while the red text serves as the corresponding analogy in machine learning. Training a machine learning model is like buying shoes. We start with a certain size and, with the sales assistant’s guidance, continually try new sizes until we find the right fit.</figcaption>
+</figure>
+</div>
+</div>
+<p>I hope you all have grasped this concept. However, you may have noticed that there isn’t a corresponding term in machine learning under “feedback.” So, what is the feedback that the model receives based on the loss? Let’s talk about some mathematics.</p>
+<div class="custom-Rfigure-block">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="l3_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Assuming our loss function is a simple quadratic curve, our goal is to find the set of <span class="math inline">\(w\)</span> that gives us the smallest loss in the most efficient way possible. Next, we’ll introduce the efficient method to update model parameters.</p>
+</div>
+<div class="custom-block2">
+<p><strong>NOTE</strong>: If you don’t want to delve too deeply into the mathematics behind the algorithms, you can <strong>temporarily</strong> skip the content in the following sections. Just remember, training a neural network model is like trying on shoes; the ‘comfort’ of the shoes is indicated by the loss function. Then, if the shoes are too big, you reduce the size; if they’re too tight, you look for a slightly larger size.</p>
+</div>
+</section>
+<section id="gradient-descent-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="gradient-descent-algorithm">3.2 Gradient Descent Algorithm</h2>
+<p>Let me reveal the answer. The analogy for “feedback” in model training is the gradient, and the basic algorithm for training models is called the gradient descent algorithm. So, what is a gradient? Let me refer to another activity I am good at: alpine skiing.</p>
+<!------ Slides G ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Basic Idea of GD algorithm:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_8_GD.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides G OVER ------>
+<p>The basic principle of using gradient descent to find the optimal parameters is to start from an initial value and adjust the position based on the gradient information at that point, gradually approaching the optimal value. When updating the parameters, we introduce a scaling factor to control the adjustment magnitude, making the process more flexible. This is done by multiplying the gradient value by a constant <span class="math inline">\(\alpha\)</span> and we call it as <strong>learning rate</strong>.<br>
+In summary, we can express this process using the following iterative formula:</p>
+<p><span class="math display">\[
+  w_{new} = w_{old} - \alpha \cdot \nabla L(w_{old})
+\]</span></p>
+<p>where <span class="math inline">\(w_{new}\)</span> is the updated model parameter; <span class="math inline">\(w_{old}\)</span> is the current model parameter; <span class="math inline">\(\alpha\)</span> is learning rate; and <span class="math inline">\(\nabla L(w_{old})\)</span> is the gradient of the loss function at the current weight. Next, we’ll use a simple example to demonstrate how the gradient descent (GD) algorithm works.</p>
+<!------ Slides GD ------>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Demo of GD algorithm:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><iframe src="l3_slides_9_GD1.html" width="100%" height="400" style="border: none;"></iframe></p>
+</div>
+</div>
+<!------ Slides GD OVER ------>
+<p>Regarding the learning rate, we can think of it as the working style of the shopping guide (algorithm). Different learning rates lead to different learning outcomes. Let’s look at the following example.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/learning_rate.png" class="img-fluid figure-img" style="width:88.8%"></p>
+<figcaption>Let’s compare the three guides. Shopping guide 1 is the one we previously encountered, with a learning rate of 0.4. The second appears to be very gentle, while the last one is clearly quite impatient.</figcaption>
+</figure>
+</div>
+</div>
+<p>So, which shopping guide would you like to help you choose shoes? Let’s take a look at their performance.</p>
+<div class="custom-figure-block">
+<div class="columns">
+<div class="column" style="width:50%;">
+<div style="text-align: center;">
+<p><!-- GIF container --> <img id="GD1" src="fig/GDa1.gif" alt="Learning rate 0.01" width="100%"> <br> <!-- Replay button --> <button id="replay-btn" style="margin-top: 10px; padding: 5px 10px; font-size: 13px;">Replay</button></p>
+</div>
+<script>
+// JavaScript to replay the GIF
+document.getElementById('replay-btn').addEventListener('click', function () {
+    const gif = document.getElementById('GD1');
+    const gifSrc = gif.src; // Get the current src of the GIF
+    gif.src = ''; // Reset the src to stop the GIF
+    setTimeout(() => gif.src = gifSrc, 10); // Restore the src to replay the GIF
+});
+</script>
+</div><div class="column" style="width:50%;">
+<div style="text-align: center;">
+<p><!-- GIF container --> <img id="GD2" src="fig/GDa2.gif" alt="Learning rate 0.5" width="100%"> <br> <!-- Replay button --> <button id="replay-btn" style="margin-top: 10px; padding: 5px 10px; font-size: 13px;">Replay</button></p>
+</div>
+<script>
+// JavaScript to replay the GIF
+document.getElementById('replay-btn').addEventListener('click', function () {
+    const gif = document.getElementById('GD2');
+    const gifSrc = gif.src; // Get the current src of the GIF
+    gif.src = ''; // Reset the src to stop the GIF
+    setTimeout(() => gif.src = gifSrc, 10); // Restore the src to replay the GIF
+});
+</script>
+</div>
+</div>
+</div>
+<p>Shopping guide 0.01 is indeed very gentle. She is so meticulous that you might even need to take a <a href="https://sv.wikipedia.org/wiki/Fika">fika break</a> in the middle to choose the right shoes. As for Shopping guide 0.5… she’s too impatient, so never mind.</p>
+<div class="custom-block2">
+<p><strong>Remark</strong>: I want to emphasize that the characteristics of the shopping guides are relative. Whether they are efficient, impatient, or overly gentle depends on the nature of the data itself. Therefore, the learning rate is often considered a hyperparameter. Sometimes, you need to try several shopping guides to ensure you truly find the perfect pair of shoes.</p>
+</div>
+</section>
+<section id="gd-algorithm-for-training-ann" class="level2">
+<h2 class="anchored" data-anchor-id="gd-algorithm-for-training-ann">3.3 GD algorithm for training ANN</h2>
+<p>The loss function of a neural network model is far more complex than the loss function in the example above. There are two key issues here, which I will discuss broadly without going into detail. Additionally, some finer points will be explored further in the next section on deep learning.</p>
+<p>First, the loss function of a neural network model is generally a non-convex function. In the R plots below, the left side shows a convex function similar to our previous simple example. The characteristic of a convex function is that starting from any point, we can move toward the optimal value based on the gradient information. On the right side is a simple non-convex function. This type of function has the characteristic of having local optima. This characteristic can lead to many issues, as the algorithm is particularly dependent on the choice of the initial value. With an inappropriate initial value, the gradient information may guide you toward a local optimum rather than the global optimum. Therefore, the choice of the initial value is an important issue. We will leave it at that for now, and we will discuss it further in the Lab and in the next section.</p>
+<div class="custom-Rfigure-block">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="l3_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Another issue is that neural network models have many model parameters, unlike the loss function mentioned above, which has only one optimization variable. Additionally, due to the structure of neural network models, we have parameters at different layers. This characteristic makes calculating the gradient values for each model parameter quite complex. Therefore, we typically use the <strong>backpropagation algorithm</strong> to compute the gradient values. The principle is to first calculate the model’s loss based on the initial model parameters, then compute the gradient for each parameter layer by layer, moving backward from the last layer based on the loss, and finally use the gradient descent algorithm to update the parameters.</p>
+<p>Even though these reasons make training neural network models quite complex and sometimes an incomprehensible black box operation, the term “black box” means that we need to iteratively experiment multiple times based on the model’s performance to arrive at the final model. This is somewhat similar to tuning hyperparameters. Nevertheless, when there is sufficient data, we can often train neural network models that perform well.</p>
+</section>
+<section id="implementation-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-in-r">3.4 Implementation in R</h2>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/keras_logo.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<p>In this course, we use the Keras package to implement the training of neural network models in R. I’ve placed specific introductions, explanations, and operations in the Lab. I recommend that you take a look there before continuing to read. A small gate to Lab: <a href="../../../Courses/mlwr2_2025/l3/l3_lab_home.html">here</a>.</p>
+</section>
+</section>
+<section id="deep-learning" class="level1">
+<h1>4. Deep Learning</h1>
+<p>I feel very lucky because we have witnessed a significant historical phase in humanity together. I remember in 2016, I was sitting on bus line 8 in Umeå, watching the live broadcast of the match between the Korean Go player Lee Sedol and AlphaGo on my phone. I was very conflicted at that time. First, I had always been proud of my ancestors for inventing Go (<a href="https://en.wikipedia.org/wiki/Go_(game)">Weiqi</a>), and I didn’t want the final intellectual barrier created by them to be easily overcome by computers. At the same time, I was very interested in the development of machine learning and was eager to see humanity make breakthroughs in the field of artificial intelligence. However, that spring, on the bus, I witnessed the singularity of human development. As a result, AlphaGo defeated Lee Sedol 4-1. Therefore, I am willing to regard the event of AlphaGo, based on deep learning, defeating top human Go players as a major milestone in the field of artificial intelligence.</p>
+<div class="custom-block2">
+<p><strong>Remark</strong>: It is worth mentioning that the Go player Lee Sedol, who was facing off against AlphaGo, was about to retire and was not considered the number one player in Go at that time. I guess, if the match had been played by the Chinese player Ke Jie, we would have to push this milestone further back. However, when Ke Jie competed a year later, AlphaGo had already evolved into the unbeatable AlphaGo Zero.</p>
+</div>
+<section id="retrospect" class="level2">
+<h2 class="anchored" data-anchor-id="retrospect">4.1 Retrospect</h2>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/History.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>There is an old Chinese saying, “By using other people as a mirror, one can understand success and failure; By using history as a mirror, one can understand the rise and fall.” Image by Rochester Riverside Primary School.</figcaption>
+</figure>
+</div>
+</div>
+<p>Although we have not yet introduced another famous machine learning model, the Support Vector Machine (SVM), we will use it as a reference to review the history of ANN and deep learning in the development of machine learning. Therefore, I will briefly introduce the characteristics of SVM here. SVM is a nonlinear machine learning model that belongs to the kernel methods family. It primarily uses the concept of feature mapping to nonlinearize a linear model. However, its approach to feature mapping is quite unique. Instead of manually selecting an appropriate feature mapping to get the augmented feature space, SVM employs a mathematical tool called the kernel function to control the final augmented feature space, allowing for a more flexible use of an unknown feature mapping through hyperparameters. (<strong>Note</strong>: Later, we will encounter the term “kernel” again in convolutional neural networks, but these are entirely different concepts.) Due to the use of kernel functions, along with convex optimization and the concept of reproducing kernel Hilbert space, SVM has gained a strong and solid theoretical foundation. Its flexibility and relatively low data requirements once made SVM the dominant model in the field of machine learning. Even today, you can still find many studies and explorations of deep learning through the perspective of kernel functions. I have a set of quite good notes for learning SVM and kernel methods. I will write them up and publish them on Yggdrasil later. If you’re interested, stay tuned! 😊</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/ANN_history.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>The famous deep learning architecture, CNN, is purely based on two ancient ideas and concepts. However, people usually only mention LeCun while overlooking two pioneers, Werbos and Kunihiko. I think this is quite <strong>unfair</strong>.</figcaption>
+</figure>
+</div>
+</div>
+<p>I have summarized the historical review of the field of machine learning in the image above. After reading it, you will realize that ANN is actually a very old concept and idea. The reason why machine learning was not as popular as it is today and was dominated by SVM for 20 years was mainly that the timing was not right—the two most critical factors had not yet matured.</p>
+<p>So, what are those two key factors? The first key factor is <strong>data</strong>. There is an old Chinese saying, “A clever housewife cannot cook without rice.” Indeed, in the era before the internet and digital technology advanced, it was difficult to obtain high-quality data. The number of parameters in neural network models is often staggering, and insufficient data can directly lead to overfitting or even prevent the neural network model from being trained at all. Secondly, <strong>computational power</strong> is also crucial. Our small smartphones today are much more powerful than the computers of the past. The computational requirements for neural network models and their gradient information are enormous, so this critical factor is not hard to understand. However, the new era has arrived! We now have a much better kitchen now. It’s not just the “clever housewives” anymore—now, everyone can step into the kitchen and cook!</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/kitchen.png" class="img-fluid figure-img" style="width:77.7%"></p>
+<figcaption>In this new era, everything has become relatively convenient, and everyone can step into the kitchen and cook a variety of delicious dishes.</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="from-shallow-to-deep" class="level2">
+<h2 class="anchored" data-anchor-id="from-shallow-to-deep">4.2 From Shallow to Deep</h2>
+<p>Before the success of deep learning, research in the field of machine learning on neural networks was primarily limited to shallow neural network models. These models typically had fewer layers, often just one hidden layer, and were more limited in their ability to capture complex patterns and representations in data. Deep learning specifically refers to machine learning models that utilize deep neural networks, which are neural networks with many layers. These models are capable of learning complex representations of data by processing it through multiple levels of abstraction, hence the term “deep.” So, when you refer to deep learning, it typically involves using deep neural network architectures for tasks such as image recognition, natural language processing, and speech recognition.</p>
+<div class="custom-block2">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Shallow ANN:</strong></p>
+<ol type="1">
+<li><p><strong>Easier to train, more efficient:</strong><br>
+Shallow ANN model typically consist of fewer layers and are simpler in structure, which makes them easier and faster to train. With fewer parameters to optimize, the training process is often more efficient and less computationally expensive compared to deeper models.</p></li>
+<li><p><strong>Simpler decision structure:</strong><br>
+The decision-making process in shallow ANNs is relatively straightforward. Since the networks have fewer layers, the information flow is less complex, which can sometimes lead to easier interpretability. However, this simplicity limits their ability to model more intricate patterns and relationships within data.</p></li>
+<li><p><strong>Good enough theory:</strong><br>
+Theoretical foundations for shallow ANNs are well established and understood. These models work well in many classical machine learning tasks where data is not overly complex. Shallow networks can perform well with simpler datasets, and the theory behind them has been solid for decades.</p></li>
+</ol>
+</div><div class="column" style="width:50%;">
+<p><strong>Deep ANN:</strong></p>
+<ol type="1">
+<li><p><strong>‘Arbitrarily’ powerful:</strong><br>
+Deep ANNs are composed of many layers, each learning more complex patterns. This feature have the theoretical potential to model virtually any function and capture highly non-linear relationships in data.</p></li>
+<li><p><strong>More ‘meaningful’ feature extraction:</strong><br>
+As the End to End learning method, one of the major advantages of deep networks is their ability to learn hierarchical features in different levels automatically. This ability to perform automatic feature extraction is crucial in fields like computer vision, natural language processing, and speech recognition.</p></li>
+<li><p><strong>More challenges:</strong><br>
+Deep networks come with significant challenges. However, apart from lacking a solid theoretical foundation, researchers in the field of deep learning have essentially overcome various challenges. Next, let’s discuss the various solutions that deep learning has developed to face its challenges.<br>
+</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="challenges-and-solutions" class="level2">
+<h2 class="anchored" data-anchor-id="challenges-and-solutions">4.3 Challenges and Solutions</h2>
+<p><strong>Challenge 1: High complexity model</strong>. Deep learning models based on deep neural network architectures have a considerable number of model parameters. This means we need to train models with high complexity. When the data volume is insufficient, overcoming the overfitting problem becomes our first challenge. People have approached this problem from both the model and data aspects.</p>
+<p>First, in terms of the model, various regularization techniques have been introduced. For example, adding an L2 penalty to the neuron activation function, and introducing practical methods such as dropout learning and early stopping during model training. These methods are easy to understand. I suggest you read textbook sections 10.7.2 to 10.7.4 (pages 436-439).</p>
+<p>Secondly, in situations where data is insufficient, many methods have also been proposed to overcome this challenge. For example, data augmentation is a very straightforward method.</p>
+<div class="custom-figure-block">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/DataAugmentation.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>In situations with insufficient data, people address the issue by applying various slight transformations to the original data to generate synthetic images, thereby compensating for the lack of data. For example, stretching, rotating, and adding noise. One of my students in this course, <strong><span class="citation" data-cites="Eleonora">@Eleonora</span> Isberg</strong>, also proposed the idea of reconstructing images using a small number of principal components (PCs), which is quite interesting. <strong>LHS</strong>: the original image data, <strong>RHS</strong>: the augmented image data.</figcaption>
+</figure>
+</div>
+</div>
+<p>In the previous section, we mentioned that the initial values of model parameters are crucial when training a model. A good set of initial values can help us find the optimal model parameters more quickly and avoid getting trapped in local optima. Therefore, based on this idea, concepts such as pre-training, fine-tuning, and transfer learning have also been proposed.</p>
+<div class="custom-block2">
+<p>About <strong>Pre-training</strong> and <strong>Pre-trained Model</strong>: TBA</p>
+</div>
+<div class="custom-block2">
+<p>About <strong>Transfer Learning</strong>: TBA</p>
+</div>
+<p><strong>Challenge 2: More tricky optimization problems</strong>. We have previously mentioned that the loss function of neural network models is highly unfriendly. It not only has many local minimum traps but also requires gradient information to be obtained layer by layer. Therefore, training neural network models is a tricky problem in most cases. However, we also have many new ideas and methods in this regard. One of the revolutionary changes is the introduction of the ReLU activation function.</p>
+<div class="custom-block2">
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Sigmoid function</strong>:</p>
+<p><span class="math display">\[
+  \sigma(x) = \frac{1}{1 + e^{-x}}  
+\]</span></p>
+</div><div class="column" style="width:50%;">
+<p><strong>ReLU function</strong>:</p>
+<p><span class="math display">\[
+  \text{ReLU}(x) = max(0,x)
+\]</span></p>
+</div>
+</div>
+</div>
+<p>We know that activation functions play a crucial role in introducing non-linearity. However, traditional activation functions, such as the sigmoid function (also known as the logistic function), are quite complex, which increases the difficulty of computing gradient information and even causes significant issues in the backward propagation of gradients. The introduction of the ReLU function has greatly addressed this problem.</p>
+<p>Another point worth mentioning is <strong>batch learning</strong>. We know that algorithms (such as gradient-based methods) guide us toward the optimal model parameters using gradient information. Just like in statistics, where all data is used to update maximum likelihood estimates, traditional methods involve using all the data to compute the gradient information. However, this approach not only increases the computational load significantly but also hinders the learning process. Therefore, it was proposed that data could be fed to the model in random batches. In this way, the algorithm makes targeted adjustments based on a subset of the data each time, which greatly enriches the gradient information we can obtain.</p>
+<div class="custom-block2">
+<p><strong>The analogy that requires some imagination</strong></p>
+<p>For Chinese students, since there’s no English-speaking environment, the main method of learning English is through memorizing word lists. We often find ourselves holding a vocabulary list all day long. For those of us who don’t particularly enjoy learning languages, like me, it’s hard to stick to this method. As a result, we often start memorizing from A and quickly give up. This makes us Chinese students have a special kind of feeling toward the word “abandon”. 😊 But if we shuffle the order and use the “batch” method to memorize (e.g.&nbsp;reading a book) rather than holding the entire book, it might lead to better results.</p>
+</div>
+<div class="custom-block2">
+<p><strong>Epochs</strong> and <strong>batch_size</strong></p>
+<p>Later on, when you use Keras, you will frequently encounter these two parameters. “Epochs” are like the number of times you change shoes when you’re shopping, while “batch_size” is the amount of data you feed to the model in each epoch, just like how you might try on a certain number of shoes each time you change. How to choose the batch_size？ Well, people often choose powers of 2 as the batch size. he table below summarizes the key takeaways about choosing the batch size.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 27%">
+<col style="width: 23%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Batch Size</strong></th>
+<th><strong>Advantages</strong></th>
+<th><strong>Disadvantages</strong></th>
+<th><strong>Applicable Scenarios</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Small Batch (16, 32, 64)</strong></td>
+<td>Stable training, reduces memory usage</td>
+<td>Longer training time</td>
+<td>Most tasks, default recommendation</td>
+</tr>
+<tr class="even">
+<td><strong>Medium Batch (128, 256)</strong></td>
+<td>Balances speed and stability</td>
+<td>May lead to local minima</td>
+<td>When memory is sufficient</td>
+</tr>
+<tr class="odd">
+<td><strong>Large Batch (512+)</strong></td>
+<td>Faster training</td>
+<td>Prone to local minima</td>
+<td>When computational resources are abundant, very large datasets</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In addition to the Gradient Descent algorithm, we have many of its <strong>variant algorithms</strong> to choose from. In the next section, I will specifically discuss this point.</p>
+<p><strong>Challenge 3: Heavy computational works</strong>. Heavy computational tasks are something deep learning must face. Fortunately, we have more computing resources, so this is not a major issue. For example, we can use GPUs instead of CPUs for batch computations. I believe that, in the near future, we will have even more technologies to provide us with even greater computational power.</p>
+</section>
+<section id="more-options-for-shopping-guides-optimizers" class="level2">
+<h2 class="anchored" data-anchor-id="more-options-for-shopping-guides-optimizers">4.4 More options for shopping guides (Optimizers)</h2>
+<p>TBA</p>
+</section>
+</section>
+<section id="convolutional-neural-network" class="level1">
+<h1>5. Convolutional Neural Network</h1>
+<p>TBA</p>
+<!--- End  --->
+<div style="text-align: center; margin: 30px 0">
+<p><a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a></p>
+</div>
+<!--- --->
+
+
+</section>
+
+</main> <!-- /main -->
+<div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
+  <div>© 2024 Xijia Liu. All rights reserved. Contact: xijia.liu AT umu.se</div>
+  <div><img src="../../../Images/logo.png" alt="Logo" style="width: 60px;"></div>
+</div>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
