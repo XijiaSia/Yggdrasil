@@ -265,10 +265,24 @@ Deep networks come with significant challenges. However, apart from lacking a so
 </div>
 <p>In the previous section, we mentioned that the initial values of model parameters are crucial when training a model. A good set of initial values can help us find the optimal model parameters more quickly and avoid getting trapped in local optima. Therefore, based on this idea, concepts such as pre-training, fine-tuning, and transfer learning have also been proposed.</p>
 <div class="custom-block2">
-<p>About <strong>Pre-training</strong> and <strong>Pre-trained Model</strong>: TBA</p>
+<p>About <strong>Pre-training</strong>:</p>
+<p>In many cases, the size of the dataset itself is substantial, but due to various reasons, the amount of annotated data is limited. In such situations, we can consider pre-training. The general idea is to first train an unsupervised learning model, such as an autoencoder, using a large amount of data. Then, we retain all pre-trained results from the encoder part and connect it to the target variable, forming a neural network model. Finally, we train the neural network model using the pre-trained parameters as initial values.</p>
+<p>It is generally believed that, although pre-training lacks the guidance of the target variable, the learned model parameters still hold some significance. Therefore, they can be considered relatively close to the ideal model parameters.</p>
 </div>
 <div class="custom-block2">
-<p>About <strong>Transfer Learning</strong>: TBA</p>
+<p>About <strong>Pre-trained Model</strong> and <strong>Transfer Learning</strong>: These two strategies have become increasingly popular. A <strong>Pre-trained Model</strong> refers to a neural network model trained on a large annotated dataset, which is then applied to a smaller annotated dataset with the same model architecture. It is believed that using the parameters of a pre-trained model as the initial values for an optimization algorithm allows for training a better model with less annotated data. This training process is also known as <strong>fine-tuning</strong>. Fine-tuning is often achieved with the help of <strong>freezing</strong>. Simply put, this means fixing the parameters of certain layers in the neural network and only training the unfrozen layers using a limited amount of annotated data.</p>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p>A broader concept is <strong>transfer learning</strong>, which is inspired by human behavior. We often assume that if a person is skilled at playing one musical instrument, they can quickly learn another. The same principle can be applied to deep learning. For example, recognizing digits and recognizing letters are very similar tasks. Suppose we have a large amount of labeled digit images but only a small amount of labeled letter images. In this case, we can first train a <strong>pre-trained model</strong> on digit images and then <strong>fine-tune</strong> it on letter images.</p>
+<p>A more extreme approach would be to use the digit-trained model as a <strong>feature extractor</strong> for letter images, obtaining high-quality feature representations. These extracted features can then be used, along with labeled letter images, to train a separate machine learning model.</p>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/trans.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:88.8%"></p>
+</figure>
+</div>
+</div>
+</div>
 </div>
 <p><strong>Challenge 2: More tricky optimization problems</strong>. We have previously mentioned that the loss function of neural network models is highly unfriendly. It not only has many local minimum traps but also requires gradient information to be obtained layer by layer. Therefore, training neural network models is a tricky problem in most cases. However, we also have many new ideas and methods in this regard. One of the revolutionary changes is the introduction of the ReLU activation function.</p>
 <div class="custom-block2">
@@ -337,7 +351,56 @@ Deep networks come with significant challenges. However, apart from lacking a so
 </section>
 <section id="more-options-for-shopping-guides-optimizers" class="level2">
 <h2 class="anchored" data-anchor-id="more-options-for-shopping-guides-optimizers">4.4 More options for shopping guides (Optimizers)</h2>
-<p>TBA</p>
+<p>In recent years, with the rise of deep learning, many new optimization algorithms have been proposed. However, despite these variations, almost all of them are modifications of the Gradient Descent algorithm. These modifications typically focus on two main aspects: incorporating “Momentum” and more adaptive learning rate.</p>
+<p>The concept of <strong>Momentum</strong> is not difficult to understand. Simply put, it involves using historical gradient information from the training process to adjust the current gradient information. The implementation of this idea is somewhat similar to autoregressive models, but we won’t show the specific formulas here. Another dimension of algorithm variation is a more adaptive learning rate. We want the optimizer to make large updates at the beginning, but become more gentle during finer stages. In other words, we need a learning rate that changes according to the amount of gradient information. The gradient descent algorithm modified with this idea are Adagrad (Adaptive Gradient) and Adadelta. When both Momentum and adaptive learning rate are considered together, we get the famous Adam (Adaptive Moment) algorithm.</p>
+<p>Finally, I’ve summarized the commonly used optimization algorithms in Keras in the table below.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 47%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Optimizer</strong></th>
+<th><strong>Applicable Scenarios</strong></th>
+<th><strong>Features</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>SGD</strong></td>
+<td>Suitable for small datasets, converges slowly but stable</td>
+<td>Classic gradient descent, supports momentum and Nesterov</td>
+</tr>
+<tr class="even">
+<td><strong>Adam</strong></td>
+<td>Suitable for most tasks, default choice</td>
+<td>Automatically adjusts learning rate, fast, robust</td>
+</tr>
+<tr class="odd">
+<td><strong>Adagrad</strong></td>
+<td>Suitable for sparse data, tasks with fewer features</td>
+<td>Adaptive learning rate, suitable for NLP</td>
+</tr>
+<tr class="even">
+<td><strong>Adadelta</strong></td>
+<td>Similar to Adagrad, but avoids the issue of excessively small learning rates</td>
+<td>Suitable for tasks with imbalanced gradients</td>
+</tr>
+<tr class="odd">
+<td><strong>AdamW</strong></td>
+<td>Adam + L2 regularization (weight decay)</td>
+<td>Suitable for deep networks</td>
+</tr>
+<tr class="even">
+<td><strong>Nadam</strong></td>
+<td>Adam + Nesterov momentum</td>
+<td>Suitable for tasks requiring fast convergence</td>
+</tr>
+</tbody>
+</table>
+<p>In this section, we have discussed various aspects of deep learning. However, there is one important topic we haven’t addressed yet, which is model architecture. The design of the model architecture depends on the nature of our data. For example, for image data, we typically use Convolutional Neural Networks (CNNs); for sequential data, we usually use Recurrent Neural Network (RNN) architectures; and for text data, the most popular architecture currently is the famous Transformer. In the next section, we will provide a more detailed explanation of Convolutional Neural Networks.</p>
 <div style="text-align: center; margin: 30px 0">
 <p><a href="../../../Courses/mlwr2_2025/l3/l3_3.html" title="Training Algorithm and Implementation"><strong>Previous page</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_5.html" title="Convolutional Neural Network"><strong>Next page</strong></a></p>
 </div>
