@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5. Convolutional Neural Networks – My Yggdrasil</title>
+<title>6. To my friends – My Yggdrasil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../../styles.css">
 </head>
@@ -152,25 +123,15 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">5.1 Motivation:</a></li>
-  <li><a href="#what-is-convolution" id="toc-what-is-convolution" class="nav-link" data-scroll-target="#what-is-convolution">5.2 What is Convolution?</a></li>
-  <li><a href="#the-role-of-convolution" id="toc-the-role-of-convolution" class="nav-link" data-scroll-target="#the-role-of-convolution">5.2 The role of Convolution</a></li>
-  <li><a href="#convolution-unit" id="toc-convolution-unit" class="nav-link" data-scroll-target="#convolution-unit">5.3 Convolution Unit</a></li>
-  <li><a href="#cnn-architectures-and-evolution" id="toc-cnn-architectures-and-evolution" class="nav-link" data-scroll-target="#cnn-architectures-and-evolution">5.4 CNN Architectures and Evolution</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">5. Convolutional Neural Networks</h1>
+<h1 class="title">6. To my friends</h1>
 </div>
 
 
@@ -187,206 +148,19 @@ window.Quarto = {
 </header>
 
 
-<p>Convolutional Neural Network (CNN) architecture is a general term for a class of deep learning architectures. With the development of deep learning, CNNs have evolved from the early LeNet, which had only a few layers, to ResNet, which can exceed 100 layers in depth. Recently, Vision Transformer (ViT), based on the transformer architecture, and ConvNeXt, which integrates Transformer and CNN, have emerged as the latest architectures in this field. However, a skyscraper starts from the ground—all these architectures are fundamentally built on the use of convolution. So, what is the motivation for using convolution? What exactly is convolution? And what role does it play in deep learning? In this section, we will answer these questions.</p>
-<section id="motivation" class="level2">
-<h2 class="anchored" data-anchor-id="motivation">5.1 Motivation:</h2>
-<p>In lecture 2, we used image data of only 16×16 pixels, which amounts to 256 pixels in total. In the lab for lecture 3, the MNIST dataset had slightly larger images, with dimensions of 28×28, totaling 784 pixels. For such input data, a single neuron alone would require 785 parameters. At that time, we used two dense layers with 256 and 128 neurons, respectively, resulting in a final neural network model with 235,146 parameters. Such a large model requires a vast amount of labeled data for training. Meanwhile, <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-100</a>, one of the benchmark datasets in deep learning, consists of 32×32 images with three color <a href="https://en.wikipedia.org/wiki/Channel_(digital_image)#:~:text=strengths%20and%20weaknesses.-,RGB%20images,computer%20displays%20and%20image%20scanners.">channels</a>. If we were to build a model purely using dense layers, the number of parameters would be enormous, making training practically infeasible.</p>
-<div class="custom-Rfigure-block">
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="l3_5_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="460"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>From another perspective, image features are usually local. This is easy to understand—when distinguishing between the digits 5 and 6, we primarily focus on whether the small loop at the bottom is closed, or whether the brushstroke in the top-left corner is straight or curved, rather than examining the entire image. However, dense layers inherently act as global feature extractors because they assign a weight to every variable (pixel) during computation. Therefore, applying dense layers directly to image data is not only unreasonable but also highly inefficient.</p>
-<p>Based on these two considerations, researchers turned to using convolution for image data. So, what exactly is convolution?</p>
-</section>
-<section id="what-is-convolution" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-convolution">5.2 What is Convolution?</h2>
-<p>If you search for “convolution” on Wikipedia, you will definitely see the formulas and GIF animations below. If you have a certain mathematical background, they may appear quite beautiful. But if you find them confusing, that’s okay—forget about them, and let’s start fresh.</p>
-<p><span class="math display">\[
-  (f*g)t = \int_{-\infty}^{\infty} f(\tau)g(t-\tau)d\tau
-\]</span></p>
-<div class="custom-gifdemo-block">
-<div style="text-align: center;">
-<p><img src="fig/convolution.gif" class="img-fluid"></p>
-<p>The blue curve <span class="math inline">\(f(t)\)</span> is the original input; The moving red window is called kernel; The black line is the results of convolution.</p>
-</div>
-</div>
-<p>Do you happen to be familiar with the moving average method in statistics, particularly in time series analysis? Simply put, it is an important tool for curve smoothing. Let’s look at the example in the figure below. At the top, we have our input data, <span class="math inline">\(x_1, x_2, \dots, x_p\)</span>. Due to the influence of noise, it seems difficult to directly discern the underlying pattern in the data. (If you’ve already figured it out, please pretend you haven’t—for now.) The moving average involves using a fixed-size window to scan through the data. In each step, the window moves over a subset of the data, and the average value within that window is calculated. The resulting average value will be considered as the output value at the center point of the window’s current position.</p>
-<div class="custom-figure-block">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/cnn_demo.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
-</figure>
-</div>
-</div>
-<p>The following animation demonstrates the effect of the moving average. In fact, the moving average is essentially a 1-dimensional convolution. By performing a convolution operation (moving average) on the time series, the hidden information within the data can be easily extracted.</p>
-<div class="custom-gifdemo-block">
-<p><strong>Animation-Demo of 1-dim convolution (Moving average)</strong></p>
-<div style="text-align: center;">
-<p><img id="cnn" src="fig/cnn.gif" alt="Demo of 1D CNN" width="100%"> <br> <button id="replay_btn_0" style="margin-top: 10px; padding: 5px 10px; font-size: 13px;">Replay</button></p>
-</div>
-<script>
-// JavaScript to replay the GIF
-document.getElementById('replay_btn_0').addEventListener('click', function () {
-    const gif = document.getElementById('cnn');
-    const gifSrc = gif.src; // Get the current src of the GIF
-    gif.src = ''; // Reset the src to stop the GIF
-    setTimeout(() => gif.src = gifSrc, 10); // Restore the src to replay the GIF
-});
-</script>
-</div>
-<p>Before introducing 2D convolution, let’s first define an important terminology. In the previous example, <span class="math inline">\(x_1, x_2, \dots, x_p\)</span> is the input to the convolution, <span class="math inline">\((1/10, \dots, 1/10)\)</span> is referred to as the <strong>kernel</strong> (or <strong>filter</strong>) used in the convolution operation, and <span class="math inline">\(Z_i\)</span>’s represent the output. Therefore, essentially, convolution is the repeated scanning of the input data, applying the coefficients from the kernel to perform calculations. This allows us to easily understand how 2D convolution operates. Please take a look at the mini slides below.</p>
-<!------ Slides G ------>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-5.1. 2D convolution
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><iframe src="l3_slides_11_cnn.html" width="100%" height="400" style="border: none;"></iframe></p>
-</div>
-</div>
-<!------ Slides G OVER ------>
-</section>
-<section id="the-role-of-convolution" class="level2">
-<h2 class="anchored" data-anchor-id="the-role-of-convolution">5.2 The role of Convolution</h2>
-<p>Just like an ultrasound, convolution allows us to see things that are not visible to the naked eye. Simply put, convolution is a scanner that you can use to scan individuals to obtain <strong>local hidden</strong> information. In machine learning terms, it means you can use convolution for <strong>local feature extraction</strong>.</p>
-<div class="custom-figure-block">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/cnn_scanner.png" class="img-fluid figure-img" style="width:66.6%"></p>
-<figcaption>Not only have I accompanied my wife for prenatal ultrasound checks, but I have also experienced it myself. After an accident, the doctor used an ultrasound to check whether my possibly fractured ribs had damaged my internal organs. So we understand it well. The doctor pressed the scanner all over my abdomen, and my internal condition was laid bare wherever the scanner touched.</figcaption>
-</figure>
-</div>
-</div>
-<p>Just like when we discussed PCA, what kind of information convolution extracts is entirely determined by the coefficients in the kernel. Let’s take a look at the example below.</p>
-<div class="custom-figure-block">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/kernel.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:150.0%"></p>
-</figure>
-</div>
-</div>
-<p>On the far left of the image, we have a cute little animal that resembles a rabbit. Then, we apply different kernels to perform convolution on the image. As you can see, with changes in the kernel coefficients, convolution produces different effects on the image. When the coefficients are all set to <span class="math inline">\(1/9\)</span>, the result is a blurred image. The other two kernels, on the other hand, give us different effects: one sharpens the image, while the other extracts the edges, highlighting the boundaries of the animal. This demonstrates how the choice of kernel determines the type of feature that convolution extracts from the image, whether it’s smoothing, sharpening, or edge detection.</p>
-<p>In summary, convolution in deep learning plays the role of local feature extraction, and the coefficients required for this operation are determined by the kernel size. The empirical conclusion is that small-sized kernels, especially 3×3 kernels, are very effective for feature extraction. In other words, a convolution operation only requires 9 parameters. Compared to a dense layer, the “slimming” effect of convolution is quite significant!</p>
-<p>You might have one final question: how do we determine the coefficients of the kernel? It’s time to shout out our deep learning slogan. Yes, we let the target information decide for itself what kind of features we need to extract using convolution, just like determining the coefficients in a dense layer.</p>
-<div class="custom-block">
-<div style="font-size: 24px; text-align: center;">
-<p>Our slogan is “<strong>Learn everything from data</strong>.”</p>
-</div>
-</div>
-</section>
-<section id="convolution-unit" class="level2">
-<h2 class="anchored" data-anchor-id="convolution-unit">5.3 Convolution Unit</h2>
-<p>The idea of CNN models is realized through the <strong>convolution unit</strong>. The diagram below illustrates the key components of a convolution unit.<br>
-First, the 2D image is passed to a <strong>convolution layer</strong>. Here, you need to determine the kernel size—typically, a <span class="math inline">\(3\times 3\)</span> kernel is used. Next, you need to decide how many <strong>kernels (filters)</strong> to apply, denoted as <span class="math inline">\(K\)</span>. In most cases, multiple kernels are used within a convolution unit to extract a richer set of features. A common practice is to choose powers of 2 for the number of kernels. To capture <strong>nonlinear</strong> features, the output of the convolution operation is passed through an activation function, such as ReLU. After this, we obtain <span class="math inline">\(K\)</span> convolution results. Finally, <strong>Max Pooling</strong> is applied to reduce dimensionality while preserving important features. A detailed explanation of max pooling will be provided in the following sections. Through the above operations, we complete a single round of feature extraction using a convolution unit.</p>
-<div class="custom-figure-block">
-<div style="text-align: center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/Conv_unit.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>In Keras package, we can call function <code>layer_conv_2d</code> and <code>layer_max_pooling_2d</code> to get the 2D convolution and max pooling layer respectively. When self-learning Keras’ convolution component, <code>layer_conv_2d</code>, you may encounter some detailed issues. I will list them out to help you understand better.<br>
-<strong>Declaration</strong>: All GIF images in this section are sourced from the website Medium.</p>
-<p><strong>Padding</strong>: Padding works by expanding the region in which a convolutional neural network processes an image. By using padding, you can prevent the image size from reducing and improve the convolution’s effect on the edges of the image. In the following animations, you can observe that convolution with padding allows the output image size to remain the same as the input image.</p>
-<div class="custom-gifdemo-block">
-<div style="text-align: center;">
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/cnn_padding_off.gif" class="img-fluid figure-img"></p>
-<figcaption>Without padding</figcaption>
-</figure>
-</div>
-</div><div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/cnn_padding_on.gif" class="img-fluid figure-img" style="width:65.0%"></p>
-<figcaption>With padding</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-<p><strong>Stride</strong>: Stride is the step length of the moving window of convolution kernel.</p>
-<div class="custom-gifdemo-block">
-<div style="text-align: center;">
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/cnn_stride.gif" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption>Strid is 2</figcaption>
-</figure>
-</div>
-</div><div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/cnn_padding_on.gif" class="img-fluid figure-img" style="width:65.0%"></p>
-<figcaption>Strid is 1</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-<p><strong>Pooling</strong>: The main purpose of pooling layer is for dimension reduction. The most common pooling layers are max pooling and average pooling.</p>
-<div class="custom-gifdemo-block">
-<div style="text-align: center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/cnn_maxpool.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:66.6%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>Normalization</strong>: You may recall that we always normalize the image during the first step in the lab. The main advantage of this is that normalized inputs can accelerate the optimization process. However, the output image from a given convolutional layer will be rescaled. Therefore, in most common architectures, the convolutional layer is typically followed by a normalization layer. There are several normalization methods, with batch normalization being the most popular.</p>
-<div class="custom-figure-block">
-<div style="text-align: center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/cnn_norm.png" class="img-fluid figure-img" style="width:88.8%"></p>
-<figcaption>Source: https://arxiv.org/pdf/1803.08494.pdf</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="cnn-architectures-and-evolution" class="level2">
-<h2 class="anchored" data-anchor-id="cnn-architectures-and-evolution">5.4 CNN Architectures and Evolution</h2>
-<p>As mentioned earlier, CNNs come in many architectures and variations. These differences lie in the details, but at their core, all models follow the same fundamental framework. As shown in the figure below, the basic CNN architecture consists of five modules.<br>
-In the <strong>convolution module</strong>, we use convolution layers to extract features step by step and apply pooling to reduce dimensionality. Then, through a <strong>flatten layer</strong>, we convert the 2D feature maps into a 1D vector and pass them to the <strong>fully connected module</strong>.<br>
-In the fully connected module, we perform feature transformation and extraction, similar to training a standard neural network, preparing the data for the <strong>output layer</strong>.</p>
-<div class="custom-figure-block">
-<div style="text-align: center;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/CNN_Arch_basic.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
+<p>As we come to the end of this course, although it’s only been a few short weeks, I hope you’ve gained some new insights. Before we close this course, I’d like to share some of my thoughts on how we can teach and learn in this new era of AI.</p>
+<p>As we all know, large language models today are capable of effectively handling many tasks such as information retrieval, summarizing, and engaging in natural conversations with us. Computer programming is no longer a barrier either. <strong>So, how can we make the most of AI tools for learning</strong>?</p>
+<p>I believe that, <strong>first</strong>, you need some foundational knowledge in the field you’re studying. If I were to use AI tools to learn medicine from scratch, I would still feel quite uncertain. Therefore, having a certain level of foundational knowledge is crucial for leveraging AI tools effectively in learning. <strong>Second</strong>, more than ever before, we should shift our focus from acquiring knowledge to understanding and thinking critically about it. If we can truly understand the knowledge and grasp its key points, the things we learn become dynamic and alive. This means we can continue to expand and evolve our knowledge system. Especially in the AI era, if the knowledge we learn is alive, we can constantly engage with this knowledgeable “teacher,” converse, and learn in a way that allows us to rapidly grow and expand our knowledge framework.</p>
+<p>I hope that this course can help you in both of the two aspects as you continue your journey in learning machine learning. This course will continue to be offered next spring, and I already have some ideas on how to better integrate the two parts and add new content. I hope you all will provide me with suggestions and point out areas for improvement so that we can make this course even better.</p>
+<p>Finally, I hope everyone can experience the joy of machine learning. Wishing you all a brighter tomorrow and continued success in your learning journey.</p>
+<p>Wishing you all the best!</p>
+<p>Xijia (Sia) Liu</p>
+<p>March 3rd, 2025, Umeå</p>
 <div style="text-align: center; margin: 30px 0">
-<p><a href="../../../Courses/mlwr2_2025/l3/l3_4.html" title="Deep Learning"><strong>Previous page</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_6.html" title="To my friends"><strong>Next page</strong></a></p>
+<p><a href="../../../Courses/mlwr2_2025/l3/l3_5.html" title="5. CNN"><strong>Previous page</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a></p>
 </div>
 
 
-</section>
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
