@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lab 2: Implementation of ANN in R – My Yggdrasil</title>
+<title>Task 1: Regression Model – My Yggdrasil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -157,23 +157,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#keras-a-high-level-deep-learning-api" id="toc-keras-a-high-level-deep-learning-api" class="nav-link active" data-scroll-target="#keras-a-high-level-deep-learning-api">Keras: A High-Level Deep Learning API</a></li>
-  <li><a href="#keras-installation" id="toc-keras-installation" class="nav-link" data-scroll-target="#keras-installation">Keras Installation</a></li>
-  <li><a href="#keras-4-step-method" id="toc-keras-4-step-method" class="nav-link" data-scroll-target="#keras-4-step-method">Keras 4-step Method</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lab 2: Implementation of ANN in R</h1>
+<h1 class="title">Task 1: Regression Model</h1>
 </div>
 
 
@@ -190,68 +182,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>In this lab, we will learn how to implement neural network models using Keras package in the R environment. At the same time, these examples will provide varying degrees of support for the discussions in the lecture notes.</p>
-<section id="keras-a-high-level-deep-learning-api" class="level1">
-<h1>Keras: A High-Level Deep Learning API</h1>
-<p>With the rise of deep learning, frameworks like <strong>TensorFlow</strong> provide powerful tools for building neural networks. However, working directly with these low-level libraries can be complex. <strong>Keras</strong> simplifies this process by offering a high-level API, making it easier to define and train deep learning models. While Python users can directly use Keras, R users may find it less accessible. The <strong>keras R package</strong> solves this problem by providing an R interface to Keras, allowing R users to build and train deep learning models seamlessly within the R environment.</p>
-<p>The key feature of Keras is its modular design for deep learning architectures. For example, in a typical neural network model, Keras treats each layer as a <strong>dense unit</strong>.</p>
-<div class="custom-figure-block">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/Dense_unit.png" class="img-fluid figure-img" style="width:77.7%"></p>
-<figcaption>As Tensorflow as backend, keras summary a layer of neurons (LHS) as a dense layer unit (RHS).</figcaption>
-</figure>
-</div>
-</div>
-<p>For such a dense layer unit, we can represent it using the function <code>layer_dense</code>. The details of this dense layer unit can be specified by different augments</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">256</span>, <span class="co"># the number of resulting neurons Z</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">activation =</span> <span class="st">"relu"</span>, <span class="co"># the activation function</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">input_shape =</span> <span class="fu">c</span>(<span class="dv">784</span>)) <span class="co"># one can specify the input shape when it is the first hidden layer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>There are many other such modules, such as:</p>
-<ul>
-<li><strong><code>layer_dropout</code></strong> – Dropout regularization layer</li>
-<li><strong><code>layer_conv_2d</code></strong> – 2D Convolutional layer<br>
-</li>
-<li><strong><code>layer_max_pooling_2d</code></strong> – 2D Max Pooling layer<br>
-</li>
-<li><strong><code>layer_batch_normalization</code></strong> – Batch Normalization layer</li>
-</ul>
-<p>These modules can be combined to build various deep learning models, such as fully connected neural networks (DNNs), convolutional neural networks (CNNs)</p>
-</section>
-<section id="keras-installation" class="level1">
-<h1>Keras Installation</h1>
-<p>Installing the Keras package in the R environment can be either easy or complex, depending on your computer. However, it doesn’t mean that the newer your computer is, the easier it will be. Therefore, I suggest you try installing the Keras package and the backend language, such as TensorFlow, on your computer first. If you can install it successfully, that’s great. However, if you encounter issues, I recommend using cloud-based R computing resources to install and learn.</p>
-<p>For cloud-based R computing resources, you can use R <a href="https://posit.cloud">Post Cloud</a>, which provides an easy-to-use platform for running R code and installing packages like Keras and TensorFlow without the need to set up complex local environments. By using R Post Cloud, you can bypass the limitations of your local machine and access powerful computational resources, making it an ideal option for installing and learning deep learning with R.</p>
-<p>Please choose the appropriate computing platform based on your situation. Then use the code below to install the Keras package.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"keras"</span>) <span class="co"># install keras package</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras) <span class="co"># import the package</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_keras</span>() <span class="co"># use this function from the package to install the backend engine.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="keras-4-step-method" class="level1">
-<h1>Keras 4-step Method</h1>
-<p>As I mentioned before, Keras provides a great high-level API for deep learning. I summarized the implmentation process as the Keras 4-step method.</p>
-<!------ Slides Keraas ------>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Keras 4-step method
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><iframe src="l3_slides_keras.html" width="100%" height="400" style="border: none;"></iframe></p>
-</div>
-</div>
-<!------ Slides Keras OVER ------>
-<p>Next, let’s learn the four-step method based on the specific problem. You will have four tasks. First, we will go through the four-step method in detail by estimating linear regression using Keras. Then, in Task 2, we will modify the program to create a logistic regression classifier trained with Keras. In Task 3, you will learn more about Keras features through a simple ANN example. Finally, in Task 4, you will attempt to train a deep neural network model on high-resolution image data.</p>
+<p>Essentially, a linear regression model can also be seen as a simple neural network model. In this exercise, we will use Keras to estimate a basic linear regression model. Through this exercise, you will not only understand the Keras 4-step method I mentioned earlier but also gain some extremely simple and concrete examples to help you grasp the concepts discussed in my lecture notes.</p>
+<p><strong>Step 1</strong>: Prepare Data</p>
+<p>For this problem, we will use simulated data. Therefore you just use the following code to get the data into your space.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">30</span> <span class="co"># sample size</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">runif</span>(N, <span class="dv">0</span>, <span class="dv">5</span>) <span class="co"># regressor from uniform distribution</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>e <span class="ot">=</span> <span class="fu">rnorm</span>(N) <span class="co"># noise is from normal</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fl">0.5</span> <span class="sc">+</span> <span class="fl">1.5</span><span class="sc">*</span>x <span class="sc">+</span> e</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Step 2</strong>: Draw the model</p>
+<p>The following chunk of code demonstrates the basic pattern for modeling with Keras. We can use the <code>keras_model_sequential()</code> function to define a layer-by-layer neural network model. Here, you need to specify the <code>input_shape</code>, which determines the number of input variables for the model. Then, you can use the pipe (<code>%&gt;%</code>) operator to connect it to a neural network layer defined with the <code>layer_dense()</code> function. Similarly, you need to specify the number of neurons in this layer and choose an appropriate activation function.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Reg_Mod <span class="ot">=</span> <span class="fu">keras_model_sequential</span>(<span class="at">input_shape =</span> ?) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layer_dense</span>(<span class="at">units =</span> ?, <span class="at">activation =</span> ?)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Once the model is ready, you can use function <code>summary</code> to visualize the model</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Reg_Mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In fact, at this point, you can already start using the model for predictions because all model parameters have been initialized. Keras acts like a “shopping assistant” who presets model parameters based on experience or certain methods. You can use the <code>get_weights()</code> function to check the initialized model parameters. We can also try using the <code>predict()</code> function to compute the model’s predictions on our generated <code>x</code> values.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_weights</span>(Reg_Mod)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>y_pre <span class="ot">=</span> <span class="fu">predict</span>(Reg_Mod, x)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Are you satisfied with this prediction?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Step 3</strong>: Compile the model</p>
+<p>You can use the following chunk of code to compile the model. Our model <code>Reg_mod</code> will be piped into <code>compile</code> function. Within the function, we need to specify the loss function and choose a ‘shopping assistant’ (optimizer). Here, we will simply apply stochastic gradient descent algorithm with <code>learning_rate = 0.05</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Reg_Mod <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">compile</span>(<span class="at">loss =</span> <span class="st">"?"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">optimizer =</span> <span class="fu">optimizer_sgd</span>(<span class="at">learning_rate =</span> <span class="fl">0.05</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Step 4</strong>: Train the model</p>
+<p>In the last step, you just pipe the model <code>Reg_Mod</code> into the <code>fit</code> function. Specify the input feature values <code>x</code> and the target information <code>y</code>. <code>epochs</code> represent the maximum number of iterations you want to train the model. The <code>batch_size</code> determines how many times the data will be fed into the model within a single epoch.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Reg_Mod <span class="sc">%&gt;%</span> <span class="fu">fit</span>(x, y, <span class="at">epochs =</span> <span class="dv">20</span>, <span class="at">batch_size =</span> N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now, you can check the trained model and compare the results with the estimation by OLS method</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check the weights estimation</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">get_weights</span>(Reg_Mod)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># compare it with the outputs of 'lm'</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(y<span class="sc">~</span>x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>y_pre <span class="ot">=</span> <span class="fu">predict</span>(Reg_Mod, x)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((y_pre <span class="sc">-</span> y)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x,y,<span class="at">pch=</span><span class="dv">20</span>,<span class="at">cex=</span><span class="dv">2</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(x, y_pre, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div style="text-align: center; margin: 30px 0">
-<p><a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_lab_task_1.html" title="Task 1"><strong>Next page</strong></a></p>
+<p><a href="../../../Courses/mlwr2_2025/l3/l3_lab_home.html"><strong>Previous page</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_lab_task_2.html" title="Task 2"><strong>Next page</strong></a></p>
 </div>
 
 
-</section>
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">

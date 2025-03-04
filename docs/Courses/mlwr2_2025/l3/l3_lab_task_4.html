@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lab 2: Implementation of ANN in R – My Yggdrasil</title>
+<title>Task 4: Deep ANN model – My Yggdrasil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,40 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -157,23 +123,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#keras-a-high-level-deep-learning-api" id="toc-keras-a-high-level-deep-learning-api" class="nav-link active" data-scroll-target="#keras-a-high-level-deep-learning-api">Keras: A High-Level Deep Learning API</a></li>
-  <li><a href="#keras-installation" id="toc-keras-installation" class="nav-link" data-scroll-target="#keras-installation">Keras Installation</a></li>
-  <li><a href="#keras-4-step-method" id="toc-keras-4-step-method" class="nav-link" data-scroll-target="#keras-4-step-method">Keras 4-step Method</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lab 2: Implementation of ANN in R</h1>
+<h1 class="title">Task 4: Deep ANN model</h1>
 </div>
 
 
@@ -190,68 +148,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>In this lab, we will learn how to implement neural network models using Keras package in the R environment. At the same time, these examples will provide varying degrees of support for the discussions in the lecture notes.</p>
-<section id="keras-a-high-level-deep-learning-api" class="level1">
-<h1>Keras: A High-Level Deep Learning API</h1>
-<p>With the rise of deep learning, frameworks like <strong>TensorFlow</strong> provide powerful tools for building neural networks. However, working directly with these low-level libraries can be complex. <strong>Keras</strong> simplifies this process by offering a high-level API, making it easier to define and train deep learning models. While Python users can directly use Keras, R users may find it less accessible. The <strong>keras R package</strong> solves this problem by providing an R interface to Keras, allowing R users to build and train deep learning models seamlessly within the R environment.</p>
-<p>The key feature of Keras is its modular design for deep learning architectures. For example, in a typical neural network model, Keras treats each layer as a <strong>dense unit</strong>.</p>
-<div class="custom-figure-block">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig/Dense_unit.png" class="img-fluid figure-img" style="width:77.7%"></p>
-<figcaption>As Tensorflow as backend, keras summary a layer of neurons (LHS) as a dense layer unit (RHS).</figcaption>
-</figure>
-</div>
-</div>
-<p>For such a dense layer unit, we can represent it using the function <code>layer_dense</code>. The details of this dense layer unit can be specified by different augments</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">256</span>, <span class="co"># the number of resulting neurons Z</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">activation =</span> <span class="st">"relu"</span>, <span class="co"># the activation function</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">input_shape =</span> <span class="fu">c</span>(<span class="dv">784</span>)) <span class="co"># one can specify the input shape when it is the first hidden layer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>There are many other such modules, such as:</p>
-<ul>
-<li><strong><code>layer_dropout</code></strong> – Dropout regularization layer</li>
-<li><strong><code>layer_conv_2d</code></strong> – 2D Convolutional layer<br>
-</li>
-<li><strong><code>layer_max_pooling_2d</code></strong> – 2D Max Pooling layer<br>
-</li>
-<li><strong><code>layer_batch_normalization</code></strong> – Batch Normalization layer</li>
-</ul>
-<p>These modules can be combined to build various deep learning models, such as fully connected neural networks (DNNs), convolutional neural networks (CNNs)</p>
-</section>
-<section id="keras-installation" class="level1">
-<h1>Keras Installation</h1>
-<p>Installing the Keras package in the R environment can be either easy or complex, depending on your computer. However, it doesn’t mean that the newer your computer is, the easier it will be. Therefore, I suggest you try installing the Keras package and the backend language, such as TensorFlow, on your computer first. If you can install it successfully, that’s great. However, if you encounter issues, I recommend using cloud-based R computing resources to install and learn.</p>
-<p>For cloud-based R computing resources, you can use R <a href="https://posit.cloud">Post Cloud</a>, which provides an easy-to-use platform for running R code and installing packages like Keras and TensorFlow without the need to set up complex local environments. By using R Post Cloud, you can bypass the limitations of your local machine and access powerful computational resources, making it an ideal option for installing and learning deep learning with R.</p>
-<p>Please choose the appropriate computing platform based on your situation. Then use the code below to install the Keras package.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"keras"</span>) <span class="co"># install keras package</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(keras) <span class="co"># import the package</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install_keras</span>() <span class="co"># use this function from the package to install the backend engine.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="keras-4-step-method" class="level1">
-<h1>Keras 4-step Method</h1>
-<p>As I mentioned before, Keras provides a great high-level API for deep learning. I summarized the implmentation process as the Keras 4-step method.</p>
-<!------ Slides Keraas ------>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Keras 4-step method
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><iframe src="l3_slides_keras.html" width="100%" height="400" style="border: none;"></iframe></p>
-</div>
-</div>
-<!------ Slides Keras OVER ------>
-<p>Next, let’s learn the four-step method based on the specific problem. You will have four tasks. First, we will go through the four-step method in detail by estimating linear regression using Keras. Then, in Task 2, we will modify the program to create a logistic regression classifier trained with Keras. In Task 3, you will learn more about Keras features through a simple ANN example. Finally, in Task 4, you will attempt to train a deep neural network model on high-resolution image data.</p>
+<p>TBA</p>
 <div style="text-align: center; margin: 30px 0">
-<p><a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_lab_task_1.html" title="Task 1"><strong>Next page</strong></a></p>
+<p><a href="../../../Courses/mlwr2_2025/l3/l3_lab_task_3.html" title="Task 3"><strong>Previous page</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a></p>
 </div>
 
 
-</section>
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
