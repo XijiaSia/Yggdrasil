@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -123,8 +157,17 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#task-4.1-ann" id="toc-task-4.1-ann" class="nav-link active" data-scroll-target="#task-4.1-ann">Task 4.1: ANN</a></li>
+  <li><a href="#task-4.2-better-initialization" id="toc-task-4.2-better-initialization" class="nav-link" data-scroll-target="#task-4.2-better-initialization">Task 4.2: Better initialization</a></li>
+  <li><a href="#task-4.3-freezing-and-fine-tuning" id="toc-task-4.3-freezing-and-fine-tuning" class="nav-link" data-scroll-target="#task-4.3-freezing-and-fine-tuning">Task 4.3: Freezing and fine tuning</a></li>
+  <li><a href="#task-4.5-transfer-learning" id="toc-task-4.5-transfer-learning" class="nav-link" data-scroll-target="#task-4.5-transfer-learning">Task 4.5: Transfer learning</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -148,12 +191,76 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>TBA</p>
+<p>In the previous lecture notes, we mentioned some special techniques in deep learning, such as pretrained models, fine-tuning, and transfer learning. Understanding these concepts with a large dataset is neither convenient nor time-efficient. Therefore, in this exercise, we will use a toy dataset to learn how to implement these ideas using some advanced features in Keras. You can use the following chunk of code to obtain the data. The final training samples are <code>x</code> and <code>y</code>, where <code>y</code> is the target variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="fl">0.01</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">=</span> <span class="fl">0.1</span><span class="sc">-</span><span class="fu">dnorm</span>(t,<span class="dv">0</span>,<span class="fl">0.4</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">=</span> <span class="fl">0.9</span><span class="sc">-</span><span class="fu">dnorm</span>(t,<span class="dv">0</span>,<span class="fl">0.4</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate the final training sample</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rbind</span>(<span class="fu">cbind</span>(t,t1), <span class="fu">cbind</span>(t,t2))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(x) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"x_1"</span>, <span class="st">"x_2"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="fu">length</span>(t1)), <span class="fu">rep</span>(<span class="dv">0</span>,<span class="fu">length</span>(t2)))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="at">col =</span> y <span class="sc">+</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="l3_lab_task_4_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="task-4.1-ann" class="level1">
+<h1>Task 4.1: ANN</h1>
+<p>Here, you need to train a neural network model with a hidden layer containing two neurons to distinguish between red and black points. Most likely, you will get stuck at around 84% accuracy, but if you’re lucky, you might train a classifier that achieves 100% accuracy. If you are not lucky enough, no worries but just go ahead.</p>
+</section>
+<section id="task-4.2-better-initialization" class="level1">
+<h1>Task 4.2: Better initialization</h1>
+<p>Suppose you use a large but unlabeled dataset to perform some pretraining with unsupervised learning, thereby obtaining a set of well-initialized neuron parameters. Next, we will use these pretrained parameters as the initial values for training. The following code can help you set the initial values for the model.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get a copy of model parameters</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ann_weights_ini <span class="ot">=</span> <span class="fu">get_weights</span>(ann_mod)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># change the values </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ann_weights_ini[[<span class="dv">1</span>]] <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">18</span>,<span class="sc">-</span><span class="dv">8</span>,<span class="dv">16</span>), <span class="at">byrow =</span> T, <span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ann_weights_ini[[<span class="dv">2</span>]] <span class="ot">=</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="dv">8</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>ann_weights_ini[[<span class="dv">3</span>]] <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>ann_weights_ini[[<span class="dv">4</span>]] <span class="ot">=</span> <span class="fu">array</span>(<span class="dv">0</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># set model parameters</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>ann_mod<span class="sc">$</span><span class="fu">set_weights</span>(ann_weights_ini)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now you can compile the model and start training. You can use <code>optimizer_sgd</code> with a learning rate of <code>0.1</code>. Most likely, you will quickly obtain a classifier with 100% accuracy. Compare the final coefficients you obtained, <code>get_weights(ann_mod)</code> with the initial coefficients, <code>ann_weights_ini</code>.</p>
+</section>
+<section id="task-4.3-freezing-and-fine-tuning" class="level1">
+<h1>Task 4.3: Freezing and fine tuning</h1>
+<p>Next, we will manipulate the model coefficients obtained in section 4.2 using the following code.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pretrained_weight <span class="ot">=</span> <span class="fu">get_weights</span>(ann_mod)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># change the values </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pretrained_weight[[<span class="dv">3</span>]] <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>pretrained_weight[[<span class="dv">4</span>]] <span class="ot">=</span> <span class="fu">array</span>(<span class="dv">1</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># set model parameters</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ann_mod<span class="sc">$</span><span class="fu">set_weights</span>(pretrained_weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Assuming that the current <code>ann_mod</code> is a pretrained model obtained using some method, we will now try freezing the hidden layer coefficients and perform fine-tuning on the parameters of the second layer. To do this, you can set the <code>trainable</code> attribute of the first layer in <code>ann_mod</code> to <code>FALSE</code>. This will lock the parameters of the first layer, meaning that during model training, the optimization algorithm will not change the values of the first layer’s parameters. After this, you can proceed with fine-tuning the second layer parameters while keeping the first layer’s parameters fixed.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ann_mod<span class="sc">$</span>layers[[<span class="dv">1</span>]]<span class="sc">$</span>trainable <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After training, compare the final model coefficients with those of the pretrained model to observe any changes, and note the differences from Task 4.2.</p>
+</section>
+<section id="task-4.5-transfer-learning" class="level1">
+<h1>Task 4.5: Transfer learning</h1>
+<p>We can also treat the pretrained model from Task 4.3 as a model trained for a similar problem and apply transfer learning. There are many ways to implement transfer learning, and one of the most straightforward methods is to use the trained model as a feature extractor to extract features, and then directly train a classifier with our data. This approach is particularly useful when the working dataset is small. By leveraging the pretrained model as a feature extractor, you can transfer knowledge from a larger dataset (on which the model was originally trained) to your smaller dataset, which helps improve the performance of the classifier even with limited data. You can implement this idea by the following code.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>layer_out <span class="ot">=</span> <span class="fu">get_layer</span>(ann_mod, <span class="st">'hidden'</span>)<span class="sc">$</span>output</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>feature_extractor <span class="ot">=</span> <span class="fu">keras_model</span>(<span class="at">inputs =</span> ann_mod<span class="sc">$</span>input, <span class="at">outputs =</span> layer_out)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">predict</span>(feature_extractor, x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Next, let’s visualize and compare the original feature space with the feature space formed by extracting features through the pretrained model.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="at">col =</span> y<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(z, <span class="at">col =</span> y<span class="sc">+</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Yes, I remember what we mentioned about the essence of deep learning — it’s <strong>end-to-end learning</strong>. In the process of obtaining a great classifier through a neural network model, we also acquire excellent feature extraction tools. The power of deep learning lies in its ability to automatically learn meaningful representations from raw data, eliminating the need for manual feature engineering and enabling end-to-end learning, where both the feature extraction and the classification are learned together as part of the same model.</p>
+<p>Alright, that’s all for the experiment questions. We have also reached the end of this brief journey! I hope you had a pleasant trip.</p>
+<div style="font-family: 'Cursive', 'Georgia', sans-serif; font-size: 2em; text-align: center; font-style: italic;">
+<p>Tack för oss och hejdå!</p>
+</div>
 <div style="text-align: center; margin: 30px 0">
 <p><a href="../../../Courses/mlwr2_2025/l3/l3_lab_task_3.html" title="Task 3"><strong>Previous page</strong></a> | <a href="../../../Courses/mlwr2_2025/l3/l3_home.html"><strong>Lecture 3 Homepage</strong></a></p>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <div style="display: flex; justify-content: space-between; padding: 10px; font-size: 14px; color: #666; border-top: 1px solid #ddd;">
