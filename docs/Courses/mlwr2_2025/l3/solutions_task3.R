@@ -55,9 +55,9 @@ Training_history$metrics
 #--- Prediction ---#
 #------------------#
 
-predict_1 <- predict(mod_1, x_te)
-predict_2 <- predict_classes(mod_1, x_te)
-head(y_te)
-g_te
+# you can get the probabily for each group for each individual
+predict_1 = predict(ANN_mod, x_te)
+# or you can use the pipe line to get the categorical prediction directly
+predict_2 = ANN_mod %>% predict(x_te) %>% k_argmax() %>% as.array()
 mean(predict_2 == g_te)
 table(predict_2, g_te)

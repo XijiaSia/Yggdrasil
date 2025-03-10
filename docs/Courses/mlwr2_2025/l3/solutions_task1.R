@@ -1,3 +1,5 @@
+library(keras)
+
 #--------------------------------#
 #--- Step 1: prepare the data ---#
 #--------------------------------#
@@ -13,6 +15,12 @@ plot(x,y,pch=20,cex=2)
 #------------------------------#
 Reg_Mod = keras_model_sequential(input_shape = 1) %>% 
   layer_dense(units = 1, activation = "linear")
+
+get_weights(Reg_Mod)
+
+y_pre = predict(Reg_Mod, x)
+points(x, y_pre, col = "orange")
+points(x, y_pre, type = "l", col = "orange")
 
 summary(Reg_Mod)
 

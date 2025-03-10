@@ -27,7 +27,7 @@ get_weights(LogReg_Mod)
 #--- Step 3: Compile the model ---#
 #---------------------------------#
 LogReg_Mod %>% compile(loss = "binary_crossentropy", 
-                       optimizer = optimizer_sgd(learning_rate = 0.1),
+                       optimizer = optimizer_sgd(learning_rate = 0.01),
                        metrics = "accuracy")
 
 #-------------------------------#
@@ -40,10 +40,4 @@ LogReg_Mod %>% fit(x, y, epochs = 100, batch_size = 20)
 #------------------#
 get_weights(LogReg_Mod)
 
-# logistic regression
-mod = glm(y~x, family = "binomial")
-mod$coefficients
-y_pre = predict(mod, data.frame(x))
-y_pre = as.numeric(1/(1+exp(-y_pre)) > 0.5)
-mean(y_pre == y)
-
+y_pre = predict(LogReg_Mod, x)
